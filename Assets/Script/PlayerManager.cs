@@ -22,6 +22,7 @@ public class PlayerManager : MonoBehaviour
     public bool orderPileUp;   //子鴨を積み上げている状態  
     public bool orderRight; //スティックが右&ボタン
     public bool orderLeft; //スティックが左&ボタン
+    public bool orderDown; //スティックが下&ボタン
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -40,6 +41,7 @@ public class PlayerManager : MonoBehaviour
     {
         //コントローラー対応お願いします!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //コードから察してね
+       
         if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
             if (Input.GetKeyDown(KeyCode.J))
@@ -62,7 +64,7 @@ public class PlayerManager : MonoBehaviour
                 orderRight = false;
             }
         }
-        else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+        else if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
         {
             if (Input.GetKeyDown(KeyCode.J))
             {
@@ -73,6 +75,34 @@ public class PlayerManager : MonoBehaviour
                 orderPileUp = false;
             }
         }
+        else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
+        {
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                orderDown = true;
+            }
+            else
+            {
+                orderDown = false;
+            }
+        }
+        if (orderLeft)
+        {
+            orderLeft = false;
+        }
+        if (orderRight)
+        {
+            orderRight = false;
+        }
+        if (orderPileUp)
+        {
+            orderPileUp = false;
+        }
+        if (orderDown)
+        {
+            orderDown = false;
+        }
+
     }
 
     void InputMove()
