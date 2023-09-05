@@ -20,6 +20,8 @@ public class ChildManager : MonoBehaviour
 
     private int playerDirection = 1;
 
+    [SerializeField] float dashSpeed = 8f;
+
     private enum MoveType
     {
         Follow,//êeÇ…Ç¬Ç¢ÇƒÇ¢Ç≠
@@ -84,7 +86,7 @@ public class ChildManager : MonoBehaviour
         switch (moveType)
         {
             case MoveType.Follow:
-
+                //ÉiÉV
                 break;
             case MoveType.Dash:
 
@@ -111,9 +113,9 @@ public class ChildManager : MonoBehaviour
 
         Vector3 vec = Vector3.zero;
 
-        vec.x = 3f;
+        vec.x = dashSpeed;
 
-        if (playerDirection != 0)
+        if (OrderDirection != 0)
         {
             vec.x *= -1;
         }
