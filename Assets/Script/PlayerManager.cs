@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    public Rigidbody2D rb;
+    Rigidbody2D rb;
     float halfSize = 0f;
     
     // --- 基本移動 --- //
@@ -19,7 +19,9 @@ public class PlayerManager : MonoBehaviour
         RIGHT
     }
     DIRECTION direction = DIRECTION.LEFT;
-
+    public bool orderPileUp;   //子鴨を積み上げている状態  
+    public bool orderRight; //スティックが右&ボタン
+    public bool orderLeft; //スティックが左&ボタン
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -31,6 +33,46 @@ public class PlayerManager : MonoBehaviour
     {
         InputMove();
         Move();
+        OrderChildren();
+    }
+
+    private void OrderChildren()
+    {
+        //コントローラー対応お願いします!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //コードから察してね
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+        {
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                orderLeft = true;
+            }
+            else
+            {
+                orderLeft = false;
+            }
+        }
+        else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+        {
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                orderRight = true;
+            }
+            else
+            {
+                orderRight = false;
+            }
+        }
+        else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+        {
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                orderPileUp = true;
+            }
+            else
+            {
+                orderPileUp = false;
+            }
+        }
     }
 
     void InputMove()
@@ -48,11 +90,15 @@ public class PlayerManager : MonoBehaviour
             inputMove.x = 1f;
             direction = DIRECTION.RIGHT;
         }
+        //ジャンプ処理（Y軸イドウ）
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            rb.velocity = new Vector2(rb.velocity.x, Jumpforce)*Time.deltaTime;
+            float jumpforce = Jumpforce * Time.deltaTime;
+            rb.velocity = new Vector2(rb.velocity.x, Jumpforce);
+            // rb.AddForce(Vector3.up * Jumpforce,ForceMode2D.Impulse);
             Debug.Log("jump");
         }
+
     }
 
     void Move()
