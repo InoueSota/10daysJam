@@ -101,18 +101,18 @@ public class ChildManager : MonoBehaviour
                 SetMove(1);
 
             }
-        }
 
-        if (playerManager.orderPileUp == true)
-        {
-            stackIndex = stackCount;
-            stackPos.x = playerManager.transform.position.x;
-            stackPos.y = (playerManager.transform.position.y + playerManager.transform.localScale.y * 0.5f) + transform.localScale.y * 0.5f;
-            isPileUpped = true;
-            SetMove(2);
-            stackCount++;
-        }
 
+            if (playerManager.orderPileUp == true)
+            {
+                stackIndex = stackCount;
+                stackPos.x = playerManager.transform.position.x;
+                stackPos.y = (playerManager.transform.position.y + playerManager.transform.localScale.y * 0.5f) + transform.localScale.y * 0.5f;
+                isPileUpped = true;
+                SetMove(2);
+                stackCount++;
+            }
+        }
         if(playerManager.orderDown == true)
         {
 
