@@ -128,11 +128,8 @@ public class ChildManager : MonoBehaviour
 
         vec.x = dashSpeed;
 
-        if (OrderDirection != 0)
-        {
-            vec.x *= -1;
-        }
-
+        
+        vec.x *= OrderDirection;
         rb.velocity = vec;
     }
 
