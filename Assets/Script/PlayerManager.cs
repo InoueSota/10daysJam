@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
+    public Rigidbody2D rb;
     float halfSize = 0f;
-
+    
     // --- 基本移動 --- //
     // 入力された速度を格納する（最大１）
     Vector2 inputMove = Vector2.zero;
     // 移動速度
     [SerializeField] float moveSpeed = 0f;
+    [SerializeField] float Jumpforce = 0f;
     // 左右どちらを向いているか
     public enum DIRECTION {
         LEFT,
@@ -20,6 +22,7 @@ public class PlayerManager : MonoBehaviour
 
     void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
         halfSize = transform.localScale.x * 0.5f;
         transform.position = new (transform.position.x + halfSize, transform.position.y + halfSize, transform.position.z);
     }
@@ -44,6 +47,11 @@ public class PlayerManager : MonoBehaviour
         {
             inputMove.x = 1f;
             direction = DIRECTION.RIGHT;
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            rb.velocity = new Vector2(rb.velocity.x, Jumpforce)*Time.deltaTime;
+            Debug.Log("jump");
         }
     }
 
