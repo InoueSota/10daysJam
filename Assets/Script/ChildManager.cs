@@ -30,10 +30,7 @@ public class ChildManager : MonoBehaviour
     {
         GetPlayerDiffPosition();
 
-        Vector3 moveValue = new Vector3(diffPosition.x - transform.position.x, 0f, 0f);
-        moveValue = moveValue.normalized * (followValue * Time.deltaTime);
-
-        transform.position += moveValue;
+        transform.position += new Vector3(diffPosition.x - transform.position.x, 0f, 0f) * (followValue * Time.deltaTime);
     }
 
     void GetPlayerDiffPosition()
