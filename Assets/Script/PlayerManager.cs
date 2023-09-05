@@ -39,9 +39,25 @@ public class PlayerManager : MonoBehaviour
 
     private void OrderChildren()
     {
+        if (orderLeft)
+        {
+            orderLeft = false;
+        }
+        if (orderRight)
+        {
+            orderRight = false;
+        }
+        if (orderPileUp)
+        {
+            orderPileUp = false;
+        }
+        if (orderDown)
+        {
+            orderDown = false;
+        }
         //コントローラー対応お願いします!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //コードから察してね
-       
+
         if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
             if (Input.GetKeyDown(KeyCode.J))
@@ -86,22 +102,7 @@ public class PlayerManager : MonoBehaviour
                 orderDown = false;
             }
         }
-        if (orderLeft)
-        {
-            orderLeft = false;
-        }
-        if (orderRight)
-        {
-            orderRight = false;
-        }
-        if (orderPileUp)
-        {
-            orderPileUp = false;
-        }
-        if (orderDown)
-        {
-            orderDown = false;
-        }
+       
 
     }
 
