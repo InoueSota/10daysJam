@@ -49,6 +49,19 @@ public class ChildManager : MonoBehaviour
 
     void Update()
     {
+        if (playerManager.orderRight == true)
+        {
+            SetMove(1);
+            OrderDirection = 1;
+        }
+
+        if (playerManager.orderLeft == true)
+        {
+            SetMove(1);
+            OrderDirection = -1;
+        }
+
+
         Move();
     }
 
@@ -83,20 +96,20 @@ public class ChildManager : MonoBehaviour
     {
         moveType = (MoveType)Enum.ToObject(typeof(MoveType), type);
 
-        switch (moveType)
-        {
-            case MoveType.Follow:
-                //ナシ
-                break;
-            case MoveType.Dash:
+        //switch (moveType)
+        //{
+        //    case MoveType.Follow:
+        //        //ナシ
+        //        break;
+        //    case MoveType.Dash:
 
-                OrderDirection = (int)playerManager.GetDirection();
+        //        OrderDirection = (int)playerManager.GetDirection();
 
-                break;
-            case MoveType.Stack:
+        //        break;
+        //    case MoveType.Stack:
 
-                break;
-        }
+        //        break;
+        //}
     }
 
     //フォロー時の動き
