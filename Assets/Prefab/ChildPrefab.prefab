@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3361807911100354577}
   - component: {fileID: 2881807486014403705}
   - component: {fileID: 1537494413065667243}
+  - component: {fileID: -7024712534359552531}
   m_Layer: 0
   m_Name: ChildPrefab
   m_TagString: Untagged
@@ -100,3 +101,24 @@ MonoBehaviour:
   player: {fileID: 0}
   diffValue: 0
   followValue: 0
+--- !u!50 &-7024712534359552531
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4062459521392159587}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
