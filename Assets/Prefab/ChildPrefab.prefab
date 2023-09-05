@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 2881807486014403705}
   - component: {fileID: 1537494413065667243}
   - component: {fileID: -7024712534359552531}
-  m_Layer: 0
+  - component: {fileID: -3911588650271747608}
+  m_Layer: 3
   m_Name: ChildPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +102,9 @@ MonoBehaviour:
   player: {fileID: 0}
   diffValue: 0
   followValue: 0
+  dashSpeed: 8
   moveType: 0
+  isPileUpped: 0
 --- !u!50 &-7024712534359552531
 Rigidbody2D:
   serializedVersion: 4
@@ -122,4 +125,30 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
+--- !u!61 &-3911588650271747608
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4062459521392159587}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
