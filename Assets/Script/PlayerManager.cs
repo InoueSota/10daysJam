@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     Rigidbody2D rb;
+    SpriteRenderer sP;
     float halfSize = 0f;
     
     // --- 基本移動 --- //
@@ -26,6 +27,7 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        sP = GetComponent<SpriteRenderer>();
         halfSize = transform.localScale.x * 0.5f;
         transform.position = new (transform.position.x + halfSize, transform.position.y + halfSize, transform.position.z);
     }
@@ -115,11 +117,13 @@ public class PlayerManager : MonoBehaviour
         {
             inputMove.x = -1f;
             direction = DIRECTION.LEFT;
+            sP.flipX = true;
         }
         else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
             inputMove.x = 1f;
             direction = DIRECTION.RIGHT;
+            sP.flipX = false;
         }
         //ジャンプ処理（Y軸イドウ）
         if (Input.GetKeyDown(KeyCode.Space))
