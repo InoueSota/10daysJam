@@ -352,11 +352,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3361807911100354577, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2
+      value: -4.36
       objectReference: {fileID: 0}
     - target: {fileID: 3361807911100354577, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3361807911100354577, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: m_LocalPosition.z
@@ -693,7 +693,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 552128877539316309, guid: 7d2879c95be598a4280682a3aa1dc04c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.05
+      value: -1.79
       objectReference: {fileID: 0}
     - target: {fileID: 552128877539316309, guid: 7d2879c95be598a4280682a3aa1dc04c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -755,9 +755,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1589709772}
   - component: {fileID: 1589709771}
+  - component: {fileID: 1589709773}
   m_Layer: 0
   m_Name: Crow
-  m_TagString: Untagged
+  m_TagString: Crow
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -822,13 +823,39 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1589709770}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.1584325, y: 3.8089852, z: 0}
+  m_LocalPosition: {x: 10.95, y: 6.51, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &1589709773
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1589709770}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2, y: 2}
+    newSize: {x: 0.32, y: 0.32}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!1 &1994064167
 GameObject:
   m_ObjectHideFlags: 0
