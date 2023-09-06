@@ -57,6 +57,8 @@ public class ChildManager : MonoBehaviour
 
     private Vector3 prePos = Vector3.zero;
 
+    private bool direction = false;
+
     void Start()
     {
         halfSize = transform.localScale.x * 0.5f;
@@ -70,6 +72,8 @@ public class ChildManager : MonoBehaviour
 
     void Update()
     {
+        prePos = this.transform.position;
+
         if (isThrow == false)
         {
             throwCoolDown = 0;
@@ -84,7 +88,11 @@ public class ChildManager : MonoBehaviour
         }
 
 
-        if (moveType == MoveType.Stack)
+
+        
+
+
+            if (moveType == MoveType.Stack)
         {
             if (playerManager.orderRight == true)
             {
@@ -170,6 +178,17 @@ public class ChildManager : MonoBehaviour
         }
 
         Move();
+
+        if (prePos.x - this.transform.position.x < 0.0f)
+        {
+            direction = false;
+        }
+        else if (prePos.x - this.transform.position.x > 0.0f)
+        {
+            direction = true;
+        }
+
+        this.GetComponent<SpriteRenderer>().flipX = direction;
     }
 
     void Move()
@@ -210,7 +229,7 @@ public class ChildManager : MonoBehaviour
                 break;
         }
 
-        prePos = this.transform.position;
+        
     }
 
     //“®‚«‚ðƒZƒbƒg‚·‚é
