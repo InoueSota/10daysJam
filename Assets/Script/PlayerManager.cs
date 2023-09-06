@@ -73,6 +73,9 @@ public class PlayerManager : MonoBehaviour
 
         if (closeCrow == null)
         {
+
+            this.GetComponent<SpriteRenderer>().color = Color.white;
+
             if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
             {
                 if (Input.GetKeyDown(KeyCode.J))
@@ -120,6 +123,9 @@ public class PlayerManager : MonoBehaviour
         }
         else
         {
+
+            this.GetComponent<SpriteRenderer>().color = Color.red; 
+
             if (Input.GetKeyDown(KeyCode.J))
             {
                 orderAttack = true;
@@ -183,7 +189,7 @@ public class PlayerManager : MonoBehaviour
 
             float tDist = Vector3.Distance(transform.position, t.transform.position);
 
-            if (closeDist > tDist)
+            if (closeDist > tDist && tDist < 12.0f)
             {
                 closeDist = tDist;
 
