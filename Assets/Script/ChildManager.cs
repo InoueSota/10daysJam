@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class ChildManager : MonoBehaviour
 {
+    private Rigidbody2D rb;
     float halfSize = 0f;
 
     // プレイヤーとの差分座標を目掛ける
@@ -15,10 +16,6 @@ public class ChildManager : MonoBehaviour
     [SerializeField] float followValue = 0f;
     float diff = 0f;
     Vector2 diffPosition = Vector2.zero;
-
-    
-
-    private Rigidbody2D rb;
 
     private int playerDirection = 1;
 
@@ -62,10 +59,10 @@ public class ChildManager : MonoBehaviour
     void Start()
     {
         halfSize = transform.localScale.x * 0.5f;
+        rb = this.GetComponent<Rigidbody2D>();
+
         transform.position = new Vector3(transform.position.x, halfSize, transform.position.z);
         playerManager = player.GetComponent<PlayerManager>();
-
-        rb = this.GetComponent<Rigidbody2D>();
 
         prePos = this.transform.position;
     }
@@ -83,22 +80,14 @@ public class ChildManager : MonoBehaviour
             {
                 isThrow = false;
             }
-
             throwCoolDown++; 
         }
 
-
-
-        
-
-
-            if (moveType == MoveType.Stack)
+        if (moveType == MoveType.Stack)
         {
             if (playerManager.orderRight == true)
             {
-
                 OrderDirection = 1;
-
 
                 vec.x = dashSpeed * OrderDirection;
                 vec.y = dashSpeed;
@@ -106,7 +95,6 @@ public class ChildManager : MonoBehaviour
                 isPileUpped = false;
                 SetMove(3);
             }
-
             if (playerManager.orderLeft == true)
             {
                 OrderDirection = -1;
@@ -120,22 +108,17 @@ public class ChildManager : MonoBehaviour
         }
         else
         {
-
             if (playerManager.orderRight == true)
             {
-
                 OrderDirection = 1;
                 SetMove(1);
             }
 
             if (playerManager.orderLeft == true)
             {
-
                 OrderDirection = -1;
                 SetMove(1);
-
             }
-
 
             if (playerManager.orderPileUp == true)
             {
@@ -149,7 +132,6 @@ public class ChildManager : MonoBehaviour
         }
         if(playerManager.orderDown == true)
         {
-
             Vector3 vec = Vector3.zero;
 
             vec.x = 0.0f;
@@ -164,8 +146,7 @@ public class ChildManager : MonoBehaviour
         {
             if (playerManager.orderAttack == true && isThrow == false)
             {
-
-                nearCrawPos = playerManager.GetNeerCrawPos();
+                nearCrawPos = playerManager.GetNearCrawPos();
                 Vector3 playerPos = playerManager.transform.position;
 
                 this.transform.position = playerPos;
@@ -194,7 +175,6 @@ public class ChildManager : MonoBehaviour
     void Move()
     {
         playerDirection = (int)playerManager.GetDirection();
-
 
         switch (moveType)
         {
@@ -228,16 +208,12 @@ public class ChildManager : MonoBehaviour
 
                 break;
         }
-
-        
     }
 
     //動きをセットする
     public void SetMove(int type)
     {
         moveType = (MoveType)Enum.ToObject(typeof(MoveType), type);
-
-       
     }
 
     //フォロー時の動き
@@ -254,11 +230,9 @@ public class ChildManager : MonoBehaviour
     //ダッシュ時の動き
     void MoveDash()
     {
-
         vec = Vector3.zero;
 
         vec.x = dashSpeed;
-
         
         vec.x *= OrderDirection;
         rb.velocity = vec;
@@ -266,24 +240,18 @@ public class ChildManager : MonoBehaviour
 
     void MoveStack()
     {
-
         Vector3 pos = stackPos;
 
         pos.x = playerManager.transform.position.x;
         pos.y = stackPos.y + stackIndex * transform.localScale.y;
 
         transform.position = pos;
-
     }
 
     void MoveStackAttack()
     {
-
-        
-
         vec.y -= 3.0f * Time.deltaTime * 9.81f;
         vec.x -= 3.0f * Time.deltaTime ;
-
         
         rb.velocity = vec;
     }
@@ -297,12 +265,10 @@ public class ChildManager : MonoBehaviour
 
             if (this.transform.position.y < 0.55f)
             {
-
                 isCrawHit = false;
                 SetMove(0);
             }
         }
-
 
         rb.velocity = vec;
     }
@@ -329,9 +295,5 @@ public class ChildManager : MonoBehaviour
         {
             isCrawHit = true;
         }
-
     }
-
-
-
 }
