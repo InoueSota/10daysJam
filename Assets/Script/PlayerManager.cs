@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     Rigidbody2D rb;
+    SpriteRenderer sP;
     float halfSize = 0f;
     
     // --- 基本移動 --- //
@@ -23,9 +24,15 @@ public class PlayerManager : MonoBehaviour
     public bool orderRight; //スティックが右&ボタン
     public bool orderLeft; //スティックが左&ボタン
     public bool orderDown; //スティックが下&ボタン
+    public bool orderAttack;
+
+    private GameObject[] targets;
+    private GameObject closeCrow;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        sP = GetComponent<SpriteRenderer>();
         halfSize = transform.localScale.x * 0.5f;
         transform.position = new (transform.position.x + halfSize, transform.position.y + halfSize, transform.position.z);
     }
@@ -55,54 +62,79 @@ public class PlayerManager : MonoBehaviour
         {
             orderDown = false;
         }
+        if (orderDown)
+        {
+            orderAttack = false;
+        }
         //コントローラー対応お願いします!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //コードから察してね
 
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+        closeCrow = SearchCrow();
+
+        if (closeCrow == null)
         {
+
+            this.GetComponent<SpriteRenderer>().color = Color.white;
+
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+            {
+                if (Input.GetKeyDown(KeyCode.J))
+                {
+                    orderLeft = true;
+                }
+                else
+                {
+                    orderLeft = false;
+                }
+            }
+            else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+            {
+                if (Input.GetKeyDown(KeyCode.J))
+                {
+                    orderRight = true;
+                }
+                else
+                {
+                    orderRight = false;
+                }
+            }
+            else if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
+            {
+                if (Input.GetKeyDown(KeyCode.J))
+                {
+                    orderPileUp = true;
+                }
+                else
+                {
+                    orderPileUp = false;
+                }
+            }
+            else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
+            {
+                if (Input.GetKeyDown(KeyCode.J))
+                {
+                    orderDown = true;
+                }
+                else
+                {
+                    orderDown = false;
+                }
+            }
+        }
+        else
+        {
+
+            this.GetComponent<SpriteRenderer>().color = Color.red; 
+
             if (Input.GetKeyDown(KeyCode.J))
             {
-                orderLeft = true;
+                orderAttack = true;
             }
             else
             {
-                orderLeft = false;
+                orderAttack = false;
             }
         }
-        else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
-        {
-            if (Input.GetKeyDown(KeyCode.J))
-            {
-                orderRight = true;
-            }
-            else
-            {
-                orderRight = false;
-            }
-        }
-        else if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
-        {
-            if (Input.GetKeyDown(KeyCode.J))
-            {
-                orderPileUp = true;
-            }
-            else
-            {
-                orderPileUp = false;
-            }
-        }
-        else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
-        {
-            if (Input.GetKeyDown(KeyCode.J))
-            {
-                orderDown = true;
-            }
-            else
-            {
-                orderDown = false;
-            }
-        }
-       
 
     }
 
@@ -115,11 +147,13 @@ public class PlayerManager : MonoBehaviour
         {
             inputMove.x = -1f;
             direction = DIRECTION.LEFT;
+            sP.flipX = true;
         }
         else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
             inputMove.x = 1f;
             direction = DIRECTION.RIGHT;
+            sP.flipX = false;
         }
         //ジャンプ処理（Y軸イドウ）
         if (Input.GetKeyDown(KeyCode.Space))
@@ -141,5 +175,33 @@ public class PlayerManager : MonoBehaviour
     public DIRECTION GetDirection()
     {
         return direction;
+    }
+
+    private GameObject SearchCrow()
+    {
+
+        targets = GameObject.FindGameObjectsWithTag("Crow");
+        GameObject nearCrow = null;
+        float closeDist = 1000;
+
+        foreach (GameObject t in targets)
+        {
+
+            float tDist = Vector3.Distance(transform.position, t.transform.position);
+
+            if (closeDist > tDist && tDist < 12.0f)
+            {
+                closeDist = tDist;
+
+                nearCrow = t;
+            }
+        }
+
+        return nearCrow;
+    }
+
+    public Vector3 GetNeerCrawPos()
+    {
+        return closeCrow.transform.position;
     }
 }

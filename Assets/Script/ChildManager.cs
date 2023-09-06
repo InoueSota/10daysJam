@@ -16,7 +16,7 @@ public class ChildManager : MonoBehaviour
     float diff = 0f;
     Vector2 diffPosition = Vector2.zero;
 
-   
+    
 
     private Rigidbody2D rb;
 
@@ -30,7 +30,8 @@ public class ChildManager : MonoBehaviour
         Dash,//“ËŒ‚
         Stack,//‚©‚³‚Ë‚é
         StackAttack,
-        Stay//‚»‚Ì‚Î‚½‚¢‚«
+        Stay,//‚»‚Ì‚Î‚½‚¢‚«
+        AttackCraw,
     }
 
     [SerializeField] private MoveType moveType = MoveType.Follow;
@@ -47,6 +48,17 @@ public class ChildManager : MonoBehaviour
 
     private Vector3 stackPos = Vector3.zero;
 
+    private Vector3 nearCrawPos = Vector3.zero;
+    private static bool isThrow = false;
+
+    private int throwCoolDown = 0;
+    private bool isCrawHit = false;
+
+
+    private Vector3 prePos = Vector3.zero;
+
+    private bool direction = false;
+
     void Start()
     {
         halfSize = transform.localScale.x * 0.5f;
@@ -54,11 +66,33 @@ public class ChildManager : MonoBehaviour
         playerManager = player.GetComponent<PlayerManager>();
 
         rb = this.GetComponent<Rigidbody2D>();
+
+        prePos = this.transform.position;
     }
 
     void Update()
     {
-        if (moveType == MoveType.Stack)
+        prePos = this.transform.position;
+
+        if (isThrow == false)
+        {
+            throwCoolDown = 0;
+        }
+        else { 
+            if(throwCoolDown == 1)
+            {
+                isThrow = false;
+            }
+
+            throwCoolDown++; 
+        }
+
+
+
+        
+
+
+            if (moveType == MoveType.Stack)
         {
             if (playerManager.orderRight == true)
             {
@@ -126,7 +160,35 @@ public class ChildManager : MonoBehaviour
             SetMove(0);
         }
 
+        if (moveType != MoveType.AttackCraw)
+        {
+            if (playerManager.orderAttack == true && isThrow == false)
+            {
+
+                nearCrawPos = playerManager.GetNeerCrawPos();
+                Vector3 playerPos = playerManager.transform.position;
+
+                this.transform.position = playerPos;
+
+                vec = Vector3.Normalize(nearCrawPos - playerPos) * 16.0f;
+
+                isThrow = true;
+                SetMove(5);
+            }
+        }
+
         Move();
+
+        if (prePos.x - this.transform.position.x < 0.0f)
+        {
+            direction = false;
+        }
+        else if (prePos.x - this.transform.position.x > 0.0f)
+        {
+            direction = true;
+        }
+
+        this.GetComponent<SpriteRenderer>().flipX = direction;
     }
 
     void Move()
@@ -157,10 +219,17 @@ public class ChildManager : MonoBehaviour
                 MoveStackAttack();
 
                 break;
-                //case MoveType.Stay:
+            //case MoveType.Stay:
 
-                //    break;
+            //    break;
+            case MoveType.AttackCraw:
+
+                MoveAttackCraw();
+
+                break;
         }
+
+        
     }
 
     //“®‚«‚ðƒZƒbƒg‚·‚é
@@ -219,6 +288,25 @@ public class ChildManager : MonoBehaviour
         rb.velocity = vec;
     }
 
+    void MoveAttackCraw()
+    {
+        if(isCrawHit == true)
+        {
+            vec.x = 0;
+            vec.y -= 8.0f * Time.deltaTime * 9.81f;
+
+            if (this.transform.position.y < 0.55f)
+            {
+
+                isCrawHit = false;
+                SetMove(0);
+            }
+        }
+
+
+        rb.velocity = vec;
+    }
+
     void GetPlayerDiffPosition()
     {
         // ¶‚ðŒü‚¢‚Ä‚¢‚é‚Æ‚«
@@ -235,5 +323,15 @@ public class ChildManager : MonoBehaviour
         diffPosition = new(player.transform.position.x + diff, player.transform.position.y);
     }
 
-   
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Crow")
+        {
+            isCrawHit = true;
+        }
+
+    }
+
+
+
 }
