@@ -40,7 +40,7 @@ public class CrowScript : MonoBehaviour
             case Mode.stay:
 
                 FindClosestChild();
-               transform.position= Vector2.MoveTowards(transform.position, new((closestChild.transform.position.x+Mathf.Sin(Time.deltaTime*3)), (14.0f+Mathf.Sin(Time.deltaTime))), Time.deltaTime*moveSpeed);
+               transform.position= Vector2.MoveTowards(transform.position, new((closestChild.transform.position.x+Mathf.Sin()), (14.0f+Mathf.Sin(Time.deltaTime))), Time.deltaTime*moveSpeed);
                 coolTime -= Time.deltaTime;
                 if (coolTime < 0)
                 {
@@ -122,9 +122,13 @@ public class CrowScript : MonoBehaviour
     {
         if (collision.CompareTag(targetTag))
         {
-            mode = Mode.takeaway;
-            if(!isTakeAway)featherA.SetRunning(collision.transform.position);
-            isTakeAway = true;
+            if (mode == Mode.attak)
+            {
+                mode = Mode.takeaway;
+                if (!isTakeAway) featherA.SetRunning(collision.transform.position);
+                isTakeAway = true;
+            }
+           
             //collision.gameObject.GetComponent<ChildManager>().isTakedAway = true;
             //closestChild.transform.parent = transform;
 
