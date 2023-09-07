@@ -17,6 +17,8 @@ public class CrowScript : MonoBehaviour
     private Transform closestChild = null;
     public bool lockOn;
     public bool isTakeAway;
+    float angleX;
+    float angleY;
     public enum Mode
     {
         stay,
@@ -38,9 +40,10 @@ public class CrowScript : MonoBehaviour
         switch (mode)
         {
             case Mode.stay:
-
+                angleX += Time.deltaTime;
+                angleY += Time.deltaTime*10;
                 FindClosestChild();
-               transform.position= Vector2.MoveTowards(transform.position, new((closestChild.transform.position.x+Mathf.Sin()), (14.0f+Mathf.Sin(Time.deltaTime))), Time.deltaTime*moveSpeed);
+               transform.position= Vector2.MoveTowards(transform.position, new((closestChild.transform.position.x+Mathf.Sin(angleX)*5), (14.0f+Mathf.Sin(angleY)*0.5f)), Time.deltaTime*moveSpeed);
                 coolTime -= Time.deltaTime;
                 if (coolTime < 0)
                 {
