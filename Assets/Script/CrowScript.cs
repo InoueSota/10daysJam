@@ -9,7 +9,7 @@ public class CrowScript : MonoBehaviour
 {
     private FeatherAParticlesManager featherA;
 
-    public string targetTag = "Child"; // ŒŸõ‘ÎÛ‚ÌTag–¼
+    public string targetTag = "Child"; // ï¿½ï¿½ï¿½ï¿½ï¿½ÎÛ‚ï¿½Tagï¿½ï¿½
     public Vector3 targetPos;
     public float moveSpeed = 1.0f;
     private float coolTime = 5.0f;
@@ -68,8 +68,6 @@ public class CrowScript : MonoBehaviour
             case Mode.takeaway:
                 transform.position += new Vector3(0, moveSpeed, 0)*Time.deltaTime;
                 closestChild.transform.position = transform.position;
-                closestChild.GetComponent<ChildManager>().isTakedAway = true;
-
                 break;
 
 
@@ -82,10 +80,10 @@ public class CrowScript : MonoBehaviour
     {
         Vector3 direction = targetPos - transform.position;
 
-        // •ûŒüƒxƒNƒgƒ‹‚ğ³‹K‰»i’·‚³‚ğ1‚É‚·‚éj
+        // ï¿½ï¿½ï¿½ï¿½ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½ğ³‹Kï¿½ï¿½ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½É‚ï¿½ï¿½ï¿½j
         direction.Normalize();
 
-        // –Ú•WˆÊ’u‚Ì•ûŒü‚Éˆê’è‘¬“x‚ÅˆÚ“®
+        // ï¿½Ú•Wï¿½Ê’uï¿½Ì•ï¿½ï¿½ï¿½ï¿½Éˆï¿½è‘¬ï¿½xï¿½ÅˆÚ“ï¿½
         transform.position += direction * moveSpeed * Time.deltaTime;
 
 
@@ -132,21 +130,14 @@ public class CrowScript : MonoBehaviour
                 isTakeAway = true;
                 
             }
-           
+
             //collision.gameObject.GetComponent<ChildManager>().isTakedAway = true;
             //closestChild.transform.parent = transform;
 
         }
-        else if (collision.CompareTag("Ground")&&!isTakeAway)
-        {
-            mode = Mode.stay;
-        }
-    }
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag(targetTag))
-        {
-            //closestChild.GetComponent<ChildManager>().isTakedAway = true;
-        }
+        //else if (collision.CompareTag("Ground")&&!isTakeAway)
+        //{
+        //    mode = Mode.stay;
+        //}
     }
 }
