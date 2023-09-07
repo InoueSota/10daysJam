@@ -14,7 +14,7 @@ public class ChildManager : MonoBehaviour
     PlayerManager playerManager;
     // どれくらいの差か
     [SerializeField] float diffValue = 0f;
-    Vector2 diffPosition = Vector2.zero;
+    Vector3 diffPosition = Vector3.zero;
     float diff = 0f;
     // 追いかける強さ
     [SerializeField] float followPower = 0f;
@@ -22,7 +22,7 @@ public class ChildManager : MonoBehaviour
     // プレイヤーの向き
     private int playerDirection = 1;
 
-    private enum MoveType
+    public enum MoveType
     {
         FOLLOW,     // 親についていく
         DASH,       // 猪突猛進
@@ -52,10 +52,13 @@ public class ChildManager : MonoBehaviour
     // 積み上げ座標
     private Vector3 stackPos = Vector3.zero;
 
-    // カラスの座標
-    private Vector3 nearCrawPos = Vector3.zero;
+    // 攻撃時間
+    [SerializeField] private float attackCrowTime = 0f;
+    private float attackCrowLeftTime = 0f;
+    // 攻撃終了フラグ
+    private bool isFinishAttackCrow = false;
     // １つずつ投げるためのフラグ
-    private bool isThrow = false;
+    [SerializeField] private bool isThrow = false;
     // カラスに当たったかフラグ
     private bool isCrawHit = false;
     // カラスに連れられたかフラグ
@@ -72,63 +75,61 @@ public class ChildManager : MonoBehaviour
 
     void Update()
     {
-        if (moveType == MoveType.STACK)
+        // カラスに連れられていないとき
+        if (!isTakedAway)
         {
-            if (playerManager.orderRight == true)
+            // 積み上げられた状態で投げられる
+            if (moveType == MoveType.STACK)
             {
-                orderDirection = kRight;
-
-                velocity.x = dashSpeed * orderDirection;
-                velocity.y = dashSpeed;
-                stackCount = 0;
+                // 左に投げられる
+                if (playerManager.orderLeft)
+                {
+                    orderDirection = kLeft;
+                    StackAttackInitialize();
+                }
+                // 右に投げられる
+                if (playerManager.orderRight)
+                {
+                    orderDirection = kRight;
+                    StackAttackInitialize();
+                }
+            }
+            // 積み上げられていないとき
+            else
+            {
+                // 指示 - 左猛進
+                if (playerManager.orderLeft)
+                {
+                    orderDirection = kLeft;
+                    ChangeMoveType(MoveType.DASH);
+                }
+                // 指示 - 右猛進
+                if (playerManager.orderRight)
+                {
+                    orderDirection = kRight;
+                    ChangeMoveType(MoveType.DASH);
+                }
+                // 指示 - 積み上げ
+                if (playerManager.orderStack)
+                {
+                    stackIndex = stackCount;
+                    stackPos.x = playerManager.transform.position.x;
+                    stackPos.y = (playerManager.transform.position.y + playerManager.transform.localScale.y * 0.5f) + transform.localScale.y * 0.5f;
+                    isPiledUp = true;
+                    ChangeMoveType(MoveType.STACK);
+                    stackCount++;
+                }
+            }
+            // 指示 - 集合,待機
+            if (playerManager.orderDown)
+            {
                 isPiledUp = false;
-                SetMove(3);
-            }
-            if (playerManager.orderLeft == true)
-            {
-                orderDirection = kLeft;
-
-                velocity.x = dashSpeed * orderDirection;
-                velocity.y = dashSpeed;
                 stackCount = 0;
-                isPiledUp = false;
-                SetMove(3);
+                ChangeMoveType(MoveType.FOLLOW);
             }
+            Move();
+            ImageFlip();
         }
-        else
-        {
-            if (playerManager.orderRight == true)
-            {
-                orderDirection = kRight;
-                SetMove(1);
-            }
-
-            if (playerManager.orderLeft == true)
-            {
-                orderDirection = kLeft;
-                SetMove(1);
-            }
-
-            if (playerManager.orderStack == true)
-            {
-                stackIndex = stackCount;
-                stackPos.x = playerManager.transform.position.x;
-                stackPos.y = (playerManager.transform.position.y + playerManager.transform.localScale.y * 0.5f) + transform.localScale.y * 0.5f;
-                isPiledUp = true;
-                SetMove(2);
-                stackCount++;
-            }
-        }
-        if (playerManager.orderDown == true)
-        {
-            isPiledUp = false;
-            stackCount = 0;
-            SetMove(0);
-        }
-
-        Move();
-
-        ImageFlip();
     }
 
     void Move()
@@ -163,16 +164,16 @@ public class ChildManager : MonoBehaviour
             //    break;
             case MoveType.ATTACKCROW:
 
-                MoveAttackCraw();
+                MoveAttackCrow();
 
                 break;
         }
     }
 
     //動きをセットする
-    public void SetMove(int type)
+    public void ChangeMoveType(MoveType nextMoveType)
     {
-        moveType = (MoveType)Enum.ToObject(typeof(MoveType), type);
+        moveType = nextMoveType;
     }
 
     //フォロー時の動き
@@ -184,6 +185,11 @@ public class ChildManager : MonoBehaviour
 
         velocity.y -= 3.0f * Time.deltaTime * 9.81f;
         rb.velocity = velocity;
+
+        if (isThrow && Vector3.Distance(diffPosition, transform.position) < 0.2f)
+        {
+            isThrow = false;
+        }
     }
 
     //ダッシュ時の動き
@@ -210,14 +216,19 @@ public class ChildManager : MonoBehaviour
     void MoveStackAttack()
     {
         velocity.y -= 3.0f * Time.deltaTime * 9.81f;
-        velocity.x -= 3.0f * Time.deltaTime ;
+        velocity.x -= 3.0f * Time.deltaTime;
         
         rb.velocity = velocity;
     }
 
-    void MoveAttackCraw()
+    void MoveAttackCrow()
     {
-        if(isCrawHit == true)
+        if (isThrow)
+        {
+            attackCrowLeftTime -= Time.deltaTime;
+            if (attackCrowLeftTime < 0f) { isFinishAttackCrow = true; }
+        }
+        if(isCrawHit || isFinishAttackCrow)
         {
             velocity.x = 0;
             velocity.y -= 8.0f * Time.deltaTime * 9.81f;
@@ -225,10 +236,10 @@ public class ChildManager : MonoBehaviour
             if (this.transform.position.y < 0.55f)
             {
                 isCrawHit = false;
-                SetMove(0);
+                isThrow = false;
+                ChangeMoveType(MoveType.FOLLOW);
             }
         }
-
         rb.velocity = velocity;
     }
 
@@ -244,8 +255,7 @@ public class ChildManager : MonoBehaviour
         {
             diff = -diffValue;
         }
-
-        diffPosition = new(player.transform.position.x + diff, player.transform.position.y);
+        diffPosition = new(player.transform.position.x + diff, transform.position.y, transform.position.z);
     }
 
     void ImageFlip()
@@ -263,10 +273,19 @@ public class ChildManager : MonoBehaviour
         }
         this.GetComponent<SpriteRenderer>().flipX = isFlipX;
     }
+    void StackAttackInitialize()
+    {
+        velocity.x = dashSpeed * orderDirection;
+        velocity.y = dashSpeed;
+        stackCount = 0;
+        isPiledUp = false;
+        ChangeMoveType(MoveType.STACKATTACK);
+    }
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Crow")
+        if (collision.CompareTag("Crow"))
         {
             isCrawHit = true;
         }
@@ -279,14 +298,12 @@ public class ChildManager : MonoBehaviour
 
     public void ThrowInitialize()
     {
-        nearCrawPos = playerManager.GetNearCrawPos();
-        Vector3 playerPos = playerManager.transform.position;
-
-        this.transform.position = playerPos;
-
-        velocity = Vector3.Normalize(nearCrawPos - playerPos) * 16.0f;
-
+        velocity = playerManager.GetNearCrawPos() - player.transform.position;
+        velocity = velocity.normalized * 20.0f;
+        transform.position = player.transform.position;
+        attackCrowLeftTime = attackCrowTime;
+        isFinishAttackCrow = false;
         isThrow = true;
-        SetMove(5);
+        ChangeMoveType(MoveType.ATTACKCROW);
     }
 }

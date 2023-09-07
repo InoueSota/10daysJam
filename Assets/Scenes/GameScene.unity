@@ -349,12 +349,20 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: attackTime
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: followPower
       value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: followValue
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: attackCrowTime
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 2881807486014403705, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: m_SortingLayer
@@ -638,6 +646,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: mode
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7514164298105999568, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -708,12 +720,20 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: attackTime
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: followPower
       value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: followValue
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: attackCrowTime
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 2881807486014403705, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: m_SortingLayer
@@ -797,12 +817,20 @@ PrefabInstance:
       value: 3.5
       objectReference: {fileID: 0}
     - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: attackTime
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: followPower
       value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: followValue
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: attackCrowTime
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 2881807486014403705, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: m_SortingLayer

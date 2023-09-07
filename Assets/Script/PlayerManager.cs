@@ -122,7 +122,7 @@ public class PlayerManager : MonoBehaviour
                     {
                         childManager = children[i].GetComponent<ChildManager>();
                     }
-                    if (childManager && !childManager.GetIsThrow())
+                    if (childManager && !childManager.isTakedAway && !childManager.GetIsThrow())
                     {
                         childManager.ThrowInitialize();
                         break;

@@ -40,7 +40,7 @@ public class CrowScript : MonoBehaviour
             case Mode.stay:
 
                 FindClosestChild();
-               transform.position= Vector2.MoveTowards(transform.position, new((closestChild.transform.position.x+Mathf.Sin(Time.deltaTime*3)), (14.0f+Mathf.Sin(Time.deltaTime))), Time.deltaTime*moveSpeed);
+               transform.position= Vector2.MoveTowards(transform.position, new(closestChild.transform.position.x, 15.0f), Time.deltaTime*moveSpeed);
                 coolTime -= Time.deltaTime;
                 if (coolTime < 0)
                 {
@@ -65,8 +65,6 @@ public class CrowScript : MonoBehaviour
             case Mode.takeaway:
                 transform.position += new Vector3(0, moveSpeed, 0)*Time.deltaTime;
                 closestChild.transform.position = transform.position;
-                closestChild.GetComponent<ChildManager>().isTakedAway = true;
-
                 break;
 
 
@@ -120,25 +118,17 @@ public class CrowScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag(targetTag))
-        {
-            mode = Mode.takeaway;
-            if(!isTakeAway)featherA.SetRunning(collision.transform.position);
-            isTakeAway = true;
-            //collision.gameObject.GetComponent<ChildManager>().isTakedAway = true;
-            //closestChild.transform.parent = transform;
+        //if (collision.CompareTag(targetTag))
+        //{
+        //    mode = Mode.takeaway;
+        //    if(!isTakeAway)featherA.SetRunning(collision.transform.position);
+        //    isTakeAway = true;
+        //    //closestChild.transform.parent = transform;
 
-        }
-        else if (collision.CompareTag("Ground")&&!isTakeAway)
-        {
-            mode = Mode.stay;
-        }
-    }
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag(targetTag))
-        {
-            //closestChild.GetComponent<ChildManager>().isTakedAway = true;
-        }
+        //}
+        //else if (collision.CompareTag("Ground")&&!isTakeAway)
+        //{
+        //    mode = Mode.stay;
+        //}
     }
 }
