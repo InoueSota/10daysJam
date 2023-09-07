@@ -95,6 +95,7 @@ public class PlayerManager : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.J))
                 {
+                    allChild.stackCount = 0;
                     orderStack = true;
                 }
             }
@@ -103,6 +104,7 @@ public class PlayerManager : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.J))
                 {
+                    allChild.DiffInitialize();
                     orderDown = true;
                 }
             }

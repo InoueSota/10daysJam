@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -27,7 +26,9 @@ public class ChildManager : MonoBehaviour
     {
         FOLLOW,     // 親についていく
         DASH,       // 猪突猛進
+        TOSTACK,    // 積まれに行く
         STACK,      // 積む
+        STACKCANCEL,// 積みを中断する
         STACKATTACK,// 積まれた状態の攻撃
         STAY,       // その場に待機
         ATTACKCROW, // カラスに攻撃
@@ -46,12 +47,13 @@ public class ChildManager : MonoBehaviour
     const int kRight = 1;
 
     // 積み上げの高さをカウントで変える
-    private static int stackCount = 0;
     private int stackIndex = 0;
     // 積み上げフラグ
     public bool isPiledUp = false;
     // 積み上げ座標
     private Vector3 stackPos = Vector3.zero;
+    // 積み上げを中断した時のランダム速度
+    private float cancelRandomX = 0f;
 
     // 攻撃時間
     [SerializeField] private float attackCrowTime = 0f;
@@ -113,20 +115,8 @@ public class ChildManager : MonoBehaviour
                 // 指示 - 積み上げ
                 if (playerManager.orderStack)
                 {
-                    stackIndex = stackCount;
-                    stackPos.x = playerManager.transform.position.x;
-                    stackPos.y = (playerManager.transform.position.y + playerManager.transform.localScale.y * 0.5f) + transform.localScale.y * 0.5f;
-                    isPiledUp = true;
-                    ChangeMoveType(MoveType.STACK);
-                    stackCount++;
+                    ChangeMoveType(MoveType.TOSTACK);
                 }
-            }
-            // 指示 - 集合,待機
-            if (playerManager.orderDown)
-            {
-                isPiledUp = false;
-                stackCount = 0;
-                ChangeMoveType(MoveType.FOLLOW);
             }
             Move();
             ImageFlip();
@@ -149,12 +139,30 @@ public class ChildManager : MonoBehaviour
                 MoveDash();
 
                 break;
+            case MoveType.TOSTACK:
+
+                MoveToStack();
+
+                break;
             case MoveType.STACK:
 
                 MoveStack();
 
-                break;
+                // 指示 - 集合,待機
+                if (playerManager.orderDown)
+                {
+                    isPiledUp = false;
+                    transform.parent.gameObject.GetComponent<AllChildScript>().stackCount = 0;
+                    cancelRandomX = Random.Range(3.0f, 6.0f);
+                    ChangeMoveType(MoveType.STACKCANCEL);
+                }
 
+                break;
+            case MoveType.STACKCANCEL:
+
+                MoveStackCancel();
+
+                break;
             case MoveType.STACKATTACK:
 
                 MoveStackAttack();
@@ -242,10 +250,37 @@ public class ChildManager : MonoBehaviour
         }
     }
 
-    //ダッシュ時の動き
+    // ダッシュ時の動き
     void MoveDash()
     {
         velocity.x = dashSpeed * orderDirection;
+    }
+
+    void MoveToStack()
+    {
+        if (Mathf.Abs(player.transform.position.x - transform.position.x) < 0.2f)
+        {
+            stackIndex = transform.parent.gameObject.GetComponent<AllChildScript>().stackCount;
+            stackPos.x = playerManager.transform.position.x;
+            stackPos.y = (playerManager.transform.position.y + playerManager.transform.localScale.y * 0.5f) + transform.localScale.y * 0.5f;
+            isPiledUp = true;
+            isAddDiff = false;
+            transform.parent.gameObject.GetComponent<AllChildScript>().stackCount++;
+            ChangeMoveType(MoveType.STACK);
+        }
+        else
+        {
+            // 親の方に行く - 左
+            if (player.transform.position.x - transform.position.x < 0f)
+            {
+                velocity.x = -12.0f;
+            }
+            // 親の方に行く - 右
+            else
+            {
+                velocity.x = 12.0f;
+            }
+        }
     }
 
     void MoveStack()
@@ -258,10 +293,28 @@ public class ChildManager : MonoBehaviour
         transform.position = pos;
     }
 
+    void MoveStackCancel()
+    {
+        velocity.x = cancelRandomX;
+        velocity.y -= 3.0f * Time.deltaTime * 9.81f;
+
+        if (transform.position.y < 0.55f)
+        {
+            velocity = Vector3.zero;
+            ChangeMoveType(MoveType.FOLLOW);
+        }
+    }
+
     void MoveStackAttack()
     {
         velocity.y -= 3.0f * Time.deltaTime * 9.81f;
         velocity.x -= 3.0f * Time.deltaTime;
+
+        if (transform.position.y < 0.55f)
+        {
+            velocity = Vector3.zero;
+            ChangeMoveType(MoveType.FOLLOW);
+        }
     }
 
     void MoveAttackCrow()
@@ -289,9 +342,7 @@ public class ChildManager : MonoBehaviour
 
     void ImageFlip()
     {
-        // 画像の反転処理は親ガモ依存なので、指示を受けたら反転しないようにする
-
-        if (!isAddDiff)
+        if (!isAddDiff && moveType != MoveType.STACK)
         {
             if (!isFlipX && velocity.x < 0f)
             {
@@ -302,7 +353,7 @@ public class ChildManager : MonoBehaviour
                 isFlipX = false;
             }
         }
-        else
+        else if (isAddDiff || moveType == MoveType.STACK)
         {
             if (playerDirection == 0)
             {
@@ -318,9 +369,9 @@ public class ChildManager : MonoBehaviour
 
     void StackAttackInitialize()
     {
-        velocity.x = dashSpeed * orderDirection;
-        velocity.y = dashSpeed;
-        stackCount = 0;
+        velocity.x = 8f * orderDirection;
+        velocity.y = 8f;
+        transform.parent.gameObject.GetComponent<AllChildScript>().stackCount = 0;
         isPiledUp = false;
         ChangeMoveType(MoveType.STACKATTACK);
     }
