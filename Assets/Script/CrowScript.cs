@@ -130,6 +130,7 @@ public class CrowScript : MonoBehaviour
                 mode = Mode.takeaway;
                 if (!isTakeAway) featherA.SetRunning(collision.transform.position);
                 isTakeAway = true;
+                
             }
            
             //collision.gameObject.GetComponent<ChildManager>().isTakedAway = true;
