@@ -83,7 +83,7 @@ public class CrowScript : MonoBehaviour
                 direction.Normalize();
                 transform.position += new Vector3(-direction.x * moveSpeed, moveSpeed, 0) * Time.deltaTime;
                 closestChild.transform.position = transform.position;
-<<<<<<< HEAD
+
                 closestChild.GetComponent<ChildManager>().isTakedAway = true;
                 if (transform.position.y > 20)
                 {
@@ -91,8 +91,7 @@ public class CrowScript : MonoBehaviour
                     mode = Mode.stay;
                     coolTime = kMaxcoolTime * 1.5f;
                 }
-=======
->>>>>>> 0922b93b1ad63e6cb178ced5afbd52a925b7169b
+
                 break;
 
         }
@@ -101,13 +100,13 @@ public class CrowScript : MonoBehaviour
 
     private void Attak()
     {
-<<<<<<< HEAD
+
         easetime -= Time.deltaTime * 0.5f;
         float t = (easetime / 1.0f);
         float y = Mathf.Lerp(targetPos.y, startPos.y, EaseInSine(t));
         float x = Mathf.Lerp(targetPos.x, startPos.x, EaseOutQuart(t));
         transform.position = new Vector3(x, y, 0);
-=======
+
         Vector3 direction = targetPos - transform.position;
 
         // ・ｽ・ｽ・ｽ・ｽ・ｽx・ｽN・ｽg・ｽ・ｽ・ｽｳ規・ｽ・ｽ・ｽi・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ1・ｽﾉゑｿｽ・ｽ・ｽj
@@ -116,7 +115,7 @@ public class CrowScript : MonoBehaviour
         // ・ｽﾚ標・ｽﾊ置・ｽﾌ包ｿｽ・ｽ・ｽ・ｽﾉ茨ｿｽ闡ｬ・ｽx・ｽﾅ移難ｿｽ
         transform.position += direction * moveSpeed * Time.deltaTime;
 
->>>>>>> 0922b93b1ad63e6cb178ced5afbd52a925b7169b
+
 
     }
 
@@ -196,7 +195,7 @@ public class CrowScript : MonoBehaviour
             //closestChild.transform.parent = transform;
 
         }
-<<<<<<< HEAD
+
         else if (collision.CompareTag("Ground") && !isTakeAway)
         {
             mode = Mode.stay;
@@ -208,12 +207,7 @@ public class CrowScript : MonoBehaviour
         {
             //closestChild.GetComponent<ChildManager>().isTakedAway = true;
         }
-=======
-        //else if (collision.CompareTag("Ground")&&!isTakeAway)
-        //{
-        //    mode = Mode.stay;
-        //}
->>>>>>> 0922b93b1ad63e6cb178ced5afbd52a925b7169b
+
     }
 
 

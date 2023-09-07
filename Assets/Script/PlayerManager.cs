@@ -50,10 +50,6 @@ public class PlayerManager : MonoBehaviour
         children = new GameObject[30];
     }
 
-    private void FixedUpdate()
-    {
-        
-    }
 
     void Update()
     {
