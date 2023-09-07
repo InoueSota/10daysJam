@@ -9,7 +9,7 @@ public class CrowScript : MonoBehaviour
 {
     private FeatherAParticlesManager featherA;
 
-    public string targetTag = "Child"; // åüçıëŒè€ÇÃTagñº
+    public string targetTag = "Child"; // ÔøΩÔøΩÔøΩÔøΩÔøΩŒè€ÇÔøΩTagÔøΩÔøΩ
     public Vector3 targetPos;
     public float moveSpeed = 1.0f;
     private float coolTime = 5.0f;
@@ -17,6 +17,8 @@ public class CrowScript : MonoBehaviour
     private Transform closestChild = null;
     public bool lockOn;
     public bool isTakeAway;
+    float angleX;
+    float angleY;
     public enum Mode
     {
         stay,
@@ -38,9 +40,10 @@ public class CrowScript : MonoBehaviour
         switch (mode)
         {
             case Mode.stay:
-
+                angleX += Time.deltaTime;
+                angleY += Time.deltaTime*10;
                 FindClosestChild();
-               transform.position= Vector2.MoveTowards(transform.position, new(closestChild.transform.position.x, 15.0f), Time.deltaTime*moveSpeed);
+               transform.position= Vector2.MoveTowards(transform.position, new((closestChild.transform.position.x+Mathf.Sin(angleX)*5), (14.0f+Mathf.Sin(angleY)*0.5f)), Time.deltaTime*moveSpeed);
                 coolTime -= Time.deltaTime;
                 if (coolTime < 0)
                 {
@@ -77,10 +80,10 @@ public class CrowScript : MonoBehaviour
     {
         Vector3 direction = targetPos - transform.position;
 
-        // ï˚å¸ÉxÉNÉgÉãÇê≥ãKâªÅií∑Ç≥Ç1Ç…Ç∑ÇÈÅj
+        // ÔøΩÔøΩÔøΩÔøΩÔøΩxÔøΩNÔøΩgÔøΩÔøΩÔøΩê≥ãKÔøΩÔøΩÔøΩiÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ1ÔøΩ…ÇÔøΩÔøΩÔøΩj
         direction.Normalize();
 
-        // ñ⁄ïWà íuÇÃï˚å¸Ç…àÍíËë¨ìxÇ≈à⁄ìÆ
+        // ÔøΩ⁄ïWÔøΩ íuÔøΩÃïÔøΩÔøΩÔøΩÔøΩ…àÔøΩËë¨ÔøΩxÔøΩ≈à⁄ìÔøΩ
         transform.position += direction * moveSpeed * Time.deltaTime;
 
 
@@ -118,12 +121,18 @@ public class CrowScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //if (collision.CompareTag(targetTag))
-        //{
-        //    mode = Mode.takeaway;
-        //    if(!isTakeAway)featherA.SetRunning(collision.transform.position);
-        //    isTakeAway = true;
-        //    //closestChild.transform.parent = transform;
+        if (collision.CompareTag(targetTag))
+        {
+            if (mode == Mode.attak)
+            {
+                mode = Mode.takeaway;
+                if (!isTakeAway) featherA.SetRunning(collision.transform.position);
+                isTakeAway = true;
+                
+            }
+           
+            //collision.gameObject.GetComponent<ChildManager>().isTakedAway = true;
+            //closestChild.transform.parent = transform;
 
         //}
         //else if (collision.CompareTag("Ground")&&!isTakeAway)
