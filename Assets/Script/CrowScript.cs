@@ -11,7 +11,7 @@ public class CrowScript : MonoBehaviour
     public float moveSpeed = 1.0f;
 
     private Transform closestChild = null;
-    public bool LockOn;
+    public bool lockOn;
     // public bool takeAway;
     public enum Mode
     {
@@ -91,17 +91,16 @@ public class CrowScript : MonoBehaviour
             }
         }
 
-        // closestChildがnullでなければ、最も近い子オブジェクトが見つかったことになります
+       
         if (closestChild != null)
         {
-            LockOn = true;
+            lockOn = true;
             targetPos = closestChild.transform.position;
-            // ここでclosestChildを使って何かを行うことができます
-            // 例: closestChild.GetComponent<YourComponent>().DoSomething();
+            
         }
         else
         {
-            LockOn = false;
+            lockOn = false;
         }
     }
 
