@@ -6,6 +6,8 @@ using static UnityEngine.GraphicsBuffer;
 
 public class CrowScript : MonoBehaviour
 {
+    private FeatherAParticlesManager featherA;
+
     public string targetTag = "Child"; // åüçıëŒè€ÇÃTagñº
     public Vector3 targetPos;
     public float moveSpeed = 1.0f;
@@ -25,7 +27,7 @@ public class CrowScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        featherA = GetComponent<FeatherAParticlesManager>();
     }
 
     // Update is called once per frame
@@ -110,6 +112,8 @@ public class CrowScript : MonoBehaviour
         {
             mode = Mode.takeaway;
             //closestChild.transform.parent = transform;
+
+            featherA.SetRunning(collision.transform.position);
         }
     }
 }
