@@ -11,7 +11,7 @@ public class CrowScript : MonoBehaviour
 {
     private FeatherAParticlesManager featherA;
 
-    public string targetTag = "Child"; // ŒŸõ‘ÎÛ‚ÌTag–¼
+    public string targetTag = "Child"; // ï¿½ï¿½ï¿½ï¿½ï¿½ÎÛ‚ï¿½Tagï¿½ï¿½
     public Vector3 targetPos;
     public Vector3 startPos;
     public float moveSpeed = 1.0f;
@@ -79,7 +79,7 @@ public class CrowScript : MonoBehaviour
                 break;
             case Mode.takeaway:
                 Vector3 direction = targetPos - transform.position;
-                // •ûŒüƒxƒNƒgƒ‹‚ğ³‹K‰»i’·‚³‚ğ1‚É‚·‚éj
+                // æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ­£è¦åŒ–ï¼ˆé•·ã•ã‚’1ã«ã™ã‚‹ï¼‰
                 direction.Normalize();
                 transform.position += new Vector3(-direction.x * moveSpeed, moveSpeed, 0) * Time.deltaTime;
                 closestChild.transform.position = transform.position;

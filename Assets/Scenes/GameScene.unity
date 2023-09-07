@@ -345,8 +345,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 498490234}
     - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: dashSpeed
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: diffValue
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: attackTime
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: followPower
@@ -355,6 +363,10 @@ PrefabInstance:
     - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: followValue
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: attackCrowTime
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 2881807486014403705, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: m_SortingLayer
@@ -449,6 +461,7 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420033}
+  - component: {fileID: 519420034}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -536,6 +549,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerObj: {fileID: 498490234}
   scrollTime: 0.7
+--- !u!114 &519420034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3a1a411a56231742a0d98e878afdae3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &557885226
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -638,6 +663,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: mode
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7514164298105999568, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -704,8 +733,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 498490234}
     - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: dashSpeed
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: diffValue
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: attackTime
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: followPower
@@ -714,6 +751,10 @@ PrefabInstance:
     - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: followValue
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: attackCrowTime
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 2881807486014403705, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: m_SortingLayer
@@ -793,8 +834,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 498490234}
     - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: dashSpeed
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: diffValue
       value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: attackTime
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: followPower
@@ -803,6 +852,10 @@ PrefabInstance:
     - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: followValue
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537494413065667243, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: attackCrowTime
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 2881807486014403705, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: m_SortingLayer
