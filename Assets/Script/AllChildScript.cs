@@ -69,4 +69,9 @@ public class AllChildScript : MonoBehaviour
         diff += diffSize;
         return diff;
     }
+
+    public void SubtractDiffSize()
+    {
+        diff -= diffSize;
+    }
 }

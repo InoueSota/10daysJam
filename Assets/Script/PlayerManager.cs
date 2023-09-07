@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
@@ -115,6 +116,9 @@ public class PlayerManager : MonoBehaviour
             {
                 allChild.AddChildObjects(children);
 
+                GameObject nearChild = null;
+                int nearChildNumber = 0;
+                bool isAssignment = false;
                 for (int i = 0; i < children.GetLength(0); i++)
                 {
                     ChildManager childManager = null;
@@ -122,11 +126,40 @@ public class PlayerManager : MonoBehaviour
                     {
                         childManager = children[i].GetComponent<ChildManager>();
                     }
-                    if (childManager && !childManager.isTakedAway && !childManager.GetIsThrow())
+                    if (childManager && !childManager.isTakedAway && !childManager.GetIsThrow() && childManager.isAddDiff)
                     {
-                        childManager.ThrowInitialize();
-                        break;
+                        if (!isAssignment || (nearChild && Vector3.Distance(nearChild.transform.position, transform.position) > Vector3.Distance(children[i].transform.position, transform.position)))
+                        {
+                            nearChild = children[i];
+                            nearChildNumber = i;
+                            isAssignment = true;
+                        }
                     }
+                }
+
+                if (nearChild)
+                {
+                    ChildManager childManager = null;
+                    if (nearChild)
+                    {
+                        childManager = nearChild.GetComponent<ChildManager>();
+                    }
+                    childManager.ThrowInitialize();
+                    for (int i = 0; i < children.GetLength(0); i++)
+                    {
+                        if (children[i] && nearChildNumber != i)
+                        {
+                            if (direction == DIRECTION.LEFT)
+                            {
+                                children[i].GetComponent<ChildManager>().diff -= 1.5f;
+                            }
+                            else
+                            {
+                                children[i].GetComponent<ChildManager>().diff += 1.5f;
+                            }
+                        }
+                    }
+                    allChild.SubtractDiffSize();
                 }
                 orderAttack = true;
             }

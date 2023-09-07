@@ -8,13 +8,14 @@ public class ChildManager : MonoBehaviour
 {
     private Rigidbody2D rb;
     private float halfSize = 0f;
+    private bool isFlipX = false;
 
     // 親ガモを追いかける
     public GameObject player;
     private PlayerManager playerManager;
     // どれくらいの差か
     [SerializeField]private Vector3 diffPosition = Vector3.zero;
-    private float diff = 0f;
+    public float diff = 0f;
     public bool isAddDiff = false;
     // 追いかける強さ
     [SerializeField] private float followPower = 0f;
@@ -37,7 +38,7 @@ public class ChildManager : MonoBehaviour
     [SerializeField] private float dashSpeed = 8f;
 
     // 基本移動速度
-    private Vector3 velocity = Vector3.zero;
+    [SerializeField] private Vector3 velocity = Vector3.zero;
 
     // 速度を方向に応じて変化させる
     private int orderDirection = 0;
@@ -182,7 +183,7 @@ public class ChildManager : MonoBehaviour
     {
         if (!isAddDiff)
         {
-            if (Mathf.Abs(player.transform.position.x - transform.position.x) < 0.2f)
+            if (Mathf.Abs(player.transform.position.x - transform.position.x) < 0.5f)
             {
                 if (playerDirection == 0)
                 {
@@ -279,6 +280,8 @@ public class ChildManager : MonoBehaviour
             {
                 isCrawHit = false;
                 isThrow = false;
+                isAddDiff = false;
+                velocity = Vector3.zero;
                 ChangeMoveType(MoveType.FOLLOW);
             }
         }
@@ -288,17 +291,31 @@ public class ChildManager : MonoBehaviour
     {
         // 画像の反転処理は親ガモ依存なので、指示を受けたら反転しないようにする
 
-        bool isFlipX;
-        if (playerDirection == 0)
+        if (!isAddDiff)
         {
-            isFlipX = true;
+            if (!isFlipX && velocity.x < 0f)
+            {
+                isFlipX = true;
+            }
+            else if (isFlipX && velocity.x > 0f)
+            {
+                isFlipX = false;
+            }
         }
         else
         {
-            isFlipX = false;
+            if (playerDirection == 0)
+            {
+                isFlipX = true;
+            }
+            else
+            {
+                isFlipX = false;
+            }
         }
         this.GetComponent<SpriteRenderer>().flipX = isFlipX;
     }
+
     void StackAttackInitialize()
     {
         velocity.x = dashSpeed * orderDirection;
@@ -312,6 +329,7 @@ public class ChildManager : MonoBehaviour
     {
         if (collision.CompareTag("Crow"))
         {
+            velocity.y = 5.0f;
             isCrawHit = true;
         }
     }
@@ -324,7 +342,7 @@ public class ChildManager : MonoBehaviour
     public void ThrowInitialize()
     {
         velocity = playerManager.GetNearCrawPos() - player.transform.position;
-        velocity = velocity.normalized * 20.0f;
+        velocity = velocity.normalized * 30.0f;
         transform.position = player.transform.position;
         attackCrowLeftTime = attackCrowTime;
         isFinishAttackCrow = false;
