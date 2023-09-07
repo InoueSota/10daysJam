@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using TreeEditor;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static UnityEngine.GraphicsBuffer;
+//using static UnityEngine.GraphicsBuffer;
 
 public class CrowScript : MonoBehaviour
 {
@@ -11,6 +13,7 @@ public class CrowScript : MonoBehaviour
 
     public string targetTag = "Child"; // 検索対象のTag名
     public Vector3 targetPos;
+    public Vector3 startPos;
     public float moveSpeed = 1.0f;
     private float coolTime = 5.0f;
     private float kMaxcoolTime = 5.0f;
@@ -19,6 +22,9 @@ public class CrowScript : MonoBehaviour
     public bool isTakeAway;
     float angleX;
     float angleY;
+    private GameObject player;
+    private int direction_ = 1;
+    float easetime = 1.0f;
     public enum Mode
     {
         stay,
@@ -32,6 +38,7 @@ public class CrowScript : MonoBehaviour
     void Start()
     {
         featherA = GetComponent<FeatherAParticlesManager>();
+        player = GameObject.Find("Player");
     }
 
     // Update is called once per frame
@@ -41,20 +48,25 @@ public class CrowScript : MonoBehaviour
         {
             case Mode.stay:
                 angleX += Time.deltaTime;
-                angleY += Time.deltaTime*10;
+                angleY += Time.deltaTime * 10;
                 FindClosestChild();
-               transform.position= Vector2.MoveTowards(transform.position, new((closestChild.transform.position.x+Mathf.Sin(angleX)*5), (14.0f+Mathf.Sin(angleY)*0.5f)), Time.deltaTime*moveSpeed);
+                transform.position = Vector2.MoveTowards(transform.position, new Vector2(targetPos.x + (10 * direction_), 14.0f), Time.deltaTime * moveSpeed);
                 coolTime -= Time.deltaTime;
-                if (coolTime < 0)
+                direction_ = UnityEngine.Random.Range(-1,2);
+
+
+                    if (coolTime < 0)
                 {
                     mode = Mode.attak;
+                    startPos = transform.position;
+                    easetime = 1.0f;
                 }
                 isTakeAway = false;
                 break;
             case Mode.attak:
                 coolTime = kMaxcoolTime;
                 Attak();
-                float distance = Vector2.Distance( transform.position, targetPos);
+                float distance = Vector2.Distance(transform.position, targetPos);
                 if (distance <= 0.1f)
                 {
                     mode = Mode.stay;
@@ -66,13 +78,19 @@ public class CrowScript : MonoBehaviour
 
                 break;
             case Mode.takeaway:
-                transform.position += new Vector3(0, moveSpeed, 0)*Time.deltaTime;
+                Vector3 direction = targetPos - transform.position;
+                // 方向ベクトルを正規化（長さを1にする）
+                direction.Normalize();
+                transform.position += new Vector3(-direction.x * moveSpeed, moveSpeed, 0) * Time.deltaTime;
                 closestChild.transform.position = transform.position;
                 closestChild.GetComponent<ChildManager>().isTakedAway = true;
-
+                if (transform.position.y > 20)
+                {
+                    Destroy(closestChild.gameObject);
+                    mode = Mode.stay;
+                    coolTime = kMaxcoolTime * 1.5f;
+                }
                 break;
-
-
 
         }
 
@@ -80,14 +98,11 @@ public class CrowScript : MonoBehaviour
 
     private void Attak()
     {
-        Vector3 direction = targetPos - transform.position;
-
-        // 方向ベクトルを正規化（長さを1にする）
-        direction.Normalize();
-
-        // 目標位置の方向に一定速度で移動
-        transform.position += direction * moveSpeed * Time.deltaTime;
-
+        easetime -= Time.deltaTime * 0.5f;
+        float t = (easetime / 1.0f);
+        float y = Mathf.Lerp(targetPos.y, startPos.y, EaseInSine(t));
+        float x = Mathf.Lerp(targetPos.x, startPos.x, EaseOutQuart(t));
+        transform.position = new Vector3(x, y, 0);
 
     }
 
@@ -108,19 +123,49 @@ public class CrowScript : MonoBehaviour
             }
         }
 
-       
+
         if (closestChild != null)
         {
             lockOn = true;
             targetPos = closestChild.transform.position;
-            
+
         }
         else
         {
             lockOn = false;
+            //targetPos = player.transform.position;
+            targetPos = Vector3.zero;
         }
     }
 
+    float EaseOutQuint(float t)
+    {
+        return 1 - Mathf.Pow(1 - t, 5);
+    }
+    float EaseInCubic(float t)
+    {
+        return t * t * t;
+    }
+
+    float EaseInBack(float t)
+    {
+        const float c1 = 1.70158f;
+        const float c3 = c1 + 1;
+
+        return c3 * t * t * t - c1 * t * t;
+    }
+    float EaseOutQuart(float t)
+    {
+        return 1 - Mathf.Pow(1 - t, 4);
+    }
+    float EaseInCirc(float t)
+    {
+        return 1 - Mathf.Sqrt(1 - Mathf.Pow(t, 2));
+    }
+    float EaseInSine(float t)
+    {
+        return 1 - Mathf.Cos((t * Mathf.PI) / 2);
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag(targetTag))
@@ -130,14 +175,14 @@ public class CrowScript : MonoBehaviour
                 mode = Mode.takeaway;
                 if (!isTakeAway) featherA.SetRunning(collision.transform.position);
                 isTakeAway = true;
-                
+
             }
-           
+
             //collision.gameObject.GetComponent<ChildManager>().isTakedAway = true;
             //closestChild.transform.parent = transform;
 
         }
-        else if (collision.CompareTag("Ground")&&!isTakeAway)
+        else if (collision.CompareTag("Ground") && !isTakeAway)
         {
             mode = Mode.stay;
         }
@@ -149,4 +194,8 @@ public class CrowScript : MonoBehaviour
             //closestChild.GetComponent<ChildManager>().isTakedAway = true;
         }
     }
+
+
 }
+
+

@@ -25,6 +25,7 @@ public class PlayerManager : MonoBehaviour
     AllChildScript allChild;
     // 子ガモを格納する
     private GameObject[] children;
+    public bool isJump;
 
     // 指示関係
     public bool orderLeft;      // 指示 - 左猛進
@@ -54,7 +55,17 @@ public class PlayerManager : MonoBehaviour
         Move();
         OrderChildren();
     }
-
+    private void FixedUpdate()
+    {
+        if (isJump)
+        {
+            float jumpForce = Jumpforce * Time.deltaTime;
+            rb.velocity = new Vector2(rb.velocity.x, Jumpforce);
+           // rb.AddForce(Vector3.up * Jumpforce, ForceMode2D.Impulse);
+            Debug.Log("jump");
+            isJump = false;
+        }
+    }
     private void OrderChildren()
     {
         // フラグを初期化する
@@ -153,11 +164,9 @@ public class PlayerManager : MonoBehaviour
         //ジャンプ処理（Y軸イドウ）
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            float jumpForce = Jumpforce * Time.deltaTime;
-            rb.velocity = new Vector2(rb.velocity.x, Jumpforce);
-            // rb.AddForce(Vector3.up * Jumpforce,ForceMode2D.Impulse);
-            Debug.Log("jump");
+            isJump = true;
         }
+       
 
     }
 
