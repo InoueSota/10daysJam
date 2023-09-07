@@ -55,11 +55,11 @@ public class ChildManager : MonoBehaviour
     // カラスの座標
     private Vector3 nearCrawPos = Vector3.zero;
     // １つずつ投げるためのフラグ
-    private static bool isThrow = false;
-    // １つずつ投げるためのクールタイム
-    private int throwCoolDown = 0;
+    private bool isThrow = false;
     // カラスに当たったかフラグ
     private bool isCrawHit = false;
+    // カラスに連れられたかフラグ
+    public bool isTakedAway = false;
 
     void Start()
     {
@@ -72,18 +72,6 @@ public class ChildManager : MonoBehaviour
 
     void Update()
     {
-        if (isThrow == false)
-        {
-            throwCoolDown = 0;
-        }
-        else { 
-            if(throwCoolDown == 1)
-            {
-                isThrow = false;
-            }
-            throwCoolDown++; 
-        }
-
         if (moveType == MoveType.STACK)
         {
             if (playerManager.orderRight == true)
@@ -136,22 +124,6 @@ public class ChildManager : MonoBehaviour
             isPiledUp = false;
             stackCount = 0;
             SetMove(0);
-        }
-
-        if (moveType != MoveType.ATTACKCROW)
-        {
-            if (playerManager.orderAttack == true && isThrow == false)
-            {
-                nearCrawPos = playerManager.GetNearCrawPos();
-                Vector3 playerPos = playerManager.transform.position;
-
-                this.transform.position = playerPos;
-
-                velocity = Vector3.Normalize(nearCrawPos - playerPos) * 16.0f;
-
-                isThrow = true;
-                SetMove(5);
-            }
         }
 
         Move();
@@ -298,5 +270,23 @@ public class ChildManager : MonoBehaviour
         {
             isCrawHit = true;
         }
+    }
+
+    public bool GetIsThrow()
+    {
+        return isThrow;
+    }
+
+    public void ThrowInitialize()
+    {
+        nearCrawPos = playerManager.GetNearCrawPos();
+        Vector3 playerPos = playerManager.transform.position;
+
+        this.transform.position = playerPos;
+
+        velocity = Vector3.Normalize(nearCrawPos - playerPos) * 16.0f;
+
+        isThrow = true;
+        SetMove(5);
     }
 }

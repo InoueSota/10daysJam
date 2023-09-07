@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static UnityEngine.GraphicsBuffer;
 
 public class CrowScript : MonoBehaviour
@@ -11,10 +12,11 @@ public class CrowScript : MonoBehaviour
     public string targetTag = "Child"; // åüçıëŒè€ÇÃTagñº
     public Vector3 targetPos;
     public float moveSpeed = 1.0f;
-
+    private float coolTime = 5.0f;
+    private float kMaxcoolTime = 5.0f;
     private Transform closestChild = null;
     public bool lockOn;
-    // public bool takeAway;
+    public bool isTakeAway;
     public enum Mode
     {
         stay,
@@ -38,14 +40,22 @@ public class CrowScript : MonoBehaviour
             case Mode.stay:
 
                 FindClosestChild();
-
+               transform.position= Vector2.MoveTowards(transform.position, new((closestChild.transform.position.x+Mathf.Sin()), (14.0f+Mathf.Sin(Time.deltaTime))), Time.deltaTime*moveSpeed);
+                coolTime -= Time.deltaTime;
+                if (coolTime < 0)
+                {
+                    mode = Mode.attak;
+                }
+                isTakeAway = false;
                 break;
             case Mode.attak:
-
-
+                coolTime = kMaxcoolTime;
                 Attak();
-
-
+                float distance = Vector2.Distance( transform.position, targetPos);
+                if (distance <= 0.1f)
+                {
+                    mode = Mode.stay;
+                }
                 break;
             case Mode.leave:
 
@@ -55,6 +65,8 @@ public class CrowScript : MonoBehaviour
             case Mode.takeaway:
                 transform.position += new Vector3(0, moveSpeed, 0)*Time.deltaTime;
                 closestChild.transform.position = transform.position;
+                closestChild.GetComponent<ChildManager>().isTakedAway = true;
+
                 break;
 
 
@@ -110,10 +122,27 @@ public class CrowScript : MonoBehaviour
     {
         if (collision.CompareTag(targetTag))
         {
-            mode = Mode.takeaway;
+            if (mode == Mode.attak)
+            {
+                mode = Mode.takeaway;
+                if (!isTakeAway) featherA.SetRunning(collision.transform.position);
+                isTakeAway = true;
+            }
+           
+            //collision.gameObject.GetComponent<ChildManager>().isTakedAway = true;
             //closestChild.transform.parent = transform;
 
-            featherA.SetRunning(collision.transform.position);
+        }
+        else if (collision.CompareTag("Ground")&&!isTakeAway)
+        {
+            mode = Mode.stay;
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag(targetTag))
+        {
+            //closestChild.GetComponent<ChildManager>().isTakedAway = true;
         }
     }
 }
