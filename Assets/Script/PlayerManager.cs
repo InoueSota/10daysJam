@@ -18,7 +18,7 @@ public class PlayerManager : MonoBehaviour
         LEFT,
         RIGHT
     }
-    DIRECTION direction = DIRECTION.LEFT;
+    DIRECTION direction = DIRECTION.RIGHT;
 
     // 全子ガモ
     public GameObject allChildObj;
@@ -142,13 +142,21 @@ public class PlayerManager : MonoBehaviour
         {
             inputMove.x = -1f;
             direction = DIRECTION.LEFT;
-            sP.flipX = true;
+            if (!sP.flipX)
+            {
+                allChild.DiffInitialize();
+                sP.flipX = true;
+            }
         }
         else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
             inputMove.x = 1f;
             direction = DIRECTION.RIGHT;
-            sP.flipX = false;
+            if (sP.flipX)
+            {
+                allChild.DiffInitialize();
+                sP.flipX = false;
+            }
         }
         //ジャンプ処理（Y軸イドウ）
         if (Input.GetKeyDown(KeyCode.Space))

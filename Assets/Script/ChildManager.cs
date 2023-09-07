@@ -7,17 +7,17 @@ using UnityEngine;
 public class ChildManager : MonoBehaviour
 {
     private Rigidbody2D rb;
-    float halfSize = 0f;
+    private float halfSize = 0f;
 
     // 親ガモを追いかける
     public GameObject player;
-    PlayerManager playerManager;
+    private PlayerManager playerManager;
     // どれくらいの差か
-    [SerializeField] float diffValue = 0f;
-    Vector3 diffPosition = Vector3.zero;
-    float diff = 0f;
+    [SerializeField]private Vector3 diffPosition = Vector3.zero;
+    private float diff = 0f;
+    public bool isAddDiff = false;
     // 追いかける強さ
-    [SerializeField] float followPower = 0f;
+    [SerializeField] private float followPower = 0f;
 
     // プレイヤーの向き
     private int playerDirection = 1;
@@ -34,10 +34,10 @@ public class ChildManager : MonoBehaviour
     [SerializeField] private MoveType moveType = MoveType.FOLLOW;
 
     // 猛進速度
-    [SerializeField] float dashSpeed = 8f;
+    [SerializeField] private float dashSpeed = 8f;
 
     // 基本移動速度
-    Vector3 velocity = Vector3.zero;
+    private Vector3 velocity = Vector3.zero;
 
     // 速度を方向に応じて変化させる
     private int orderDirection = 0;
@@ -168,39 +168,83 @@ public class ChildManager : MonoBehaviour
 
                 break;
         }
+
+        rb.velocity = velocity;
     }
 
-    //動きをセットする
+    // 動きをセットする
     public void ChangeMoveType(MoveType nextMoveType)
     {
         moveType = nextMoveType;
     }
 
-    //フォロー時の動き
+    void GetPlayerDiffPosition()
+    {
+        if (!isAddDiff)
+        {
+            if (Mathf.Abs(player.transform.position.x - transform.position.x) < 0.2f)
+            {
+                if (playerDirection == 0)
+                {
+                    diff = transform.parent.gameObject.GetComponent<AllChildScript>().AddDiffSize();
+                }
+                else
+                {
+                    diff = -transform.parent.gameObject.GetComponent<AllChildScript>().AddDiffSize();
+                }
+                isAddDiff = true;
+            }
+            else
+            {
+                // 親の方に行く - 左
+                if (player.transform.position.x - transform.position.x < 0f)
+                {
+                    velocity.x = -10.0f;
+                }
+                // 親の方に行く - 右
+                else
+                {
+                    velocity.x = 10.0f;
+                }
+            }
+        }
+        diffPosition = new(player.transform.position.x + diff, transform.position.y, transform.position.z);
+    }
+
+    // フォロー時の動き
     void MoveFollow()
     {
+        // 親とどれくらい離れるかを取得
         GetPlayerDiffPosition();
-        
-        transform.position += new Vector3(diffPosition.x - transform.position.x, 0f, 0f) * (followPower * Time.deltaTime);
 
-        velocity.y -= 3.0f * Time.deltaTime * 9.81f;
-        rb.velocity = velocity;
-
-        if (isThrow && Vector3.Distance(diffPosition, transform.position) < 0.2f)
+        if (isAddDiff)
         {
-            isThrow = false;
+            if (Mathf.Abs(diffPosition.x - transform.position.x) < 1.0f)
+            {
+                // 離れた座標に向かう
+                transform.position += new Vector3(diffPosition.x - transform.position.x, 0f, 0f) * (followPower * Time.deltaTime);
+                velocity = Vector3.zero;
+            }
+            else
+            {
+                // 親の方に行く - 左
+                if (diffPosition.x - transform.position.x < 0f)
+                {
+                    velocity.x = -10.0f;
+                }
+                // 親の方に行く - 右
+                else
+                {
+                    velocity.x = 10.0f;
+                }
+            }
         }
     }
 
     //ダッシュ時の動き
     void MoveDash()
     {
-        velocity = Vector3.zero;
-
-        velocity.x = dashSpeed;
-
-        velocity.x *= orderDirection;
-        rb.velocity = velocity;
+        velocity.x = dashSpeed * orderDirection;
     }
 
     void MoveStack()
@@ -217,8 +261,6 @@ public class ChildManager : MonoBehaviour
     {
         velocity.y -= 3.0f * Time.deltaTime * 9.81f;
         velocity.x -= 3.0f * Time.deltaTime;
-        
-        rb.velocity = velocity;
     }
 
     void MoveAttackCrow()
@@ -240,22 +282,6 @@ public class ChildManager : MonoBehaviour
                 ChangeMoveType(MoveType.FOLLOW);
             }
         }
-        rb.velocity = velocity;
-    }
-
-    void GetPlayerDiffPosition()
-    {
-        // 左を向いているとき
-        if (playerDirection == 0)
-        {
-            diff = diffValue;
-        }
-        // 右を向いているとき
-        else
-        {
-            diff = -diffValue;
-        }
-        diffPosition = new(player.transform.position.x + diff, transform.position.y, transform.position.z);
     }
 
     void ImageFlip()
