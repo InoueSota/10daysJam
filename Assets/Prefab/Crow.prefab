@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7514164298105999575}
   - component: {fileID: 7514164298105999569}
   - component: {fileID: 5098290474370891436}
+  - component: {fileID: 6700715944245316401}
   m_Layer: 0
   m_Name: Crow
   m_TagString: Crow
@@ -129,3 +130,22 @@ MonoBehaviour:
   moveSpeed: 1
   LockOn: 0
   mode: 0
+--- !u!114 &6700715944245316401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7514164298105999574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ef555098799743498eec6bd66613dd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generateCount: 10
+  shotAngleRand: 45
+  particle: {fileID: 2149657176416664010, guid: 43afa3c59c8c3f040b06539cd111929b, type: 3}
+  shotDistance: 1
+  shotDistanceRand: 0.2
+  RunTimeMax: 0.5
+  RunTimeMaxRand: 0.2
