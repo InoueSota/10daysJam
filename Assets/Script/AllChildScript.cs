@@ -4,48 +4,34 @@ using UnityEngine;
 
 public class AllChildScript : MonoBehaviour
 {
-   public int childCount;
-    Transform parentTransform;
-    public int PineNum;
-    // Start is called before the first frame update
+    public int stackCount;
+
     void Start()
     {
-        //// 親オブジェクトのTransformコンポーネントを取得
-        //parentTransform = transform;
-        //// 子オブジェクトの数を数える
-        //childCount = parentTransform.childCount;
         // 最初に一度だけ子オブジェクトを数える
-        CountPineNum();
-
+        CountStackCount();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        CountPineNum();
+        CountStackCount();
     }
 
-    void CountPineNum()
+    void CountStackCount()
     {
-        PineNum = 0;
+        stackCount = 0;
 
         // 子オブジェクトをループして条件をチェック
         foreach (Transform child in transform)
         {
             ChildManager childManager = child.GetComponent<ChildManager>();
-            if (childManager != null && childManager.isPileUpped)
+            if (childManager != null && childManager.isPiledUp)
             {
-                PineNum++;
+                stackCount++;
             }
         }
 
         // 結果をコンソールに出力
-        Debug.Log("PineNum: " + PineNum);
+        Debug.Log("stackCount: " + stackCount);
     }
-
-
-
-
-
-
 }

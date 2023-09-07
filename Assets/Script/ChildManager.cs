@@ -9,52 +9,57 @@ public class ChildManager : MonoBehaviour
     private Rigidbody2D rb;
     float halfSize = 0f;
 
-    // プレイヤーとの差分座標を目掛ける
+    // 親ガモを追いかける
     public GameObject player;
     PlayerManager playerManager;
+    // どれくらいの差か
     [SerializeField] float diffValue = 0f;
-    [SerializeField] float followValue = 0f;
-    float diff = 0f;
     Vector2 diffPosition = Vector2.zero;
+    float diff = 0f;
+    // 追いかける強さ
+    [SerializeField] float followPower = 0f;
 
+    // プレイヤーの向き
     private int playerDirection = 1;
-
-    [SerializeField] float dashSpeed = 8f;
 
     private enum MoveType
     {
-        Follow,//親についていく
-        Dash,//突撃
-        Stack,//かさねる
-        StackAttack,
-        Stay,//そのばたいき
-        AttackCraw,
+        FOLLOW,     // 親についていく
+        DASH,       // 猪突猛進
+        STACK,      // 積む
+        STACKATTACK,// 積まれた状態の攻撃
+        STAY,       // その場に待機
+        ATTACKCROW, // カラスに攻撃
     }
+    [SerializeField] private MoveType moveType = MoveType.FOLLOW;
 
-    [SerializeField] private MoveType moveType = MoveType.Follow;
+    // 猛進速度
+    [SerializeField] float dashSpeed = 8f;
 
-    Vector3 vec = Vector3.zero;
+    // 基本移動速度
+    Vector3 velocity = Vector3.zero;
 
+    // 速度を方向に応じて変化させる
+    private int orderDirection = 0;
+    const int kLeft = -1;
+    const int kRight = 1;
 
-    private int OrderDirection = 0;
-
+    // 積み上げの高さをカウントで変える
     private static int stackCount = 0;
     private int stackIndex = 0;
-
-    public bool isPileUpped = false;
-
+    // 積み上げフラグ
+    public bool isPiledUp = false;
+    // 積み上げ座標
     private Vector3 stackPos = Vector3.zero;
 
+    // カラスの座標
     private Vector3 nearCrawPos = Vector3.zero;
+    // １つずつ投げるためのフラグ
     private static bool isThrow = false;
-
+    // １つずつ投げるためのクールタイム
     private int throwCoolDown = 0;
+    // カラスに当たったかフラグ
     private bool isCrawHit = false;
-
-
-    private Vector3 prePos = Vector3.zero;
-
-    private bool direction = false;
 
     void Start()
     {
@@ -63,14 +68,10 @@ public class ChildManager : MonoBehaviour
 
         transform.position = new Vector3(transform.position.x, halfSize, transform.position.z);
         playerManager = player.GetComponent<PlayerManager>();
-
-        prePos = this.transform.position;
     }
 
     void Update()
     {
-        prePos = this.transform.position;
-
         if (isThrow == false)
         {
             throwCoolDown = 0;
@@ -83,26 +84,26 @@ public class ChildManager : MonoBehaviour
             throwCoolDown++; 
         }
 
-        if (moveType == MoveType.Stack)
+        if (moveType == MoveType.STACK)
         {
             if (playerManager.orderRight == true)
             {
-                OrderDirection = 1;
+                orderDirection = kRight;
 
-                vec.x = dashSpeed * OrderDirection;
-                vec.y = dashSpeed;
+                velocity.x = dashSpeed * orderDirection;
+                velocity.y = dashSpeed;
                 stackCount = 0;
-                isPileUpped = false;
+                isPiledUp = false;
                 SetMove(3);
             }
             if (playerManager.orderLeft == true)
             {
-                OrderDirection = -1;
+                orderDirection = kLeft;
 
-                vec.x = dashSpeed * OrderDirection;
-                vec.y = dashSpeed;
-                isPileUpped = false;
+                velocity.x = dashSpeed * orderDirection;
+                velocity.y = dashSpeed;
                 stackCount = 0;
+                isPiledUp = false;
                 SetMove(3);
             }
         }
@@ -110,39 +111,34 @@ public class ChildManager : MonoBehaviour
         {
             if (playerManager.orderRight == true)
             {
-                OrderDirection = 1;
+                orderDirection = kRight;
                 SetMove(1);
             }
 
             if (playerManager.orderLeft == true)
             {
-                OrderDirection = -1;
+                orderDirection = kLeft;
                 SetMove(1);
             }
 
-            if (playerManager.orderPileUp == true)
+            if (playerManager.orderStack == true)
             {
                 stackIndex = stackCount;
                 stackPos.x = playerManager.transform.position.x;
                 stackPos.y = (playerManager.transform.position.y + playerManager.transform.localScale.y * 0.5f) + transform.localScale.y * 0.5f;
-                isPileUpped = true;
+                isPiledUp = true;
                 SetMove(2);
                 stackCount++;
             }
         }
-        if(playerManager.orderDown == true)
+        if (playerManager.orderDown == true)
         {
-            Vector3 vec = Vector3.zero;
-
-            vec.x = 0.0f;
-            vec.y = 0.0f;
-
-            isPileUpped = false;
+            isPiledUp = false;
             stackCount = 0;
             SetMove(0);
         }
 
-        if (moveType != MoveType.AttackCraw)
+        if (moveType != MoveType.ATTACKCROW)
         {
             if (playerManager.orderAttack == true && isThrow == false)
             {
@@ -151,7 +147,7 @@ public class ChildManager : MonoBehaviour
 
                 this.transform.position = playerPos;
 
-                vec = Vector3.Normalize(nearCrawPos - playerPos) * 16.0f;
+                velocity = Vector3.Normalize(nearCrawPos - playerPos) * 16.0f;
 
                 isThrow = true;
                 SetMove(5);
@@ -160,16 +156,7 @@ public class ChildManager : MonoBehaviour
 
         Move();
 
-        if (prePos.x - this.transform.position.x < 0.0f)
-        {
-            direction = false;
-        }
-        else if (prePos.x - this.transform.position.x > 0.0f)
-        {
-            direction = true;
-        }
-
-        this.GetComponent<SpriteRenderer>().flipX = direction;
+        ImageFlip();
     }
 
     void Move()
@@ -178,23 +165,23 @@ public class ChildManager : MonoBehaviour
 
         switch (moveType)
         {
-            case MoveType.Follow:
+            case MoveType.FOLLOW:
 
                 MoveFollow();
 
                 break;
-            case MoveType.Dash:
+            case MoveType.DASH:
 
                 MoveDash();
 
                 break;
-            case MoveType.Stack:
+            case MoveType.STACK:
 
                 MoveStack();
 
                 break;
 
-            case MoveType.StackAttack:
+            case MoveType.STACKATTACK:
 
                 MoveStackAttack();
 
@@ -202,7 +189,7 @@ public class ChildManager : MonoBehaviour
             //case MoveType.Stay:
 
             //    break;
-            case MoveType.AttackCraw:
+            case MoveType.ATTACKCROW:
 
                 MoveAttackCraw();
 
@@ -221,21 +208,21 @@ public class ChildManager : MonoBehaviour
     {
         GetPlayerDiffPosition();
         
-        transform.position += new Vector3(diffPosition.x - transform.position.x, 0f, 0f) * (followValue * Time.deltaTime);
+        transform.position += new Vector3(diffPosition.x - transform.position.x, 0f, 0f) * (followPower * Time.deltaTime);
 
-        vec.y -= 3.0f * Time.deltaTime * 9.81f;
-        rb.velocity = vec;
+        velocity.y -= 3.0f * Time.deltaTime * 9.81f;
+        rb.velocity = velocity;
     }
 
     //ダッシュ時の動き
     void MoveDash()
     {
-        vec = Vector3.zero;
+        velocity = Vector3.zero;
 
-        vec.x = dashSpeed;
-        
-        vec.x *= OrderDirection;
-        rb.velocity = vec;
+        velocity.x = dashSpeed;
+
+        velocity.x *= orderDirection;
+        rb.velocity = velocity;
     }
 
     void MoveStack()
@@ -250,18 +237,18 @@ public class ChildManager : MonoBehaviour
 
     void MoveStackAttack()
     {
-        vec.y -= 3.0f * Time.deltaTime * 9.81f;
-        vec.x -= 3.0f * Time.deltaTime ;
+        velocity.y -= 3.0f * Time.deltaTime * 9.81f;
+        velocity.x -= 3.0f * Time.deltaTime ;
         
-        rb.velocity = vec;
+        rb.velocity = velocity;
     }
 
     void MoveAttackCraw()
     {
         if(isCrawHit == true)
         {
-            vec.x = 0;
-            vec.y -= 8.0f * Time.deltaTime * 9.81f;
+            velocity.x = 0;
+            velocity.y -= 8.0f * Time.deltaTime * 9.81f;
 
             if (this.transform.position.y < 0.55f)
             {
@@ -270,7 +257,7 @@ public class ChildManager : MonoBehaviour
             }
         }
 
-        rb.velocity = vec;
+        rb.velocity = velocity;
     }
 
     void GetPlayerDiffPosition()
@@ -287,6 +274,22 @@ public class ChildManager : MonoBehaviour
         }
 
         diffPosition = new(player.transform.position.x + diff, player.transform.position.y);
+    }
+
+    void ImageFlip()
+    {
+        // 画像の反転処理は親ガモ依存なので、指示を受けたら反転しないようにする
+
+        bool isFlipX;
+        if (playerDirection == 0)
+        {
+            isFlipX = true;
+        }
+        else
+        {
+            isFlipX = false;
+        }
+        this.GetComponent<SpriteRenderer>().flipX = isFlipX;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

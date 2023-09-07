@@ -21,9 +21,9 @@ public class PlayerManager : MonoBehaviour
     DIRECTION direction = DIRECTION.LEFT;
 
     // 指示関係
-    public bool orderPileUp;    // 指示 - 子鴨を積み上げている状態  
-    public bool orderRight;     // 指示 - 右猛進
     public bool orderLeft;      // 指示 - 左猛進
+    public bool orderRight;     // 指示 - 右猛進
+    public bool orderStack;     // 指示 - 積み上げ
     public bool orderDown;      // 指示 - 集合,待機
     public bool orderAttack;    // 指示 - カラスに攻撃
 
@@ -48,9 +48,10 @@ public class PlayerManager : MonoBehaviour
 
     private void OrderChildren()
     {
+        // フラグを初期化する
         orderLeft = false;
         orderRight = false;
-        orderPileUp = false;
+        orderStack = false;
         orderDown = false;
         orderAttack = false;
 
@@ -63,6 +64,7 @@ public class PlayerManager : MonoBehaviour
         {
             this.GetComponent<SpriteRenderer>().color = Color.white;
 
+            // 指示 - 左猛進
             if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
             {
                 if (Input.GetKeyDown(KeyCode.J))
@@ -70,6 +72,7 @@ public class PlayerManager : MonoBehaviour
                     orderLeft = true;
                 }
             }
+            // 指示 - 右猛進
             else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
             {
                 if (Input.GetKeyDown(KeyCode.J))
@@ -77,13 +80,15 @@ public class PlayerManager : MonoBehaviour
                     orderRight = true;
                 }
             }
+            // 指示 - 積み上げ
             else if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
             {
                 if (Input.GetKeyDown(KeyCode.J))
                 {
-                    orderPileUp = true;
+                    orderStack = true;
                 }
             }
+            // 指示 - 集合,待機
             else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
             {
                 if (Input.GetKeyDown(KeyCode.J))
@@ -94,8 +99,9 @@ public class PlayerManager : MonoBehaviour
         }
         else
         {
-            this.GetComponent<SpriteRenderer>().color = Color.red; 
+            this.GetComponent<SpriteRenderer>().color = Color.red;
 
+            // 指示 - カラスに攻撃
             if (Input.GetKeyDown(KeyCode.J))
             {
                 orderAttack = true;
