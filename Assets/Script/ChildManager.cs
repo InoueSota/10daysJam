@@ -282,7 +282,6 @@ public class ChildManager : MonoBehaviour
         ChangeMoveType(MoveType.STACKATTACK);
     }
 
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Crow"))

@@ -130,11 +130,11 @@ public class CrowScript : MonoBehaviour
                 isTakeAway = true;
                 
             }
-           
+
             //collision.gameObject.GetComponent<ChildManager>().isTakedAway = true;
             //closestChild.transform.parent = transform;
 
-        //}
+        }
         //else if (collision.CompareTag("Ground")&&!isTakeAway)
         //{
         //    mode = Mode.stay;
