@@ -49,6 +49,11 @@ public class PlayerManager : MonoBehaviour
         children = new GameObject[30];
     }
 
+    private void FixedUpdate()
+    {
+        
+    }
+
     void Update()
     {
         InputMove();
@@ -79,6 +84,7 @@ public class PlayerManager : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.J))
                 {
+                    allChild.DiffInitialize();
                     orderLeft = true;
                 }
             }
@@ -87,6 +93,7 @@ public class PlayerManager : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.J))
                 {
+                    allChild.DiffInitialize();
                     orderRight = true;
                 }
             }
@@ -96,6 +103,7 @@ public class PlayerManager : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.J))
                 {
                     allChild.stackCount = 0;
+                    allChild.DiffInitialize();
                     orderStack = true;
                 }
             }
@@ -198,7 +206,6 @@ public class PlayerManager : MonoBehaviour
         {
             float jumpForce = Jumpforce * Time.deltaTime;
             rb.velocity = new Vector2(rb.velocity.x, Jumpforce);
-            // rb.AddForce(Vector3.up * Jumpforce,ForceMode2D.Impulse);
             Debug.Log("jump");
         }
 

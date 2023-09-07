@@ -76,6 +76,11 @@ public class ChildManager : MonoBehaviour
         playerManager = player.GetComponent<PlayerManager>();
     }
 
+    private void FixedUpdate()
+    {
+        rb.velocity = velocity;
+    }
+
     void Update()
     {
         // カラスに連れられていないとき
@@ -178,7 +183,6 @@ public class ChildManager : MonoBehaviour
                 break;
         }
 
-        rb.velocity = velocity;
     }
 
     // 動きをセットする
