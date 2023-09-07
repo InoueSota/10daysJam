@@ -2,17 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static UnityEngine.GraphicsBuffer;
 
 public class CrowScript : MonoBehaviour
 {
+    private FeatherAParticlesManager featherA;
+
     public string targetTag = "Child"; // 検索対象のTag名
     public Vector3 targetPos;
     public float moveSpeed = 1.0f;
-
+    private float coolTime = 5.0f;
+    private float kMaxcoolTime = 5.0f;
     private Transform closestChild = null;
-    public bool LockOn;
-    // public bool takeAway;
+    public bool lockOn;
+    public bool isTakeAway;
     public enum Mode
     {
         stay,
@@ -25,7 +29,7 @@ public class CrowScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        featherA = GetComponent<FeatherAParticlesManager>();
     }
 
     // Update is called once per frame
@@ -36,14 +40,22 @@ public class CrowScript : MonoBehaviour
             case Mode.stay:
 
                 FindClosestChild();
-
+               transform.position= Vector2.MoveTowards(transform.position, new(closestChild.transform.position.x, 15.0f), Time.deltaTime*moveSpeed);
+                coolTime -= Time.deltaTime;
+                if (coolTime < 0)
+                {
+                    mode = Mode.attak;
+                }
+                isTakeAway = false;
                 break;
             case Mode.attak:
-
-
+                coolTime = kMaxcoolTime;
                 Attak();
-
-
+                float distance = Vector2.Distance( transform.position, targetPos);
+                if (distance <= 0.1f)
+                {
+                    mode = Mode.stay;
+                }
                 break;
             case Mode.leave:
 
@@ -91,17 +103,16 @@ public class CrowScript : MonoBehaviour
             }
         }
 
-        // closestChildがnullでなければ、最も近い子オブジェクトが見つかったことになります
+       
         if (closestChild != null)
         {
-            LockOn = true;
+            lockOn = true;
             targetPos = closestChild.transform.position;
-            // ここでclosestChildを使って何かを行うことができます
-            // 例: closestChild.GetComponent<YourComponent>().DoSomething();
+            
         }
         else
         {
-            LockOn = false;
+            lockOn = false;
         }
     }
 
@@ -110,7 +121,14 @@ public class CrowScript : MonoBehaviour
         if (collision.CompareTag(targetTag))
         {
             mode = Mode.takeaway;
+            if(!isTakeAway)featherA.SetRunning(collision.transform.position);
+            isTakeAway = true;
             //closestChild.transform.parent = transform;
+
+        }
+        else if (collision.CompareTag("Ground")&&!isTakeAway)
+        {
+            mode = Mode.stay;
         }
     }
 }
