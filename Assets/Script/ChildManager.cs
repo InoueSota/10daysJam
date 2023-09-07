@@ -58,6 +58,8 @@ public class ChildManager : MonoBehaviour
     private bool isThrow = false;
     // カラスに当たったかフラグ
     private bool isCrawHit = false;
+    // カラスに連れられたかフラグ
+    public bool isTakedAway = false;
 
     void Start()
     {
