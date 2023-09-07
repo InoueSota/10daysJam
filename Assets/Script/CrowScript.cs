@@ -11,7 +11,7 @@ public class CrowScript : MonoBehaviour
 {
     private FeatherAParticlesManager featherA;
 
-    public string targetTag = "Child"; // ï¿½ï¿½ï¿½ï¿½ï¿½ÎÛ‚ï¿½Tagï¿½ï¿½
+    public string targetTag = "Child"; // E½E½E½E½E½ÎÛ‚ï¿½TagE½E½
     public Vector3 targetPos;
     public Vector3 startPos;
     public float moveSpeed = 1.0f;
@@ -79,10 +79,11 @@ public class CrowScript : MonoBehaviour
                 break;
             case Mode.takeaway:
                 Vector3 direction = targetPos - transform.position;
-                // æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ­£è¦åŒ–ï¼ˆé•·ã•ã‚’1ã«ã™ã‚‹ï¼‰
+                // •ûŒüƒxƒNƒgƒ‹‚ğ³‹K‰»i’·‚³‚ğ1‚É‚·‚éj
                 direction.Normalize();
                 transform.position += new Vector3(-direction.x * moveSpeed, moveSpeed, 0) * Time.deltaTime;
                 closestChild.transform.position = transform.position;
+<<<<<<< HEAD
                 closestChild.GetComponent<ChildManager>().isTakedAway = true;
                 if (transform.position.y > 20)
                 {
@@ -90,6 +91,8 @@ public class CrowScript : MonoBehaviour
                     mode = Mode.stay;
                     coolTime = kMaxcoolTime * 1.5f;
                 }
+=======
+>>>>>>> 0922b93b1ad63e6cb178ced5afbd52a925b7169b
                 break;
 
         }
@@ -98,11 +101,22 @@ public class CrowScript : MonoBehaviour
 
     private void Attak()
     {
+<<<<<<< HEAD
         easetime -= Time.deltaTime * 0.5f;
         float t = (easetime / 1.0f);
         float y = Mathf.Lerp(targetPos.y, startPos.y, EaseInSine(t));
         float x = Mathf.Lerp(targetPos.x, startPos.x, EaseOutQuart(t));
         transform.position = new Vector3(x, y, 0);
+=======
+        Vector3 direction = targetPos - transform.position;
+
+        // E½E½E½E½E½xE½NE½gE½E½E½ğ³‹KE½E½E½iE½E½E½E½E½E½1E½É‚ï¿½E½E½j
+        direction.Normalize();
+
+        // E½Ú•WE½Ê’uE½Ì•ï¿½E½E½E½Éˆï¿½è‘¬E½xE½ÅˆÚ“ï¿½
+        transform.position += direction * moveSpeed * Time.deltaTime;
+
+>>>>>>> 0922b93b1ad63e6cb178ced5afbd52a925b7169b
 
     }
 
@@ -182,6 +196,7 @@ public class CrowScript : MonoBehaviour
             //closestChild.transform.parent = transform;
 
         }
+<<<<<<< HEAD
         else if (collision.CompareTag("Ground") && !isTakeAway)
         {
             mode = Mode.stay;
@@ -193,6 +208,12 @@ public class CrowScript : MonoBehaviour
         {
             //closestChild.GetComponent<ChildManager>().isTakedAway = true;
         }
+=======
+        //else if (collision.CompareTag("Ground")&&!isTakeAway)
+        //{
+        //    mode = Mode.stay;
+        //}
+>>>>>>> 0922b93b1ad63e6cb178ced5afbd52a925b7169b
     }
 
 
