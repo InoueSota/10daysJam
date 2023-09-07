@@ -34,4 +34,16 @@ public class AllChildScript : MonoBehaviour
         // 結果をコンソールに出力
         Debug.Log("stackCount: " + stackCount);
     }
+
+    public void AddChildObjects(GameObject[] children)
+    {
+        // 子を数える
+        int childCount = 0;
+
+        foreach (Transform child in transform)
+        {
+            children[childCount] = child.gameObject;
+            childCount++;
+        }
+    }
 }

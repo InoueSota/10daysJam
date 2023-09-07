@@ -20,6 +20,12 @@ public class PlayerManager : MonoBehaviour
     }
     DIRECTION direction = DIRECTION.LEFT;
 
+    // 全子ガモ
+    public GameObject allChildObj;
+    AllChildScript allChild;
+    // 子ガモを格納する
+    private GameObject[] children;
+
     // 指示関係
     public bool orderLeft;      // 指示 - 左猛進
     public bool orderRight;     // 指示 - 右猛進
@@ -37,6 +43,9 @@ public class PlayerManager : MonoBehaviour
         sP = GetComponent<SpriteRenderer>();
         halfSize = transform.localScale.x * 0.5f;
         transform.position = new (transform.position.x + halfSize, transform.position.y + halfSize, transform.position.z);
+
+        allChild = allChildObj.GetComponent<AllChildScript>();
+        children = new GameObject[30];
     }
 
     void Update()
@@ -104,6 +113,21 @@ public class PlayerManager : MonoBehaviour
             // 指示 - カラスに攻撃
             if (Input.GetKeyDown(KeyCode.J))
             {
+                allChild.AddChildObjects(children);
+
+                for (int i = 0; i < children.GetLength(0); i++)
+                {
+                    ChildManager childManager = null;
+                    if (children[i])
+                    {
+                        childManager = children[i].GetComponent<ChildManager>();
+                    }
+                    if (childManager && !childManager.GetIsThrow())
+                    {
+                        childManager.ThrowInitialize();
+                        break;
+                    }
+                }
                 orderAttack = true;
             }
         }
@@ -150,7 +174,6 @@ public class PlayerManager : MonoBehaviour
 
     private GameObject SearchCrow()
     {
-
         targets = GameObject.FindGameObjectsWithTag("Crow");
         GameObject nearCrow = null;
 
