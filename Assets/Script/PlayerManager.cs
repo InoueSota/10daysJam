@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
@@ -18,7 +19,7 @@ public class PlayerManager : MonoBehaviour
         LEFT,
         RIGHT
     }
-    DIRECTION direction = DIRECTION.LEFT;
+    DIRECTION direction = DIRECTION.RIGHT;
 
     // 全子ガモ
     public GameObject allChildObj;
@@ -46,6 +47,11 @@ public class PlayerManager : MonoBehaviour
 
         allChild = allChildObj.GetComponent<AllChildScript>();
         children = new GameObject[30];
+    }
+
+    private void FixedUpdate()
+    {
+        
     }
 
     void Update()
@@ -78,6 +84,7 @@ public class PlayerManager : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.J))
                 {
+                    allChild.DiffInitialize();
                     orderLeft = true;
                 }
             }
@@ -86,6 +93,7 @@ public class PlayerManager : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.J))
                 {
+                    allChild.DiffInitialize();
                     orderRight = true;
                 }
             }
@@ -94,6 +102,8 @@ public class PlayerManager : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.J))
                 {
+                    allChild.stackCount = 0;
+                    allChild.DiffInitialize();
                     orderStack = true;
                 }
             }
@@ -102,6 +112,7 @@ public class PlayerManager : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.J))
                 {
+                    allChild.DiffInitialize();
                     orderDown = true;
                 }
             }
@@ -115,6 +126,9 @@ public class PlayerManager : MonoBehaviour
             {
                 allChild.AddChildObjects(children);
 
+                GameObject nearChild = null;
+                int nearChildNumber = 0;
+                bool isAssignment = false;
                 for (int i = 0; i < children.GetLength(0); i++)
                 {
                     ChildManager childManager = null;
@@ -122,11 +136,40 @@ public class PlayerManager : MonoBehaviour
                     {
                         childManager = children[i].GetComponent<ChildManager>();
                     }
-                    if (childManager && !childManager.isTakedAway && !childManager.GetIsThrow())
+                    if (childManager && !childManager.isTakedAway && !childManager.GetIsThrow() && childManager.isAddDiff)
                     {
-                        childManager.ThrowInitialize();
-                        break;
+                        if (!isAssignment || (nearChild && Vector3.Distance(nearChild.transform.position, transform.position) > Vector3.Distance(children[i].transform.position, transform.position)))
+                        {
+                            nearChild = children[i];
+                            nearChildNumber = i;
+                            isAssignment = true;
+                        }
                     }
+                }
+
+                if (nearChild)
+                {
+                    ChildManager childManager = null;
+                    if (nearChild)
+                    {
+                        childManager = nearChild.GetComponent<ChildManager>();
+                    }
+                    childManager.ThrowInitialize();
+                    for (int i = 0; i < children.GetLength(0); i++)
+                    {
+                        if (children[i] && nearChildNumber != i)
+                        {
+                            if (direction == DIRECTION.LEFT)
+                            {
+                                children[i].GetComponent<ChildManager>().diff -= 1.5f;
+                            }
+                            else
+                            {
+                                children[i].GetComponent<ChildManager>().diff += 1.5f;
+                            }
+                        }
+                    }
+                    allChild.SubtractDiffSize();
                 }
                 orderAttack = true;
             }
@@ -142,20 +185,27 @@ public class PlayerManager : MonoBehaviour
         {
             inputMove.x = -1f;
             direction = DIRECTION.LEFT;
-            sP.flipX = true;
+            if (!sP.flipX)
+            {
+                allChild.DiffInitialize();
+                sP.flipX = true;
+            }
         }
         else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
             inputMove.x = 1f;
             direction = DIRECTION.RIGHT;
-            sP.flipX = false;
+            if (sP.flipX)
+            {
+                allChild.DiffInitialize();
+                sP.flipX = false;
+            }
         }
         //ジャンプ処理（Y軸イドウ）
         if (Input.GetKeyDown(KeyCode.Space))
         {
             float jumpForce = Jumpforce * Time.deltaTime;
             rb.velocity = new Vector2(rb.velocity.x, Jumpforce);
-            // rb.AddForce(Vector3.up * Jumpforce,ForceMode2D.Impulse);
             Debug.Log("jump");
         }
 
