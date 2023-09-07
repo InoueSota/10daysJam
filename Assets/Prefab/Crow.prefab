@@ -126,6 +126,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetTag: Child
   targetPos: {x: 0, y: 0, z: 0}
-  moveSpeed: 1
-  LockOn: 0
+  moveSpeed: 5
+  lockOn: 0
   mode: 0
