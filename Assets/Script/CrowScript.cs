@@ -10,6 +10,7 @@ using UnityEngine.UIElements;
 public class CrowScript : MonoBehaviour
 {
     private FeatherAParticlesManager featherA;
+    private StanParticlesManager stan;
 
     public string targetTag = "Child"; // ・ｽ・ｽ・ｽ・ｽ・ｽﾎ象ゑｿｽTag・ｽ・ｽ
     public Vector3 targetPos;
@@ -38,7 +39,10 @@ public class CrowScript : MonoBehaviour
     void Start()
     {
         featherA = GetComponent<FeatherAParticlesManager>();
+        stan = GetComponent<StanParticlesManager>();
         player = GameObject.Find("Player");
+
+       
     }
 
     // Update is called once per frame
