@@ -21,12 +21,14 @@ public class PlayerManager : MonoBehaviour
     }
     DIRECTION direction = DIRECTION.RIGHT;
 
-    private enum ORDERPATTERN
+    private enum INPUTDIRECTION
     {
-        DASH,
-        ATTACK
+        LEFT,
+        RIGHT,
+        UP,
+        DOWN
     }
-    ORDERPATTERN orderPattern = ORDERPATTERN.ATTACK;
+    INPUTDIRECTION inputDirection = INPUTDIRECTION.RIGHT;
 
     // 全子ガモ
     public GameObject allChildObj;
@@ -57,7 +59,6 @@ public class PlayerManager : MonoBehaviour
     private int inputHorizontal = 0;
     //縦
     private int inputVertical = 0;
-
 
     void Start()
     {
@@ -97,21 +98,21 @@ public class PlayerManager : MonoBehaviour
             if (closeCrow == null)
             {
                 // 指示 - 左猛進
-                if (!orderStack && inputHorizontal < 0)
+                if (!orderStack && inputDirection == INPUTDIRECTION.LEFT)
                 {
                     OrderInitialize();
                     orderLeft = true;
-                    CheckDiffChild(ORDERPATTERN.DASH);
+                    CheckDiffChild(true);
                 }
                 // 指示 - 右猛進
-                else if (!orderStack && inputHorizontal > 0)
+                else if (!orderStack && inputDirection == INPUTDIRECTION.RIGHT)
                 {
                     OrderInitialize();
                     orderRight = true;
-                    CheckDiffChild(ORDERPATTERN.DASH);
+                    CheckDiffChild(true);
                 }
                 // 指示 - 積み上げ
-                else if (!orderStack && inputVertical > 0)
+                else if (!orderStack && inputDirection == INPUTDIRECTION.UP)
                 {
                     OrderInitialize();
                     allChild.stackCount = 0;
@@ -119,12 +120,12 @@ public class PlayerManager : MonoBehaviour
                     orderStack = true;
                 }
                 // 指示 - 積み上げ攻撃
-                else if (orderStack && (inputHorizontal < 0 || inputHorizontal > 0))
+                else if (orderStack && (inputDirection == INPUTDIRECTION.LEFT || inputDirection == INPUTDIRECTION.RIGHT))
                 {
                     StackInitialize();
                 }
                 // 指示 - 集合,待機
-                else if (inputVertical < 0)
+                else if (inputDirection == INPUTDIRECTION.DOWN)
                 {
                     OrderInitialize();
                     allChild.DiffInitialize();
@@ -134,21 +135,21 @@ public class PlayerManager : MonoBehaviour
             else
             {
                 // カラスが近くにいるときも積み上げられるようにする
-                if (!orderStack && inputVertical > 0)
+                if (!orderStack && inputDirection == INPUTDIRECTION.UP)
                 {
                     OrderInitialize();
                     allChild.stackCount = 0;
                     allChild.DiffInitialize();
                     orderStack = true;
                 }
-                else if (orderStack && (inputHorizontal < 0 || inputHorizontal > 0))
+                else if (orderStack && (inputDirection == INPUTDIRECTION.LEFT || inputDirection == INPUTDIRECTION.RIGHT))
                 {
                     StackInitialize();
                 }
                 else if (!orderStack)
                 {
                     // 指示 - カラスに攻撃
-                    CheckDiffChild(ORDERPATTERN.ATTACK);
+                    CheckDiffChild(false);
                     orderAttack = true;
                 }
             }
@@ -213,6 +214,24 @@ public class PlayerManager : MonoBehaviour
         {
             isJump = true;
         }
+
+        // 入力された方向を取得する
+        if (inputHorizontal < 0)
+        {
+            inputDirection = INPUTDIRECTION.LEFT;
+        }
+        else if (inputHorizontal > 0)
+        {
+            inputDirection = INPUTDIRECTION.RIGHT;
+        }
+        else if (inputVertical > 0)
+        {
+            inputDirection = INPUTDIRECTION.UP;
+        }
+        else if (inputVertical < 0)
+        {
+            inputDirection = INPUTDIRECTION.DOWN;
+        }
     }
 
     void Move()
@@ -253,12 +272,12 @@ public class PlayerManager : MonoBehaviour
         OrderInitialize();
         allChild.DiffInitialize();
         // 左積み上げ攻撃
-        if (inputHorizontal < 0)
+        if (inputDirection == INPUTDIRECTION.LEFT)
         {
             orderLeft = true;
         }
         // 右積み上げ攻撃
-        else if (inputHorizontal > 0)
+        else if (inputDirection == INPUTDIRECTION.RIGHT)
         {
             orderRight = true;
         }
@@ -274,7 +293,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    private void CheckDiffChild(ORDERPATTERN orderPattern_)
+    private void CheckDiffChild(bool isOrderDash)
     {
         // 全ての子ガモを取得する
         allChild.AddChildObjects(children);
@@ -293,8 +312,8 @@ public class PlayerManager : MonoBehaviour
             }
             // 指示を出せる状態か判定する
             if (childManager && !childManager.isTakedAway && childManager.isAddDiff &&
-                ((orderPattern == ORDERPATTERN.DASH) ||
-                 (orderPattern == ORDERPATTERN.ATTACK && !childManager.GetIsThrow())))
+                (isOrderDash ||
+                (!isOrderDash && !childManager.GetIsThrow())))
             {
                 // 距離を判定する
                 if (!isAssignment || (nearChild && Vector3.Distance(nearChild.transform.position, transform.position) > Vector3.Distance(children[i].transform.position, transform.position)))
@@ -315,11 +334,11 @@ public class PlayerManager : MonoBehaviour
             }
 
             // 指示の内容によって変える
-            if (orderPattern_ == ORDERPATTERN.DASH)
+            if (isOrderDash)
             {
                 childManager.DashInitialize(orderLeft);
             }
-            else if (orderPattern_ == ORDERPATTERN.ATTACK)
+            else
             {
                 childManager.ThrowInitialize();
             }

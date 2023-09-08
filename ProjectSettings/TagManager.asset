@@ -10,6 +10,7 @@ TagManager:
   - BackGround
   - SceneChanger
   - Grass
+  - Obstacle
   layers:
   - Default
   - TransparentFX
