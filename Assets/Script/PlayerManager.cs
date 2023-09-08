@@ -58,7 +58,6 @@ public class PlayerManager : MonoBehaviour
     //èc
     private int inputVertical = 0;
 
-
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();

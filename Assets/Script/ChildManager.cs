@@ -103,8 +103,8 @@ public class ChildManager : MonoBehaviour
         // カラスに連れられていないとき
         if (!isTakedAway)
         {
-            // 積み上げられていないとき
-            if (moveType != MoveType.STACK && (moveType == MoveType.FOLLOW || moveType == MoveType.STACKCANCEL))
+            // 指示が通るとき
+            if (moveType != MoveType.STACK && moveType != MoveType.PANIC && (moveType == MoveType.FOLLOW || moveType == MoveType.STACKCANCEL))
             {
                 // 指示 - 積み上げ
                 if (playerManager.orderStack)
@@ -272,21 +272,6 @@ public class ChildManager : MonoBehaviour
     }
 
     // 積み上げ関係
-    public void StackAttackInitialize(bool isLeft)
-    {
-        if (isLeft)
-        {
-            orderDirection = kLeft;
-        }
-        else
-        {
-            orderDirection = kRight;
-        }
-        velocity.x = 8f * orderDirection;
-        velocity.y = 8f;
-        transform.parent.gameObject.GetComponent<AllChildScript>().stackCount = 0;
-        ChangeMoveType(MoveType.STACKATTACK);
-    }
     void MoveToStack()
     {
         if (judgeGround)
@@ -343,6 +328,21 @@ public class ChildManager : MonoBehaviour
             velocity = Vector3.zero;
             ChangeMoveType(MoveType.FOLLOW);
         }
+    }
+    public void StackAttackInitialize(bool isLeft)
+    {
+        if (isLeft)
+        {
+            orderDirection = kLeft;
+        }
+        else
+        {
+            orderDirection = kRight;
+        }
+        velocity.x = 8f * orderDirection;
+        velocity.y = 8f;
+        transform.parent.gameObject.GetComponent<AllChildScript>().stackCount = 0;
+        ChangeMoveType(MoveType.STACKATTACK);
     }
 
     // カラスに攻撃関係
@@ -415,6 +415,19 @@ public class ChildManager : MonoBehaviour
             isFlipX = true;
         }
 
+        // 近くに行ったら戻す
+        if (judgeGround && Mathf.Abs(player.transform.position.x - transform.position.x) < 5f)
+        {
+            if (playerManager.orderStack)
+            {
+                ChangeMoveType(MoveType.TOSTACK);
+            }
+            else
+            {
+                ChangeMoveType(MoveType.FOLLOW);
+            }
+        }
+
         // 迷いきったらパニックになる
         if (lostLeftTime < 0f)
         {
@@ -425,8 +438,6 @@ public class ChildManager : MonoBehaviour
             isPanic = true;
             ChangeMoveType(MoveType.PANIC);
         }
-
-
     }
 
     // パニック関係
@@ -446,6 +457,19 @@ public class ChildManager : MonoBehaviour
             {
                 velocity.x *= -1f;
             }
+        }
+
+        if (judgeGround && Mathf.Abs(player.transform.position.x - transform.position.x) < 0.5f)
+        {
+            if (playerManager.orderStack)
+            {
+                ChangeMoveType(MoveType.TOSTACK);
+            }
+            else
+            {
+                ChangeMoveType(MoveType.FOLLOW);
+            }
+            isPanic = false;
         }
     }
     public bool GetIsPanic()
