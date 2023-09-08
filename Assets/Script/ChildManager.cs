@@ -51,6 +51,9 @@ public class ChildManager : MonoBehaviour
     const int kLeft = -1;
     const int kRight = 1;
 
+    // 待機位置をランダムに設定する
+    private float stayRandomPositionX = 0f;
+
     // 積み上げの高さをカウントで変える
     private int stackIndex = 0;
     // 積み上げ座標
@@ -104,7 +107,7 @@ public class ChildManager : MonoBehaviour
         if (!isTakedAway)
         {
             // 指示が通るとき
-            if (moveType != MoveType.STACK && moveType != MoveType.PANIC && (moveType == MoveType.FOLLOW || moveType == MoveType.STACKCANCEL))
+            if (moveType == MoveType.FOLLOW || moveType == MoveType.STAY)
             {
                 // 指示 - 積み上げ
                 if (playerManager.orderStack)
@@ -129,6 +132,12 @@ public class ChildManager : MonoBehaviour
         {
             case MoveType.FOLLOW:
                 MoveFollow();
+                // 指示 - 集合,待機
+                if (playerManager.orderDown)
+                {
+                    stayRandomPositionX = Random.Range(player.transform.position.x - 3f, player.transform.position.x + 3f);
+                    moveType = MoveType.STAY;
+                }
                 break;
             case MoveType.DASH:
                 MoveDash();
@@ -152,9 +161,31 @@ public class ChildManager : MonoBehaviour
             case MoveType.STACKATTACK:
                 MoveStackAttack();
                 break;
-            //case MoveType.Stay:
+            case MoveType.STAY:
 
-            //    break;
+                if (Mathf.Abs(stayRandomPositionX - transform.position.x) < 1.0f)
+                {
+                    // 離れた座標に向かう
+                    velocity = Vector3.zero;
+                }
+                else
+                {
+                    // 親の方に行く - 左
+                    if (stayRandomPositionX - transform.position.x < 0f)
+                    {
+                        velocity.x = -10.0f;
+                    }
+                    // 親の方に行く - 右
+                    else
+                    {
+                        velocity.x = 10.0f;
+                    }
+                }
+                if (playerManager.orderDown)
+                {
+                    moveType = MoveType.FOLLOW;
+                }
+                break;
             case MoveType.ATTACKCROW:
                 MoveAttackCrow();
                 break;

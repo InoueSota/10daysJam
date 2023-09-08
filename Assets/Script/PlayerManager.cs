@@ -92,6 +92,7 @@ public class PlayerManager : MonoBehaviour
     private void OrderChildren()
     {
         closeCrow = SearchCrow();
+        orderDown = false;
 
         if (inputOrder != 0 && preInputOrder == 0)
         {
