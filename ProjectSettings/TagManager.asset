@@ -8,6 +8,8 @@ TagManager:
   - Crow
   - Child
   - BackGround
+  - SceneChanger
+  - Grass
   layers:
   - Default
   - TransparentFX

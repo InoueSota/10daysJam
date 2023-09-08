@@ -198,8 +198,6 @@ public class PlayerManager : MonoBehaviour
         {
             isJump = true;
         }
-       
-
     }
 
     void Move()

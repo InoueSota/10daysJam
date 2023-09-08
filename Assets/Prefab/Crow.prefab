@@ -132,6 +132,7 @@ MonoBehaviour:
   moveSpeed: 5
   lockOn: 0
   isTakeAway: 0
+  easetime: 1
   mode: 0
 --- !u!114 &6700715944245316401
 MonoBehaviour:
