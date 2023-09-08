@@ -46,7 +46,7 @@ public class PlayerManager : MonoBehaviour
     private GameObject[] targets;
     private GameObject closeCrow;
 
-    //入力とるやつ
+    // 入力とるやつ
     private int inputJump = 0;
     private int preInputJump = 0;
 
@@ -90,73 +90,88 @@ public class PlayerManager : MonoBehaviour
     }
     private void OrderChildren()
     {
-        // フラグを初期化する
+        closeCrow = SearchCrow();
+
+        if (inputOrder != 0 && preInputOrder == 0)
+        {
+            if (closeCrow == null)
+            {
+                // 指示 - 左猛進
+                if (!orderStack && inputHorizontal < 0)
+                {
+                    OrderInitialize();
+                    orderLeft = true;
+                    CheckDiffChild(ORDERPATTERN.DASH);
+                }
+                // 指示 - 右猛進
+                else if (!orderStack && inputHorizontal > 0)
+                {
+                    OrderInitialize();
+                    orderRight = true;
+                    CheckDiffChild(ORDERPATTERN.DASH);
+                }
+                // 指示 - 積み上げ
+                else if (!orderStack && inputVertical > 0)
+                {
+                    OrderInitialize();
+                    allChild.stackCount = 0;
+                    allChild.DiffInitialize();
+                    orderStack = true;
+                }
+                // 指示 - 積み上げ攻撃
+                else if (orderStack && (inputHorizontal < 0 || inputHorizontal > 0))
+                {
+                    StackInitialize();
+                }
+                // 指示 - 集合,待機
+                else if (inputVertical < 0)
+                {
+                    OrderInitialize();
+                    allChild.DiffInitialize();
+                    orderDown = true;
+                }
+            }
+            else
+            {
+                // カラスが近くにいるときも積み上げられるようにする
+                if (!orderStack && inputVertical > 0)
+                {
+                    OrderInitialize();
+                    allChild.stackCount = 0;
+                    allChild.DiffInitialize();
+                    orderStack = true;
+                }
+                else if (orderStack && (inputHorizontal < 0 || inputHorizontal > 0))
+                {
+                    StackInitialize();
+                }
+                else if (!orderStack)
+                {
+                    // 指示 - カラスに攻撃
+                    CheckDiffChild(ORDERPATTERN.ATTACK);
+                    orderAttack = true;
+                }
+            }
+        }
+
+        // 色変更
+        if (!closeCrow)
+        {
+            GetComponent<SpriteRenderer>().color = Color.white;
+        }
+        else
+        {
+            GetComponent<SpriteRenderer>().color = Color.red;
+        }
+    }
+
+    private void OrderInitialize()
+    {
         orderLeft = false;
         orderRight = false;
         orderStack = false;
         orderDown = false;
         orderAttack = false;
-
-        //コントローラー対応お願いします!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //コードから察してね
-
-        closeCrow = SearchCrow();
-
-        if (closeCrow == null)
-        {
-            this.GetComponent<SpriteRenderer>().color = Color.white;
-
-            // 指示 - 左猛進
-            if (inputHorizontal < 0)
-            {
-                if (inputOrder != 0 && preInputOrder == 0)
-                {
-                    orderLeft = true;
-                    orderRight = false;
-                    CheckDiffChild(ORDERPATTERN.DASH);
-                }
-            }
-            // 指示 - 右猛進
-            else if (inputHorizontal > 0)
-            {
-                if (inputOrder != 0 && preInputOrder == 0)
-                {
-                    orderLeft = false;
-                    orderRight = true;
-                    CheckDiffChild(ORDERPATTERN.DASH);
-                }
-            }
-            // 指示 - 積み上げ
-            else if (inputVertical > 0)
-            {
-                if (inputOrder != 0 && preInputOrder == 0)
-                {
-                    allChild.stackCount = 0;
-                    allChild.DiffInitialize();
-                    orderStack = true;
-                }
-            }
-            // 指示 - 集合,待機
-            else if (inputVertical < 0)
-            {
-                if (inputOrder != 0 && preInputOrder == 0)
-                {
-                    allChild.DiffInitialize();
-                    orderDown = true;
-                }
-            }
-        }
-        else
-        {
-            this.GetComponent<SpriteRenderer>().color = Color.red;
-
-            // 指示 - カラスに攻撃
-            if (inputOrder != 0 && preInputOrder == 0)
-            {
-                CheckDiffChild(ORDERPATTERN.ATTACK);
-                orderAttack = true;
-            }
-        }
     }
 
     void InputMove()
@@ -233,6 +248,32 @@ public class PlayerManager : MonoBehaviour
         return closeCrow.transform.position;
     }
 
+    private void StackInitialize()
+    {
+        OrderInitialize();
+        allChild.DiffInitialize();
+        // 左積み上げ攻撃
+        if (inputHorizontal < 0)
+        {
+            orderLeft = true;
+        }
+        // 右積み上げ攻撃
+        else if (inputHorizontal > 0)
+        {
+            orderRight = true;
+        }
+
+        // 全ての子ガモを取得する
+        allChild.AddChildObjects(children);
+        for (int i = 0; i < children.GetLength(0); i++)
+        {
+            if (children[i])
+            {
+                children[i].GetComponent<ChildManager>().StackAttackInitialize(orderLeft);
+            }
+        }
+    }
+
     private void CheckDiffChild(ORDERPATTERN orderPattern_)
     {
         // 全ての子ガモを取得する
@@ -251,7 +292,9 @@ public class PlayerManager : MonoBehaviour
                 childManager = children[i].GetComponent<ChildManager>();
             }
             // 指示を出せる状態か判定する
-            if (childManager && !childManager.isTakedAway && childManager.isAddDiff && (orderPattern == ORDERPATTERN.DASH || (orderPattern == ORDERPATTERN.ATTACK && !childManager.GetIsThrow())))
+            if (childManager && !childManager.isTakedAway && childManager.isAddDiff &&
+                ((orderPattern == ORDERPATTERN.DASH) ||
+                 (orderPattern == ORDERPATTERN.ATTACK && !childManager.GetIsThrow())))
             {
                 // 距離を判定する
                 if (!isAssignment || (nearChild && Vector3.Distance(nearChild.transform.position, transform.position) > Vector3.Distance(children[i].transform.position, transform.position)))
@@ -276,7 +319,7 @@ public class PlayerManager : MonoBehaviour
             {
                 childManager.DashInitialize(orderLeft);
             }
-            if (orderPattern_ == ORDERPATTERN.ATTACK)
+            else if (orderPattern_ == ORDERPATTERN.ATTACK)
             {
                 childManager.ThrowInitialize();
             }

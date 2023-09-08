@@ -23,6 +23,8 @@ public class ChildManager : MonoBehaviour
     private Vector3 velocity = Vector3.zero;
     // プレイヤーの向き
     private int playerDirection = 1;
+    // 接地判定
+    [SerializeField]private bool judgeGround = false;
 
     public enum MoveType
     {
@@ -35,8 +37,10 @@ public class ChildManager : MonoBehaviour
         STAY,       // その場に待機
         ATTACKCROW, // カラスに攻撃
         EATGRASS,   // 草を食べる
+        LOST,       // 迷っている
+        PANIC       // パニック
     }
-    private MoveType moveType = MoveType.FOLLOW;
+    [SerializeField]private MoveType moveType = MoveType.FOLLOW;
 
     // 猛進フラグ
     private bool isDash = false;
@@ -66,12 +70,17 @@ public class ChildManager : MonoBehaviour
     // カラスに連れられたかフラグ
     public bool isTakedAway = false;
 
-    // 草関係
     // 食事に掛かる時間
     [SerializeField] private float eatGrassTime = 0f;
     private float eatGrassLeftTime = 0f;
     // 食べたら大きさを変える
     private Vector3 kAddScale = new Vector3(0.15f, 0.15f, 0.15f);
+
+    //// 迷っている時間
+    //[SerializeField] private float lostTime = 0f;
+    //private float lostLeftTime = 0f;
+    //[SerializeField] private float changeOfDirectionIntervalTime = 0f;
+    //private float changeOfDirectionIntervalLeftTime = 0f;
 
     void Start()
     {
@@ -92,24 +101,8 @@ public class ChildManager : MonoBehaviour
         // カラスに連れられていないとき
         if (!isTakedAway)
         {
-            // 積み上げられた状態で投げられる
-            if (moveType == MoveType.STACK)
-            {
-                // 左に投げられる
-                if (playerManager.orderLeft)
-                {
-                    orderDirection = kLeft;
-                    StackAttackInitialize();
-                }
-                // 右に投げられる
-                if (playerManager.orderRight)
-                {
-                    orderDirection = kRight;
-                    StackAttackInitialize();
-                }
-            }
             // 積み上げられていないとき
-            else if (moveType == MoveType.FOLLOW)
+            if (moveType != MoveType.STACK && (moveType == MoveType.FOLLOW || moveType == MoveType.STACKCANCEL))
             {
                 // 指示 - 積み上げ
                 if (playerManager.orderStack)
@@ -117,7 +110,11 @@ public class ChildManager : MonoBehaviour
                     ChangeMoveType(MoveType.TOSTACK);
                 }
             }
+
             Move();
+            
+            Gravity();
+            
             ImageFlip();
         }
     }
@@ -129,24 +126,16 @@ public class ChildManager : MonoBehaviour
         switch (moveType)
         {
             case MoveType.FOLLOW:
-
                 MoveFollow();
-
                 break;
             case MoveType.DASH:
-
                 MoveDash();
-
                 break;
             case MoveType.TOSTACK:
-
                 MoveToStack();
-
                 break;
             case MoveType.STACK:
-
                 MoveStack();
-
                 // 指示 - 集合,待機
                 if (playerManager.orderDown)
                 {
@@ -154,33 +143,42 @@ public class ChildManager : MonoBehaviour
                     cancelRandomX = Random.Range(3.0f, 6.0f);
                     ChangeMoveType(MoveType.STACKCANCEL);
                 }
-
                 break;
             case MoveType.STACKCANCEL:
-
                 MoveStackCancel();
-
                 break;
             case MoveType.STACKATTACK:
-
                 MoveStackAttack();
-
                 break;
             //case MoveType.Stay:
 
             //    break;
             case MoveType.ATTACKCROW:
-
                 MoveAttackCrow();
-
                 break;
             case MoveType.EATGRASS:
-
                 MoveEatGrass();
-
+                break;
+            case MoveType.LOST:
+                MoveLost();
+                break;
+            case MoveType.PANIC:
+                MovePanic();
                 break;
         }
+    }
 
+    // 重力処理
+    void Gravity()
+    {
+        if (!judgeGround && (moveType == MoveType.FOLLOW || moveType == MoveType.STACKCANCEL || moveType == MoveType.STACKATTACK))
+        {
+            velocity.y -= 3.0f * Time.deltaTime * 9.81f;
+        }
+        else if (moveType == MoveType.FOLLOW)
+        {
+            velocity.y = 0f;
+        }
     }
 
     // 動きをセットする
@@ -272,8 +270,16 @@ public class ChildManager : MonoBehaviour
     }
 
     // 積み上げ関係
-    void StackAttackInitialize()
+    public void StackAttackInitialize(bool isLeft)
     {
+        if (isLeft)
+        {
+            orderDirection = kLeft;
+        }
+        else
+        {
+            orderDirection = kRight;
+        }
         velocity.x = 8f * orderDirection;
         velocity.y = 8f;
         transform.parent.gameObject.GetComponent<AllChildScript>().stackCount = 0;
@@ -281,26 +287,29 @@ public class ChildManager : MonoBehaviour
     }
     void MoveToStack()
     {
-        if (Mathf.Abs(player.transform.position.x - transform.position.x) < 0.2f)
+        if (judgeGround)
         {
-            stackIndex = transform.parent.gameObject.GetComponent<AllChildScript>().stackCount;
-            stackPos.x = playerManager.transform.position.x;
-            stackPos.y = (playerManager.transform.position.y + playerManager.transform.localScale.y * 0.5f) + transform.localScale.y * 0.5f;
-            isAddDiff = false;
-            transform.parent.gameObject.GetComponent<AllChildScript>().stackCount++;
-            ChangeMoveType(MoveType.STACK);
-        }
-        else
-        {
-            // 親の方に行く - 左
-            if (player.transform.position.x - transform.position.x < 0f)
+            if (Mathf.Abs(player.transform.position.x - transform.position.x) < 0.2f)
             {
-                velocity.x = -12.0f;
+                stackIndex = transform.parent.gameObject.GetComponent<AllChildScript>().stackCount;
+                stackPos.x = playerManager.transform.position.x;
+                stackPos.y = (playerManager.transform.position.y + playerManager.transform.localScale.y * 0.5f) + 0.5f;
+                isAddDiff = false;
+                transform.parent.gameObject.GetComponent<AllChildScript>().stackCount++;
+                ChangeMoveType(MoveType.STACK);
             }
-            // 親の方に行く - 右
             else
             {
-                velocity.x = 12.0f;
+                // 親の方に行く - 左
+                if (player.transform.position.x - transform.position.x < 0f)
+                {
+                    velocity.x = -12.0f;
+                }
+                // 親の方に行く - 右
+                else
+                {
+                    velocity.x = 12.0f;
+                }
             }
         }
     }
@@ -309,16 +318,15 @@ public class ChildManager : MonoBehaviour
         Vector3 pos = stackPos;
 
         pos.x = playerManager.transform.position.x;
-        pos.y = stackPos.y + stackIndex * transform.localScale.y;
+        pos.y = stackPos.y + stackIndex * 1f;
 
         transform.position = pos;
     }
     void MoveStackCancel()
     {
         velocity.x = cancelRandomX;
-        velocity.y -= 3.0f * Time.deltaTime * 9.81f;
 
-        if (transform.position.y < 0.55f)
+        if (judgeGround)
         {
             velocity = Vector3.zero;
             ChangeMoveType(MoveType.FOLLOW);
@@ -326,10 +334,9 @@ public class ChildManager : MonoBehaviour
     }
     void MoveStackAttack()
     {
-        velocity.y -= 3.0f * Time.deltaTime * 9.81f;
         velocity.x -= 3.0f * Time.deltaTime;
 
-        if (transform.position.y < 0.55f)
+        if (judgeGround)
         {
             velocity = Vector3.zero;
             ChangeMoveType(MoveType.FOLLOW);
@@ -385,6 +392,18 @@ public class ChildManager : MonoBehaviour
         }
     }
 
+    // 迷い関係
+    void MoveLost()
+    {
+
+    }
+
+    // パニック関係
+    void MovePanic()
+    {
+        
+    }
+
     // 当たり判定（対象によって行動が変わる）
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -402,6 +421,24 @@ public class ChildManager : MonoBehaviour
             velocity = Vector3.zero;
             eatGrassLeftTime = eatGrassTime;
             isDash = false;
+        }
+    }
+
+    // 接地判定
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        // 接地判定（true → false）
+        if (judgeGround && collision.gameObject.CompareTag("Ground"))
+        {
+            judgeGround = false;
+        }
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // 接地判定（false → true）
+        if (!judgeGround && collision.gameObject.CompareTag("Ground"))
+        {
+            judgeGround = true;
         }
     }
 
