@@ -38,15 +38,12 @@ public class CrowScript : MonoBehaviour
         stan
     };
     [SerializeField] private Mode mode;
-
     // Start is called before the first frame update
     void Start()
     {
         featherA = GetComponent<FeatherAParticlesManager>();
         stan = GetComponent<StanParticlesManager>();
-        player = GameObject.Find("Player");
-
-       
+        player = GameObject.Find("Player");       
     }
 
     // Update is called once per frame
@@ -127,7 +124,7 @@ public class CrowScript : MonoBehaviour
         easetime -= Time.deltaTime * 0.5f;
         float t = (easetime / 1.0f);
         float y = Mathf.Lerp(targetPos.y, startPos.y, EaseInSine(t));
-        float x = Mathf.Lerp(targetPos.x, startPos.x, EaseOutQuart(t*0.8f));
+        float x = Mathf.Lerp(targetPos.x, startPos.x, EaseOutQuart(t));
         transform.position = new Vector3(x, y, 0);
 
         Vector3 direction = targetPos - transform.position;
@@ -231,6 +228,7 @@ public class CrowScript : MonoBehaviour
         if (collision.CompareTag("Ground")&& mode == Mode.attak)
         {
             mode = Mode.stan;
+            stan.SetRun(kStanTime); //スタースタン
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
