@@ -16,7 +16,7 @@ public class CrowScript : MonoBehaviour
     public Vector3 startPos;
     public float moveSpeed = 1.0f;
     private float coolTime = 5.0f;
-    private float kMaxcoolTime = 5.0f;
+    [SerializeField] private float kMaxcoolTime = 5.0f;
     private Transform closestChild = null;
     public bool lockOn;
     public bool isTakeAway;
@@ -24,9 +24,9 @@ public class CrowScript : MonoBehaviour
     float angleY;
     private GameObject player;
     private int direction_ = 1;
-   public float easetime = 1.0f;
-    public float stanTime = 2.0f;
-    const float kStanTime = 2.0f;
+    [SerializeField] float easetime = 1.0f;
+    private float stanTime = 2.0f;
+    [SerializeField] const float kStanTime = 2.0f;
     public enum Mode
     {
         stay,
@@ -53,21 +53,25 @@ public class CrowScript : MonoBehaviour
                 angleX += Time.deltaTime;
                 angleY += Time.deltaTime * 10;
                 FindClosestChild();
-                transform.position = Vector2.MoveTowards(transform.position, new Vector2(targetPos.x + (10 * direction_), 14.0f), Time.deltaTime * moveSpeed);
+                transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x, 14.0f), Time.deltaTime * moveSpeed);
                 coolTime -= Time.deltaTime;
-                direction_ = UnityEngine.Random.Range(-1, 2);
-                transform.position += new Vector3(direction_,0, 0)*Time.deltaTime;
+                if ((int)angleX % 3 == 0)
+                {
+                    direction_ = UnityEngine.Random.Range(-1, 2);
+                }
+                transform.position += new Vector3(direction_*moveSpeed,0, 0)*Time.deltaTime;
 
                 if (coolTime < 0)
                 {
                     mode = Mode.attak;
                     startPos = transform.position;
                     easetime = 1.0f;
+                    coolTime = kMaxcoolTime;
                 }
                 isTakeAway = false;
                 break;
             case Mode.attak:
-                coolTime = kMaxcoolTime;
+                
                 Attak();
                 float distance = Vector2.Distance(transform.position, targetPos);
                 if (distance <= 0.1f)
@@ -211,7 +215,10 @@ public class CrowScript : MonoBehaviour
                 mode = Mode.takeaway;                
                 isTakeAway = true;
             }
-            if (!isTakeAway) featherA.SetRunning(collision.transform.position);
+            if (collision.GetComponent<ChildManager>().GetIsThrow())
+            {
+                if (!collision.GetComponent<ChildManager>().isTakedAway) featherA.SetRunning(collision.transform.position);
+            }
             //collision.gameObject.GetComponent<ChildManager>().isTakedAway = true;
             //closestChild.transform.parent = transform;
 
