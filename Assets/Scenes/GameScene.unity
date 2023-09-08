@@ -715,6 +715,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Crow
       objectReference: {fileID: 0}
+    - target: {fileID: 7514164298105999574, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
 --- !u!1001 &863093164

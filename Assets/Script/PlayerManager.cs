@@ -21,6 +21,13 @@ public class PlayerManager : MonoBehaviour
     }
     DIRECTION direction = DIRECTION.RIGHT;
 
+    private enum ORDERPATTERN
+    {
+        DASH,
+        ATTACK
+    }
+    ORDERPATTERN orderPattern = ORDERPATTERN.ATTACK;
+
     // 全子ガモ
     public GameObject allChildObj;
     AllChildScript allChild;
@@ -104,8 +111,9 @@ public class PlayerManager : MonoBehaviour
             {
                 if (inputOrder != 0 && preInputOrder == 0)
                 {
-                    allChild.DiffInitialize();
                     orderLeft = true;
+                    orderRight = false;
+                    CheckDiffChild(ORDERPATTERN.DASH);
                 }
             }
             // 指示 - 右猛進
@@ -113,8 +121,9 @@ public class PlayerManager : MonoBehaviour
             {
                 if (inputOrder != 0 && preInputOrder == 0)
                 {
-                    allChild.DiffInitialize();
+                    orderLeft = false;
                     orderRight = true;
+                    CheckDiffChild(ORDERPATTERN.DASH);
                 }
             }
             // 指示 - 積み上げ
@@ -144,53 +153,7 @@ public class PlayerManager : MonoBehaviour
             // 指示 - カラスに攻撃
             if (inputOrder != 0 && preInputOrder == 0)
             {
-                allChild.AddChildObjects(children);
-
-                GameObject nearChild = null;
-                int nearChildNumber = 0;
-                bool isAssignment = false;
-                for (int i = 0; i < children.GetLength(0); i++)
-                {
-                    ChildManager childManager = null;
-                    if (children[i])
-                    {
-                        childManager = children[i].GetComponent<ChildManager>();
-                    }
-                    if (childManager && !childManager.isTakedAway && !childManager.GetIsThrow() && childManager.isAddDiff)
-                    {
-                        if (!isAssignment || (nearChild && Vector3.Distance(nearChild.transform.position, transform.position) > Vector3.Distance(children[i].transform.position, transform.position)))
-                        {
-                            nearChild = children[i];
-                            nearChildNumber = i;
-                            isAssignment = true;
-                        }
-                    }
-                }
-
-                if (nearChild)
-                {
-                    ChildManager childManager = null;
-                    if (nearChild)
-                    {
-                        childManager = nearChild.GetComponent<ChildManager>();
-                    }
-                    childManager.ThrowInitialize();
-                    for (int i = 0; i < children.GetLength(0); i++)
-                    {
-                        if (children[i] && nearChildNumber != i)
-                        {
-                            if (direction == DIRECTION.LEFT)
-                            {
-                                children[i].GetComponent<ChildManager>().diff -= 1.5f;
-                            }
-                            else
-                            {
-                                children[i].GetComponent<ChildManager>().diff += 1.5f;
-                            }
-                        }
-                    }
-                    allChild.SubtractDiffSize();
-                }
+                CheckDiffChild(ORDERPATTERN.ATTACK);
                 orderAttack = true;
             }
         }
@@ -270,5 +233,72 @@ public class PlayerManager : MonoBehaviour
     public Vector3 GetNearCrawPos()
     {
         return closeCrow.transform.position;
+    }
+
+    private void CheckDiffChild(ORDERPATTERN orderPattern_)
+    {
+        // 全ての子ガモを取得する
+        allChild.AddChildObjects(children);
+
+        GameObject nearChild = null;
+        int nearChildNumber = 0;
+        bool isAssignment = false;
+
+        // 親ガモに一番近い子ガモを取得する
+        for (int i = 0; i < children.GetLength(0); i++)
+        {
+            ChildManager childManager = null;
+            if (children[i])
+            {
+                childManager = children[i].GetComponent<ChildManager>();
+            }
+            // 指示を出せる状態か判定する
+            if (childManager && !childManager.isTakedAway && childManager.isAddDiff && (orderPattern == ORDERPATTERN.DASH || (orderPattern == ORDERPATTERN.ATTACK && !childManager.GetIsThrow())))
+            {
+                // 距離を判定する
+                if (!isAssignment || (nearChild && Vector3.Distance(nearChild.transform.position, transform.position) > Vector3.Distance(children[i].transform.position, transform.position)))
+                {
+                    nearChild = children[i];
+                    nearChildNumber = i;
+                    isAssignment = true;
+                }
+            }
+        }
+
+        if (nearChild)
+        {
+            ChildManager childManager = null;
+            if (nearChild)
+            {
+                childManager = nearChild.GetComponent<ChildManager>();
+            }
+
+            // 指示の内容によって変える
+            if (orderPattern_ == ORDERPATTERN.DASH)
+            {
+                childManager.DashInitialize(orderLeft);
+            }
+            if (orderPattern_ == ORDERPATTERN.ATTACK)
+            {
+                childManager.ThrowInitialize();
+            }
+
+            for (int i = 0; i < children.GetLength(0); i++)
+            {
+                if (children[i] && nearChildNumber != i)
+                {
+                    // 前にずらす
+                    if (direction == DIRECTION.LEFT)
+                    {
+                        children[i].GetComponent<ChildManager>().diff -= 1.5f;
+                    }
+                    else
+                    {
+                        children[i].GetComponent<ChildManager>().diff += 1.5f;
+                    }
+                }
+            }
+            allChild.SubtractDiffSize();
+        }
     }
 }
