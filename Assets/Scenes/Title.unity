@@ -360,6 +360,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8486118990180569929, guid: 031cfc20f4822b8488aed7ca81710981, type: 3}
+      propertyPath: m_Icon
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8486118990180569929, guid: 031cfc20f4822b8488aed7ca81710981, type: 3}
       propertyPath: m_Name
       value: SceneChangerGenerate
       objectReference: {fileID: 0}
@@ -713,7 +717,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -202}
-  m_SizeDelta: {x: 635.9972, y: 114.7372}
+  m_SizeDelta: {x: 451.89, y: 114.7372}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1120281455
 MonoBehaviour:
@@ -735,7 +739,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PRESS ANY BUTTON
+  m_text: PRESS START
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 903cfb57f0a85034b91bedaa25422e93, type: 2}
   m_sharedMaterial: {fileID: -7803650980210978427, guid: 903cfb57f0a85034b91bedaa25422e93, type: 2}
@@ -762,7 +766,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 70.7
+  m_fontSize: 72
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
