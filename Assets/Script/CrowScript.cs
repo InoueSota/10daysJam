@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TreeEditor;
@@ -67,7 +68,7 @@ public class CrowScript : MonoBehaviour
                 {
                     mode = Mode.attak;
                     startPos = transform.position;
-                    easetime = 1.0f;
+                    easetime = 1.2f;
                     coolTime = kMaxcoolTime;
                 }
                 isTakeAway = false;
@@ -78,7 +79,7 @@ public class CrowScript : MonoBehaviour
                 float distance = Vector2.Distance(transform.position, targetPos);
                 if (distance <= 0.1f)
                 {
-                    mode = Mode.stay;
+                    mode = Mode.stay;                   
                 }
                 //if (easetime < 0f)
                 //{
@@ -121,19 +122,15 @@ public class CrowScript : MonoBehaviour
 
     private void Attak()
     {
-        easetime -= Time.deltaTime * 0.5f;
-        float t = (easetime / 1.0f);
-        float y = Mathf.Lerp(targetPos.y, startPos.y, EaseInSine(t));
-        float x = Mathf.Lerp(targetPos.x, startPos.x, EaseOutQuart(t));
-        transform.position = new Vector3(x, y, 0);
+        transform.DOMove(targetPos, 1.0f).SetEase(Ease.OutCubic);
 
-        Vector3 direction = targetPos - transform.position;
+        //Vector3 direction = targetPos - transform.position;
 
-        // �E��E��E��E��E�x�E�N�E�g�E��E��E�𐳋K�E��E��E�i�E��E��E��E��E��E�1�E�ɂ��E��E�j
-        direction.Normalize();
+        //// �E��E��E��E��E�x�E�N�E�g�E��E��E�𐳋K�E��E��E�i�E��E��E��E��E��E�1�E�ɂ��E��E�j
+        //direction.Normalize();
 
-        // �E�ڕW�E�ʒu�E�̕��E��E��E�Ɉ�葬�E�x�E�ňړ�
-        transform.position += direction * moveSpeed * Time.deltaTime;
+        //// �E�ڕW�E�ʒu�E�̕��E��E��E�Ɉ�葬�E�x�E�ňړ�
+        //transform.position += direction * moveSpeed * Time.deltaTime;
 
 
 
@@ -208,7 +205,8 @@ public class CrowScript : MonoBehaviour
           ? (Mathf.Pow(2 * t, 2) * ((c2 + 1) * 2 * t - c2)) / 2
           : (Mathf.Pow(2 * t - 2, 2) * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2;
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    
+private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag(targetTag))
         {
