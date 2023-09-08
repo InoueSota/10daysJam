@@ -222,7 +222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a1fbeb3e38086f4db87ca4b9370f67b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  changeTime: 3
+  changeTime: 1.79
   ct: 0
   isChanging: 0
   nextScene: GameScene
