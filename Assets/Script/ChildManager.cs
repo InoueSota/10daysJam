@@ -9,81 +9,81 @@ public class ChildManager : MonoBehaviour
     private float halfSize = 0f;
     private bool isFlipX = false;
 
-    // eƒKƒ‚‚ğ’Ç‚¢‚©‚¯‚é
+    // è¦ªã‚¬ãƒ¢ã‚’è¿½ã„ã‹ã‘ã‚‹
     public GameObject player;
     private PlayerManager playerManager;
-    // ‚Ç‚ê‚­‚ç‚¢‚Ì·‚©
+    // ã©ã‚Œãã‚‰ã„ã®å·®ã‹
     private Vector3 diffPosition = Vector3.zero;
     public float diff = 0f;
     public bool isAddDiff = false;
-    // ’Ç‚¢‚©‚¯‚é‹­‚³
+    // è¿½ã„ã‹ã‘ã‚‹å¼·ã•
     private float followPower = 12f;
 
-    // Šî–{ˆÚ“®‘¬“x
+    // åŸºæœ¬ç§»å‹•é€Ÿåº¦
     private Vector3 velocity = Vector3.zero;
-    // ƒvƒŒƒCƒ„[‚ÌŒü‚«
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‘ã
     private int playerDirection = 1;
-    // Ú’n”»’è
+    // æ¥åœ°åˆ¤å®š
     [SerializeField]private bool judgeGround = false;
 
     public enum MoveType
     {
-        FOLLOW,     // e‚É‚Â‚¢‚Ä‚¢‚­
-        DASH,       // ’–“Ë–Òi
-        TOSTACK,    // Ï‚Ü‚ê‚És‚­
-        STACK,      // Ï‚Ş
-        STACKCANCEL,// Ï‚İ‚ğ’†’f‚·‚é
-        STACKATTACK,// Ï‚Ü‚ê‚½ó‘Ô‚ÌUŒ‚
-        STAY,       // ‚»‚Ìê‚É‘Ò‹@
-        ATTACKCROW, // ƒJƒ‰ƒX‚ÉUŒ‚
-        EATGRASS,   // ‘‚ğH‚×‚é
-        LOST,       // –À‚Á‚Ä‚¢‚é
-        PANIC       // ƒpƒjƒbƒN
+        FOLLOW,     // è¦ªã«ã¤ã„ã¦ã„ã
+        DASH,       // çŒªçªçŒ›é€²
+        TOSTACK,    // ç©ã¾ã‚Œã«è¡Œã
+        STACK,      // ç©ã‚€
+        STACKCANCEL,// ç©ã¿ã‚’ä¸­æ–­ã™ã‚‹
+        STACKATTACK,// ç©ã¾ã‚ŒãŸçŠ¶æ…‹ã®æ”»æ’ƒ
+        STAY,       // ãã®å ´ã«å¾…æ©Ÿ
+        ATTACKCROW, // ã‚«ãƒ©ã‚¹ã«æ”»æ’ƒ
+        EATGRASS,   // è‰ã‚’é£Ÿã¹ã‚‹
+        LOST,       // è¿·ã£ã¦ã„ã‚‹
+        PANIC       // ãƒ‘ãƒ‹ãƒƒã‚¯
     }
     [SerializeField]private MoveType moveType = MoveType.FOLLOW;
 
-    // –Òiƒtƒ‰ƒO
+    // çŒ›é€²ãƒ•ãƒ©ã‚°
     private bool isDash = false;
-    // –Òi‘¬“x
+    // çŒ›é€²é€Ÿåº¦
     private float dashSpeed = 12f;
-    // ‘¬“x‚ğ•ûŒü‚É‰‚¶‚Ä•Ï‰»‚³‚¹‚é
+    // é€Ÿåº¦ã‚’æ–¹å‘ã«å¿œã˜ã¦å¤‰åŒ–ã•ã›ã‚‹
     private int orderDirection = 0;
     const int kLeft = -1;
     const int kRight = 1;
 
-    // ‘Ò‹@ˆÊ’u‚ğƒ‰ƒ“ƒ_ƒ€‚Éİ’è‚·‚é
+    // å¾…æ©Ÿä½ç½®ã‚’ãƒ©ãƒ³ãƒ€ãƒ ã«è¨­å®šã™ã‚‹
     private float stayRandomPositionX = 0f;
 
-    // Ï‚İã‚°‚Ì‚‚³‚ğƒJƒEƒ“ƒg‚Å•Ï‚¦‚é
+    // ç©ã¿ä¸Šã’ã®é«˜ã•ã‚’ã‚«ã‚¦ãƒ³ãƒˆã§å¤‰ãˆã‚‹
     private int stackIndex = 0;
-    // Ï‚İã‚°À•W
+    // ç©ã¿ä¸Šã’åº§æ¨™
     private Vector3 stackPos = Vector3.zero;
-    // Ï‚İã‚°‚ğ’†’f‚µ‚½‚Ìƒ‰ƒ“ƒ_ƒ€‘¬“x
+    // ç©ã¿ä¸Šã’ã‚’ä¸­æ–­ã—ãŸæ™‚ã®ãƒ©ãƒ³ãƒ€ãƒ é€Ÿåº¦
     private float cancelRandomX = 0f;
 
-    // UŒ‚Å‘åŠÔ
+    // æ”»æ’ƒæœ€å¤§æ™‚é–“
     private float attackCrowTime = 1.5f;
     private float attackCrowLeftTime = 0f;
-    // UŒ‚I—¹ƒtƒ‰ƒO
+    // æ”»æ’ƒçµ‚äº†ãƒ•ãƒ©ã‚°
     private bool isFinishAttackCrow = false;
-    // ‚P‚Â‚¸‚Â“Š‚°‚é‚½‚ß‚Ìƒtƒ‰ƒO
+    // ï¼‘ã¤ãšã¤æŠ•ã’ã‚‹ãŸã‚ã®ãƒ•ãƒ©ã‚°
     private bool isThrow = false;
-    // ƒJƒ‰ƒX‚É“–‚½‚Á‚½‚©ƒtƒ‰ƒO
+    // ã‚«ãƒ©ã‚¹ã«å½“ãŸã£ãŸã‹ãƒ•ãƒ©ã‚°
     private bool isCrawHit = false;
-    // ƒJƒ‰ƒX‚É˜A‚ê‚ç‚ê‚½‚©ƒtƒ‰ƒO
+    // ã‚«ãƒ©ã‚¹ã«é€£ã‚Œã‚‰ã‚ŒãŸã‹ãƒ•ãƒ©ã‚°
     public bool isTakedAway = false;
 
-    // H–‚ÉŠ|‚©‚éŠÔ
+    // é£Ÿäº‹ã«æ›ã‹ã‚‹æ™‚é–“
     [SerializeField] private float eatGrassTime = 0f;
     private float eatGrassLeftTime = 0f;
-    // H‚×‚½‚ç‘å‚«‚³‚ğ•Ï‚¦‚é
+    // é£Ÿã¹ãŸã‚‰å¤§ãã•ã‚’å¤‰ãˆã‚‹
     private Vector3 kAddScale = new Vector3(0.15f, 0.15f, 0.15f);
 
-    // –À‚Á‚Ä‚¢‚éŠÔ
+    // è¿·ã£ã¦ã„ã‚‹æ™‚é–“
     [SerializeField] private float lostTime = 0f;
     private float lostLeftTime = 0f;
 
-    // ƒpƒjƒbƒN
+    // ãƒ‘ãƒ‹ãƒƒã‚¯
     private bool isPanic = false;
     private float changeOfDirectionIntervalLeftTime = 0f;
 
@@ -103,13 +103,13 @@ public class ChildManager : MonoBehaviour
 
     void Update()
     {
-        // ƒJƒ‰ƒX‚É˜A‚ê‚ç‚ê‚Ä‚¢‚È‚¢‚Æ‚«
+        // ã‚«ãƒ©ã‚¹ã«é€£ã‚Œã‚‰ã‚Œã¦ã„ãªã„ã¨ã
         if (!isTakedAway)
         {
-            // w¦‚ª’Ê‚é‚Æ‚«
+            // æŒ‡ç¤ºãŒé€šã‚‹ã¨ã
             if (moveType == MoveType.FOLLOW || moveType == MoveType.STAY)
             {
-                // w¦ - Ï‚İã‚°
+                // æŒ‡ç¤º - ç©ã¿ä¸Šã’
                 if (playerManager.orderStack)
                 {
                     ChangeMoveType(MoveType.TOSTACK);
@@ -132,7 +132,7 @@ public class ChildManager : MonoBehaviour
         {
             case MoveType.FOLLOW:
                 MoveFollow();
-                // w¦ - W‡,‘Ò‹@
+                // æŒ‡ç¤º - é›†åˆ,å¾…æ©Ÿ
                 if (playerManager.orderDown)
                 {
                     stayRandomPositionX = Random.Range(player.transform.position.x - 3f, player.transform.position.x + 3f);
@@ -147,7 +147,7 @@ public class ChildManager : MonoBehaviour
                 break;
             case MoveType.STACK:
                 MoveStack();
-                // w¦ - W‡,‘Ò‹@
+                // æŒ‡ç¤º - é›†åˆ,å¾…æ©Ÿ
                 if (playerManager.orderDown)
                 {
                     transform.parent.gameObject.GetComponent<AllChildScript>().stackCount = 0;
@@ -165,17 +165,17 @@ public class ChildManager : MonoBehaviour
 
                 if (Mathf.Abs(stayRandomPositionX - transform.position.x) < 1.0f)
                 {
-                    // —£‚ê‚½À•W‚ÉŒü‚©‚¤
+                    // é›¢ã‚ŒãŸåº§æ¨™ã«å‘ã‹ã†
                     velocity = Vector3.zero;
                 }
                 else
                 {
-                    // e‚Ì•û‚És‚­ - ¶
+                    // è¦ªã®æ–¹ã«è¡Œã - å·¦
                     if (stayRandomPositionX - transform.position.x < 0f)
                     {
                         velocity.x = -10.0f;
                     }
-                    // e‚Ì•û‚És‚­ - ‰E
+                    // è¦ªã®æ–¹ã«è¡Œã - å³
                     else
                     {
                         velocity.x = 10.0f;
@@ -201,7 +201,7 @@ public class ChildManager : MonoBehaviour
         }
     }
 
-    // d—Íˆ—
+    // é‡åŠ›å‡¦ç†
     void Gravity()
     {
         if (!judgeGround && (moveType == MoveType.FOLLOW || moveType == MoveType.STACKCANCEL || moveType == MoveType.STACKATTACK || moveType == MoveType.LOST || moveType == MoveType.PANIC))
@@ -214,13 +214,13 @@ public class ChildManager : MonoBehaviour
         }
     }
 
-    // “®‚«‚ğƒZƒbƒg‚·‚é
+    // å‹•ãã‚’ã‚»ãƒƒãƒˆã™ã‚‹
     void ChangeMoveType(MoveType nextMoveType)
     {
         moveType = nextMoveType;
     }
 
-    // ’Ç‚¢‚©‚¯ŠÖŒW
+    // è¿½ã„ã‹ã‘é–¢ä¿‚
     void GetPlayerDiffPosition()
     {
         if (!isAddDiff)
@@ -239,12 +239,12 @@ public class ChildManager : MonoBehaviour
             }
             else
             {
-                // e‚Ì•û‚És‚­ - ¶
+                // è¦ªã®æ–¹ã«è¡Œã - å·¦
                 if (player.transform.position.x - transform.position.x < 0f)
                 {
                     velocity.x = -10.0f;
                 }
-                // e‚Ì•û‚És‚­ - ‰E
+                // è¦ªã®æ–¹ã«è¡Œã - å³
                 else
                 {
                     velocity.x = 10.0f;
@@ -255,25 +255,25 @@ public class ChildManager : MonoBehaviour
     }
     void MoveFollow()
     {
-        // e‚Æ‚Ç‚ê‚­‚ç‚¢—£‚ê‚é‚©‚ğæ“¾
+        // è¦ªã¨ã©ã‚Œãã‚‰ã„é›¢ã‚Œã‚‹ã‹ã‚’å–å¾—
         GetPlayerDiffPosition();
 
         if (isAddDiff)
         {
             if (Mathf.Abs(diffPosition.x - transform.position.x) < 1.0f)
             {
-                // —£‚ê‚½À•W‚ÉŒü‚©‚¤
+                // é›¢ã‚ŒãŸåº§æ¨™ã«å‘ã‹ã†
                 transform.position += new Vector3(diffPosition.x - transform.position.x, 0f, 0f) * (followPower * Time.deltaTime);
                 velocity.x = 0f;
             }
             else
             {
-                // e‚Ì•û‚És‚­ - ¶
+                // è¦ªã®æ–¹ã«è¡Œã - å·¦
                 if (diffPosition.x - transform.position.x < 0f)
                 {
                     velocity.x = -10.0f;
                 }
-                // e‚Ì•û‚És‚­ - ‰E
+                // è¦ªã®æ–¹ã«è¡Œã - å³
                 else
                 {
                     velocity.x = 10.0f;
@@ -282,7 +282,7 @@ public class ChildManager : MonoBehaviour
         }
     }
 
-    // –ÒiŠÖŒW
+    // çŒ›é€²é–¢ä¿‚
     public void DashInitialize(bool isLeft)
     {
         if (isLeft)
@@ -302,7 +302,7 @@ public class ChildManager : MonoBehaviour
         velocity.x = dashSpeed * orderDirection;
     }
 
-    // Ï‚İã‚°ŠÖŒW
+    // ç©ã¿ä¸Šã’é–¢ä¿‚
     void MoveToStack()
     {
         if (judgeGround)
@@ -318,12 +318,12 @@ public class ChildManager : MonoBehaviour
             }
             else
             {
-                // e‚Ì•û‚És‚­ - ¶
+                // è¦ªã®æ–¹ã«è¡Œã - å·¦
                 if (player.transform.position.x - transform.position.x < 0f)
                 {
                     velocity.x = -12.0f;
                 }
-                // e‚Ì•û‚És‚­ - ‰E
+                // è¦ªã®æ–¹ã«è¡Œã - å³
                 else
                 {
                     velocity.x = 12.0f;
@@ -376,7 +376,7 @@ public class ChildManager : MonoBehaviour
         ChangeMoveType(MoveType.STACKATTACK);
     }
 
-    // ƒJƒ‰ƒX‚ÉUŒ‚ŠÖŒW
+    // ã‚«ãƒ©ã‚¹ã«æ”»æ’ƒé–¢ä¿‚
     public bool GetIsThrow()
     {
         return isThrow;
@@ -414,7 +414,7 @@ public class ChildManager : MonoBehaviour
         }
     }
 
-    // ‘H–ŠÖŒW
+    // è‰é£Ÿäº‹é–¢ä¿‚
     void MoveEatGrass()
     {
         eatGrassLeftTime -= Time.deltaTime;
@@ -425,10 +425,10 @@ public class ChildManager : MonoBehaviour
         }
     }
 
-    // –À‚¢ŠÖŒW
+    // è¿·ã„é–¢ä¿‚
     void MoveLost()
     {
-        // –À‚¢ŠÔ‚ğŒ¸‚ç‚·
+        // è¿·ã„æ™‚é–“ã‚’æ¸›ã‚‰ã™
         lostLeftTime -= Time.deltaTime;
 
         if (judgeGround)
@@ -436,7 +436,7 @@ public class ChildManager : MonoBehaviour
             velocity.x = 0f;
         }
 
-        // ƒLƒ‡ƒƒLƒ‡ƒ‚³‚¹‚é
+        // ã‚­ãƒ§ãƒ­ã‚­ãƒ§ãƒ­ã•ã›ã‚‹
         if (lostLeftTime % 2f < 0.5f)
         {
             isFlipX = false;
@@ -446,7 +446,7 @@ public class ChildManager : MonoBehaviour
             isFlipX = true;
         }
 
-        // ‹ß‚­‚És‚Á‚½‚ç–ß‚·
+        // è¿‘ãã«è¡Œã£ãŸã‚‰æˆ»ã™
         if (judgeGround && playerManager.GetJudgeGround() && Mathf.Abs(player.transform.position.x - transform.position.x) < 3f)
         {
             if (playerManager.orderStack)
@@ -459,7 +459,7 @@ public class ChildManager : MonoBehaviour
             }
         }
 
-        // –À‚¢‚«‚Á‚½‚çƒpƒjƒbƒN‚É‚È‚é
+        // è¿·ã„ãã£ãŸã‚‰ãƒ‘ãƒ‹ãƒƒã‚¯ã«ãªã‚‹
         if (lostLeftTime < 0f)
         {
             float x = Random.Range(-3f, 3f);
@@ -471,10 +471,10 @@ public class ChildManager : MonoBehaviour
         }
     }
 
-    // ƒpƒjƒbƒNŠÖŒW
+    // ãƒ‘ãƒ‹ãƒƒã‚¯é–¢ä¿‚
     void MovePanic()
     {
-        // Œü‚©‚¤•ûŒü‚ğÄİ’è‚·‚é‚Ü‚Å‚ÌŠÔ
+        // å‘ã‹ã†æ–¹å‘ã‚’å†è¨­å®šã™ã‚‹ã¾ã§ã®æ™‚é–“
         changeOfDirectionIntervalLeftTime -= Time.deltaTime;
         if (changeOfDirectionIntervalLeftTime < 0f && judgeGround)
         {
@@ -482,7 +482,7 @@ public class ChildManager : MonoBehaviour
             velocity.y = Random.Range(3f, 6f);
             changeOfDirectionIntervalLeftTime = Random.Range(0.2f, 1.0f);
 
-            // ƒ‰ƒ“ƒ_ƒ€‚Éæ“¾‚µ‚½”š‚ª0‚È‚çX²‘¬“x‚ğƒ}ƒCƒiƒX‚É‚·‚é
+            // ãƒ©ãƒ³ãƒ€ãƒ ã«å–å¾—ã—ãŸæ•°å­—ãŒ0ãªã‚‰Xè»¸é€Ÿåº¦ã‚’ãƒã‚¤ãƒŠã‚¹ã«ã™ã‚‹
             int randomMinus = Random.Range(0, 99);
             if (randomMinus % 2 == 0)
             {
@@ -508,17 +508,17 @@ public class ChildManager : MonoBehaviour
         return isPanic;
     }
 
-    // “–‚½‚è”»’èi‘ÎÛ‚É‚æ‚Á‚Äs“®‚ª•Ï‚í‚éj
+    // å½“ãŸã‚Šåˆ¤å®šï¼ˆå¯¾è±¡ã«ã‚ˆã£ã¦è¡Œå‹•ãŒå¤‰ã‚ã‚‹ï¼‰
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // ƒJƒ‰ƒX‚É“–‚½‚Á‚½Û‚ÍUŒ‚
+        // ã‚«ãƒ©ã‚¹ã«å½“ãŸã£ãŸéš›ã¯æ”»æ’ƒ
         if (isThrow && collision.CompareTag("Crow"))
         {
             velocity.y = 5.0f;
             isCrawHit = true;
         }
 
-        // ‘‚É“–‚½‚Á‚½‚çŠÔ‚ğ‚©‚¯‚½‚Ì‚¿‚ÉH‚×‚é
+        // è‰ã«å½“ãŸã£ãŸã‚‰æ™‚é–“ã‚’ã‹ã‘ãŸã®ã¡ã«é£Ÿã¹ã‚‹
         if (isDash && collision.CompareTag("Grass"))
         {
             ChangeMoveType(MoveType.EATGRASS);
@@ -528,10 +528,10 @@ public class ChildManager : MonoBehaviour
         }
     }
 
-    // Ú’n”»’è
+    // æ¥åœ°åˆ¤å®š
     private void OnCollisionExit2D(Collision2D collision)
     {
-        // Ú’n”»’èitrue ¨ falsej
+        // æ¥åœ°åˆ¤å®šï¼ˆtrue â†’ falseï¼‰
         if (judgeGround && collision.gameObject.CompareTag("Ground"))
         {
             judgeGround = false;
@@ -543,13 +543,13 @@ public class ChildManager : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Ú’n”»’èifalse ¨ truej
+        // æ¥åœ°åˆ¤å®šï¼ˆfalse â†’ trueï¼‰
         if (!judgeGround && collision.gameObject.CompareTag("Ground"))
         {
             judgeGround = true;
         }
 
-        // áŠQ•¨‚É“–‚½‚Á‚½‚ç–À‚¤
+        // éšœå®³ç‰©ã«å½“ãŸã£ãŸã‚‰è¿·ã†
         if (collision.gameObject.CompareTag("Obstacle"))
         {
             if (isDash)
@@ -582,7 +582,7 @@ public class ChildManager : MonoBehaviour
         }
     }
 
-    // ‰æ‘œ‚Ì”½“]
+    // ç”»åƒã®åè»¢
     void ImageFlip()
     {
         if (!isAddDiff && moveType != MoveType.STACK && moveType != MoveType.LOST)

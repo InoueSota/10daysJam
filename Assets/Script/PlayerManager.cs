@@ -10,14 +10,14 @@ public class PlayerManager : MonoBehaviour
     SpriteRenderer sP;
     float halfSize = 0f;
     
-    // “ü—Í‚³‚ê‚½‘¬“x‚ğŠi”[‚·‚éiÅ‘å‚Pj
+    // å…¥åŠ›ã•ã‚ŒãŸé€Ÿåº¦ã‚’æ ¼ç´ã™ã‚‹ï¼ˆæœ€å¤§ï¼‘ï¼‰
     Vector2 inputMove = Vector2.zero;
-    // ˆÚ“®‘¬“x
+    // ç§»å‹•é€Ÿåº¦
     [SerializeField] float moveSpeed = 0f;
     [SerializeField] float Jumpforce = 0f;
-    // Ú’n”»’è
+    // æ¥åœ°åˆ¤å®š
     [SerializeField] private bool judgeGround = false;
-    // ¶‰E‚Ç‚¿‚ç‚ğŒü‚¢‚Ä‚¢‚é‚©
+    // å·¦å³ã©ã¡ã‚‰ã‚’å‘ã„ã¦ã„ã‚‹ã‹
     public enum DIRECTION {
         LEFT,
         RIGHT
@@ -33,34 +33,34 @@ public class PlayerManager : MonoBehaviour
     }
     INPUTDIRECTION inputDirection = INPUTDIRECTION.RIGHT;
 
-    // ‘SqƒKƒ‚
+    // å…¨å­ã‚¬ãƒ¢
     public GameObject allChildObj;
     AllChildScript allChild;
-    // qƒKƒ‚‚ğŠi”[‚·‚é
+    // å­ã‚¬ãƒ¢ã‚’æ ¼ç´ã™ã‚‹
     private GameObject[] children;
     public bool isJump;
 
-    // w¦ŠÖŒW
-    public bool orderLeft;      // w¦ - ¶–Òi
-    public bool orderRight;     // w¦ - ‰E–Òi
-    public bool orderStack;     // w¦ - Ï‚İã‚°
-    public bool orderDown;      // w¦ - W‡,‘Ò‹@
-    public bool orderAttack;    // w¦ - ƒJƒ‰ƒX‚ÉUŒ‚
+    // æŒ‡ç¤ºé–¢ä¿‚
+    public bool orderLeft;      // æŒ‡ç¤º - å·¦çŒ›é€²
+    public bool orderRight;     // æŒ‡ç¤º - å³çŒ›é€²
+    public bool orderStack;     // æŒ‡ç¤º - ç©ã¿ä¸Šã’
+    public bool orderDown;      // æŒ‡ç¤º - é›†åˆ,å¾…æ©Ÿ
+    public bool orderAttack;    // æŒ‡ç¤º - ã‚«ãƒ©ã‚¹ã«æ”»æ’ƒ
 
-    // ƒJƒ‰ƒXŠÖŒW
+    // ã‚«ãƒ©ã‚¹é–¢ä¿‚
     private GameObject[] targets;
     private GameObject closeCrow;
 
-    // “ü—Í‚Æ‚é‚â‚Â
+    // å…¥åŠ›ã¨ã‚‹ã‚„ã¤
     private int inputJump = 0;
     private int preInputJump = 0;
 
     private int inputOrder = 0;
     private int preInputOrder = 0;
 
-    //‰¡
+    //æ¨ª
     private int inputHorizontal = 0;
-    //c
+    //ç¸¦
     private int inputVertical = 0;
 
     void Start()
@@ -101,21 +101,21 @@ public class PlayerManager : MonoBehaviour
         {
             if (closeCrow == null)
             {
-                // w¦ - ¶–Òi
+                // æŒ‡ç¤º - å·¦çŒ›é€²
                 if (!orderStack && inputDirection == INPUTDIRECTION.LEFT)
                 {
                     OrderInitialize();
                     orderLeft = true;
                     CheckDiffChild(true);
                 }
-                // w¦ - ‰E–Òi
+                // æŒ‡ç¤º - å³çŒ›é€²
                 else if (!orderStack && inputDirection == INPUTDIRECTION.RIGHT)
                 {
                     OrderInitialize();
                     orderRight = true;
                     CheckDiffChild(true);
                 }
-                // w¦ - Ï‚İã‚°
+                // æŒ‡ç¤º - ç©ã¿ä¸Šã’
                 else if (!orderStack && inputDirection == INPUTDIRECTION.UP)
                 {
                     OrderInitialize();
@@ -123,12 +123,12 @@ public class PlayerManager : MonoBehaviour
                     allChild.DiffInitialize();
                     orderStack = true;
                 }
-                // w¦ - Ï‚İã‚°UŒ‚
+                // æŒ‡ç¤º - ç©ã¿ä¸Šã’æ”»æ’ƒ
                 else if (orderStack && (inputDirection == INPUTDIRECTION.LEFT || inputDirection == INPUTDIRECTION.RIGHT))
                 {
                     StackInitialize();
                 }
-                // w¦ - W‡,‘Ò‹@
+                // æŒ‡ç¤º - é›†åˆ,å¾…æ©Ÿ
                 else if (inputDirection == INPUTDIRECTION.DOWN)
                 {
                     OrderInitialize();
@@ -138,7 +138,7 @@ public class PlayerManager : MonoBehaviour
             }
             else
             {
-                // ƒJƒ‰ƒX‚ª‹ß‚­‚É‚¢‚é‚Æ‚«‚àÏ‚İã‚°‚ç‚ê‚é‚æ‚¤‚É‚·‚é
+                // ã‚«ãƒ©ã‚¹ãŒè¿‘ãã«ã„ã‚‹ã¨ãã‚‚ç©ã¿ä¸Šã’ã‚‰ã‚Œã‚‹ã‚ˆã†ã«ã™ã‚‹
                 if (!orderStack && inputDirection == INPUTDIRECTION.UP)
                 {
                     OrderInitialize();
@@ -152,14 +152,14 @@ public class PlayerManager : MonoBehaviour
                 }
                 else if (!orderStack)
                 {
-                    // w¦ - ƒJƒ‰ƒX‚ÉUŒ‚
+                    // æŒ‡ç¤º - ã‚«ãƒ©ã‚¹ã«æ”»æ’ƒ
                     CheckDiffChild(false);
                     orderAttack = true;
                 }
             }
         }
 
-        // F•ÏX
+        // è‰²å¤‰æ›´
         if (!closeCrow)
         {
             GetComponent<SpriteRenderer>().color = Color.white;
@@ -192,7 +192,7 @@ public class PlayerManager : MonoBehaviour
         inputHorizontal = (int)Input.GetAxisRaw("Horizontal");
         inputVertical = (int)Input.GetAxisRaw("Vertical");
 
-        // X²ˆÚ“®
+        // Xè»¸ç§»å‹•
         if (inputHorizontal < 0)
         {
             inputMove.x = -1f;
@@ -213,13 +213,13 @@ public class PlayerManager : MonoBehaviour
                 sP.flipX = false;
             }
         }
-        //ƒWƒƒƒ“ƒvˆ—iY²ƒCƒhƒEj
+        //ã‚¸ãƒ£ãƒ³ãƒ—å‡¦ç†ï¼ˆYè»¸ã‚¤ãƒ‰ã‚¦ï¼‰
         if (inputJump != 0 && preInputJump == 0)
         {
             isJump = true;
         }
 
-        // “ü—Í‚³‚ê‚½•ûŒü‚ğæ“¾‚·‚é
+        // å…¥åŠ›ã•ã‚ŒãŸæ–¹å‘ã‚’å–å¾—ã™ã‚‹
         if (inputHorizontal < 0)
         {
             inputDirection = INPUTDIRECTION.LEFT;
@@ -275,18 +275,18 @@ public class PlayerManager : MonoBehaviour
     {
         OrderInitialize();
         allChild.DiffInitialize();
-        // ¶Ï‚İã‚°UŒ‚
+        // å·¦ç©ã¿ä¸Šã’æ”»æ’ƒ
         if (inputDirection == INPUTDIRECTION.LEFT)
         {
             orderLeft = true;
         }
-        // ‰EÏ‚İã‚°UŒ‚
+        // å³ç©ã¿ä¸Šã’æ”»æ’ƒ
         else if (inputDirection == INPUTDIRECTION.RIGHT)
         {
             orderRight = true;
         }
 
-        // ‘S‚Ä‚ÌqƒKƒ‚‚ğæ“¾‚·‚é
+        // å…¨ã¦ã®å­ã‚¬ãƒ¢ã‚’å–å¾—ã™ã‚‹
         allChild.AddChildObjects(children);
         for (int i = 0; i < children.GetLength(0); i++)
         {
@@ -299,14 +299,14 @@ public class PlayerManager : MonoBehaviour
 
     private void CheckDiffChild(bool isOrderDash)
     {
-        // ‘S‚Ä‚ÌqƒKƒ‚‚ğæ“¾‚·‚é
+        // å…¨ã¦ã®å­ã‚¬ãƒ¢ã‚’å–å¾—ã™ã‚‹
         allChild.AddChildObjects(children);
 
         GameObject nearChild = null;
         int nearChildNumber = 0;
         bool isAssignment = false;
 
-        // eƒKƒ‚‚Éˆê”Ô‹ß‚¢qƒKƒ‚‚ğæ“¾‚·‚é
+        // è¦ªã‚¬ãƒ¢ã«ä¸€ç•ªè¿‘ã„å­ã‚¬ãƒ¢ã‚’å–å¾—ã™ã‚‹
         for (int i = 0; i < children.GetLength(0); i++)
         {
             ChildManager childManager = null;
@@ -314,12 +314,12 @@ public class PlayerManager : MonoBehaviour
             {
                 childManager = children[i].GetComponent<ChildManager>();
             }
-            // w¦‚ğo‚¹‚éó‘Ô‚©”»’è‚·‚é
+            // æŒ‡ç¤ºã‚’å‡ºã›ã‚‹çŠ¶æ…‹ã‹åˆ¤å®šã™ã‚‹
             if (childManager && !childManager.isTakedAway && childManager.isAddDiff &&
                 (isOrderDash ||
                 (!isOrderDash && !childManager.GetIsThrow())))
             {
-                // ‹——£‚ğ”»’è‚·‚é
+                // è·é›¢ã‚’åˆ¤å®šã™ã‚‹
                 if (!isAssignment || (nearChild && Vector3.Distance(nearChild.transform.position, transform.position) > Vector3.Distance(children[i].transform.position, transform.position)))
                 {
                     nearChild = children[i];
@@ -337,7 +337,7 @@ public class PlayerManager : MonoBehaviour
                 childManager = nearChild.GetComponent<ChildManager>();
             }
 
-            // w¦‚Ì“à—e‚É‚æ‚Á‚Ä•Ï‚¦‚é
+            // æŒ‡ç¤ºã®å†…å®¹ã«ã‚ˆã£ã¦å¤‰ãˆã‚‹
             if (isOrderDash)
             {
                 childManager.DashInitialize(orderLeft);
@@ -351,7 +351,7 @@ public class PlayerManager : MonoBehaviour
             {
                 if (children[i] && nearChildNumber != i)
                 {
-                    // ‘O‚É‚¸‚ç‚·
+                    // å‰ã«ãšã‚‰ã™
                     if (direction == DIRECTION.LEFT)
                     {
                         children[i].GetComponent<ChildManager>().diff -= 1.5f;
@@ -366,10 +366,10 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    // Ú’n”»’è
+    // æ¥åœ°åˆ¤å®š
     private void OnCollisionExit2D(Collision2D collision)
     {
-        // Ú’n”»’èitrue ¨ falsej
+        // æ¥åœ°åˆ¤å®šï¼ˆtrue â†’ falseï¼‰
         if (judgeGround && collision.gameObject.CompareTag("Ground"))
         {
             judgeGround = false;
@@ -381,13 +381,13 @@ public class PlayerManager : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Ú’n”»’èifalse ¨ truej
+        // æ¥åœ°åˆ¤å®šï¼ˆfalse â†’ trueï¼‰
         if (!judgeGround && collision.gameObject.CompareTag("Ground"))
         {
             judgeGround = true;
         }
 
-        // áŠQ•¨‚É“–‚½‚Á‚½‚ç–À‚¤
+        // éšœå®³ç‰©ã«å½“ãŸã£ãŸã‚‰è¿·ã†
         if (collision.gameObject.CompareTag("Obstacle"))
         {
             ContactPoint2D[] contacts = collision.contacts;

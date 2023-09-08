@@ -26,7 +26,7 @@ public class CrowScript : MonoBehaviour
     float angleY;
     private GameObject player;
     private int direction_ = 1;
-    [SerializeField] float easetime = 1.0f;
+    //[SerializeField] float easetime = 1.0f;
     private float stanTime = 2.0f;
     [SerializeField] const float kStanTime = 2.0f;
     public enum Mode
@@ -38,8 +38,8 @@ public class CrowScript : MonoBehaviour
         stan
     };
     [SerializeField] private Mode mode;
-    [SerializeField] private float DistanceChangeTimeX;
-    [SerializeField] private float DistanceChangeTimeY;
+    //[SerializeField] private float DistanceChangeTimeX;
+    //[SerializeField] private float DistanceChangeTimeY;
     [SerializeField] float Distance_;
     // Start is called before the first frame update
     void Start()
@@ -66,34 +66,34 @@ public class CrowScript : MonoBehaviour
                 }
                 transform.position += new Vector3(direction_*moveSpeed,0, 0)*Time.deltaTime;
                 Distance_ = Vector2.Distance(transform.position, targetPos);
-                if (Distance_ < 15)
-                {
-                    DistanceChangeTimeX=1f;
-                    DistanceChangeTimeY=1.5f;
-                }
-                else
-                if (Distance_ < 20)
-                {
-                    DistanceChangeTimeX=2;
-                    DistanceChangeTimeY=2.5f;
-                }
-                else
-                if (Distance_ < 25)
-                {
-                    DistanceChangeTimeX=2.5f;
-                    DistanceChangeTimeY=3f;
-                }
-                else
-                {
-                    DistanceChangeTimeX=3;
-                    DistanceChangeTimeY=3.5f;
-                }
+                //if (Distance_ < 15)
+                //{
+                //    DistanceChangeTimeX=1f;
+                //    DistanceChangeTimeY=1.5f;
+                //}
+                //else
+                //if (Distance_ < 20)
+                //{
+                //    DistanceChangeTimeX=2;
+                //    DistanceChangeTimeY=2.5f;
+                //}
+                //else
+                //if (Distance_ < 25)
+                //{
+                //    DistanceChangeTimeX=2.5f;
+                //    DistanceChangeTimeY=3f;
+                //}
+                //else
+                //{
+                //    DistanceChangeTimeX=3;
+                //    DistanceChangeTimeY=3.5f;
+                //}
 
                 if (coolTime < 0)
                 {
                     mode = Mode.attak;
                     startPos = transform.position;
-                    easetime = 1.2f;
+                    //easetime = 1.2f;
                     coolTime = kMaxcoolTime;
                     Attak();
                 }
