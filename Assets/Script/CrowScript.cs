@@ -11,7 +11,9 @@ using UnityEngine.UIElements;
 public class CrowScript : MonoBehaviour
 {
     private FeatherAParticlesManager featherA;
-    public string targetTag = "Child"; // E½E½E½E½E½ÎÛ‚ï¿½TagE½E½
+    private StanParticlesManager stan;
+
+    public string targetTag = "Child"; // ï¿½Eï¿½ï¿½Eï¿½ï¿½Eï¿½ï¿½Eï¿½ï¿½Eï¿½ÎÛ‚ï¿½Tagï¿½Eï¿½ï¿½Eï¿½
     public Vector3 targetPos;
     public Vector3 startPos;
     public float moveSpeed = 1.0f;
@@ -41,7 +43,10 @@ public class CrowScript : MonoBehaviour
     void Start()
     {
         featherA = GetComponent<FeatherAParticlesManager>();
+        stan = GetComponent<StanParticlesManager>();
         player = GameObject.Find("Player");
+
+       
     }
 
     // Update is called once per frame
@@ -86,7 +91,7 @@ public class CrowScript : MonoBehaviour
                 break;
             case Mode.takeaway:
                 Vector3 direction = targetPos - transform.position;
-                // •ûŒüƒxƒNƒgƒ‹‚ğ³‹K‰»i’·‚³‚ğ1‚É‚·‚éj
+                // ï¿½ï¿½ï¿½ï¿½ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½ğ³‹Kï¿½ï¿½ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½É‚ï¿½ï¿½ï¿½j
                 direction.Normalize();
                 transform.position += new Vector3(-direction.x * moveSpeed, moveSpeed, 0) * Time.deltaTime;
                 closestChild.transform.position = transform.position;
@@ -123,10 +128,10 @@ public class CrowScript : MonoBehaviour
 
         Vector3 direction = targetPos - transform.position;
 
-        // E½E½E½E½E½xE½NE½gE½E½E½ğ³‹KE½E½E½iE½E½E½E½E½E½1E½É‚ï¿½E½E½j
+        // ï¿½Eï¿½ï¿½Eï¿½ï¿½Eï¿½ï¿½Eï¿½ï¿½Eï¿½xï¿½Eï¿½Nï¿½Eï¿½gï¿½Eï¿½ï¿½Eï¿½ï¿½Eï¿½ğ³‹Kï¿½Eï¿½ï¿½Eï¿½ï¿½Eï¿½iï¿½Eï¿½ï¿½Eï¿½ï¿½Eï¿½ï¿½Eï¿½ï¿½Eï¿½ï¿½Eï¿½1ï¿½Eï¿½É‚ï¿½ï¿½Eï¿½ï¿½Eï¿½j
         direction.Normalize();
 
-        // E½Ú•WE½Ê’uE½Ì•ï¿½E½E½E½Éˆï¿½è‘¬E½xE½ÅˆÚ“ï¿½
+        // ï¿½Eï¿½Ú•Wï¿½Eï¿½Ê’uï¿½Eï¿½Ì•ï¿½ï¿½Eï¿½ï¿½Eï¿½ï¿½Eï¿½Éˆï¿½è‘¬ï¿½Eï¿½xï¿½Eï¿½ÅˆÚ“ï¿½
         transform.position += direction * moveSpeed * Time.deltaTime;
 
 
