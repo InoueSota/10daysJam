@@ -27,11 +27,13 @@ public class TitleManagerScript : MonoBehaviour
     [SerializeField] private float BackGround3ScrollSpeed = 0.25f;
     [SerializeField] private float BackGround4ScrollSpeed = 0.25f;
 
+    private SceneChanger changer;
+
     // Start is called before the first frame update
     void Start()
     {
 
-        
+        changer = GameObject.FindWithTag("SceneChanger").GetComponent<SceneChanger>();
 
         float width = Background0.GetComponent<SpriteRenderer>().bounds.size.x;
 
@@ -77,6 +79,7 @@ public class TitleManagerScript : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
 
+            changer.ChangeScene("GameScene");
 
         }
 
