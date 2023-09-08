@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7514164298105999569}
   - component: {fileID: 5098290474370891436}
   - component: {fileID: 6700715944245316401}
+  - component: {fileID: 1565551657187820618}
   m_Layer: 0
   m_Name: Crow
   m_TagString: Crow
@@ -153,3 +154,22 @@ MonoBehaviour:
   shotDistanceRand: 0.5
   RunTimeMax: 0.5
   RunTimeMaxRand: 0.2
+--- !u!114 &1565551657187820618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7514164298105999574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23e39d196613d5c49be50776e21d832c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  starParticle: {fileID: 1456223288058887879, guid: 67be473d561b59040b24fd00e4ad3aa0, type: 3}
+  starCount: 3
+  rotSpeed: 200
+  radius: 1
+  posY: 1
+  normalSize: 0.5
+  sizeVariation: 0.3
