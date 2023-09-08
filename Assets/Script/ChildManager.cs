@@ -416,7 +416,7 @@ public class ChildManager : MonoBehaviour
         }
 
         // ãﬂÇ≠Ç…çsÇ¡ÇΩÇÁñﬂÇ∑
-        if (judgeGround && Mathf.Abs(player.transform.position.x - transform.position.x) < 5f)
+        if (judgeGround && Mathf.Abs(player.transform.position.x - transform.position.x) < 3f)
         {
             if (playerManager.orderStack)
             {
