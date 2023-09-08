@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using UnityEngine;
+using static ChildManager;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class PlayerManager : MonoBehaviour
     // 移動速度
     [SerializeField] float moveSpeed = 0f;
     [SerializeField] float Jumpforce = 0f;
+    // 接地判定
+    [SerializeField] private bool judgeGround = false;
     // 左右どちらを向いているか
     public enum DIRECTION {
         LEFT,
@@ -361,5 +364,42 @@ public class PlayerManager : MonoBehaviour
             }
             allChild.SubtractDiffSize();
         }
+    }
+
+    // 接地判定
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        // 接地判定（true → false）
+        if (judgeGround && collision.gameObject.CompareTag("Ground"))
+        {
+            judgeGround = false;
+        }
+        if (judgeGround && collision.gameObject.CompareTag("Obstacle"))
+        {
+            judgeGround = false;
+        }
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // 接地判定（false → true）
+        if (!judgeGround && collision.gameObject.CompareTag("Ground"))
+        {
+            judgeGround = true;
+        }
+
+        // 障害物に当たったら迷う
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            ContactPoint2D[] contacts = collision.contacts;
+            Vector3 otherNormal = contacts[0].normal;
+            Vector3 upVector = new Vector3(0, 1, 0);
+            float dotUN = Vector3.Dot(upVector, otherNormal);
+            float dotDeg = Mathf.Acos(dotUN) * Mathf.Rad2Deg;
+            if (dotDeg > 45) { judgeGround = true; }
+        }
+    }
+    public bool GetJudgeGround()
+    {
+        return judgeGround;
     }
 }

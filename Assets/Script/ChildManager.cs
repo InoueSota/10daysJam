@@ -264,7 +264,7 @@ public class ChildManager : MonoBehaviour
             {
                 // ó£ÇÍÇΩç¿ïWÇ…å¸Ç©Ç§
                 transform.position += new Vector3(diffPosition.x - transform.position.x, 0f, 0f) * (followPower * Time.deltaTime);
-                velocity = Vector3.zero;
+                velocity.x = 0f;
             }
             else
             {
@@ -447,7 +447,7 @@ public class ChildManager : MonoBehaviour
         }
 
         // ãﬂÇ≠Ç…çsÇ¡ÇΩÇÁñﬂÇ∑
-        if (judgeGround && Mathf.Abs(player.transform.position.x - transform.position.x) < 3f)
+        if (judgeGround && playerManager.GetJudgeGround() && Mathf.Abs(player.transform.position.x - transform.position.x) < 3f)
         {
             if (playerManager.orderStack)
             {
@@ -490,7 +490,7 @@ public class ChildManager : MonoBehaviour
             }
         }
 
-        if (judgeGround && Mathf.Abs(player.transform.position.x - transform.position.x) < 0.5f)
+        if (judgeGround && playerManager.GetJudgeGround() && Mathf.Abs(player.transform.position.x - transform.position.x) < 0.5f)
         {
             if (playerManager.orderStack)
             {
@@ -536,6 +536,10 @@ public class ChildManager : MonoBehaviour
         {
             judgeGround = false;
         }
+        if (judgeGround && collision.gameObject.CompareTag("Obstacle"))
+        {
+            judgeGround = false;
+        }
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -546,7 +550,28 @@ public class ChildManager : MonoBehaviour
         }
 
         // è·äQï®Ç…ìñÇΩÇ¡ÇΩÇÁñ¿Ç§
-        if (isDash && collision.gameObject.CompareTag("Obstacle"))
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            if (isDash)
+            {
+                ChangeMoveType(MoveType.LOST);
+                lostLeftTime = lostTime;
+                velocity.x = Random.Range(2f, 7f) * -orderDirection;
+                velocity.y = Random.Range(3f, 6f);
+                judgeGround = false;
+                isDash = false;
+            }
+            else
+            {
+                ContactPoint2D[] contacts = collision.contacts;
+                Vector3 otherNormal = contacts[0].normal;
+                Vector3 upVector = new Vector3(0, 1, 0);
+                float dotUN = Vector3.Dot(upVector, otherNormal);
+                float dotDeg = Mathf.Acos(dotUN) * Mathf.Rad2Deg;
+                if (dotDeg > 45) { judgeGround = true; }
+            }
+        }
+        if (isDash && collision.gameObject.CompareTag("Wall"))
         {
             ChangeMoveType(MoveType.LOST);
             lostLeftTime = lostTime;

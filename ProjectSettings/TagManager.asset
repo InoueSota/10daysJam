@@ -11,6 +11,7 @@ TagManager:
   - SceneChanger
   - Grass
   - Obstacle
+  - Wall
   layers:
   - Default
   - TransparentFX
