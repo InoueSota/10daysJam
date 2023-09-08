@@ -103,20 +103,8 @@ public class ChildManager : MonoBehaviour
                 }
             }
             // 積み上げられていないとき
-            else
+            else if (moveType == MoveType.FOLLOW)
             {
-                // 指示 - 左猛進
-                if (playerManager.orderLeft)
-                {
-                    orderDirection = kLeft;
-                    ChangeMoveType(MoveType.DASH);
-                }
-                // 指示 - 右猛進
-                if (playerManager.orderRight)
-                {
-                    orderDirection = kRight;
-                    ChangeMoveType(MoveType.DASH);
-                }
                 // 指示 - 積み上げ
                 if (playerManager.orderStack)
                 {
@@ -186,7 +174,7 @@ public class ChildManager : MonoBehaviour
     }
 
     // 動きをセットする
-    public void ChangeMoveType(MoveType nextMoveType)
+    void ChangeMoveType(MoveType nextMoveType)
     {
         moveType = nextMoveType;
     }
@@ -387,6 +375,20 @@ public class ChildManager : MonoBehaviour
             velocity.y = 5.0f;
             isCrawHit = true;
         }
+    }
+
+    public void DashInitialize(bool isLeft)
+    {
+        if (isLeft)
+        {
+            orderDirection = kLeft;
+        }
+        else
+        {
+            orderDirection = kRight;
+        }
+        isAddDiff = false;
+        ChangeMoveType(MoveType.DASH);
     }
 
     public bool GetIsThrow()
