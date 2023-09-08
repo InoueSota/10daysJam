@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -37,6 +38,9 @@ public class CrowScript : MonoBehaviour
         stan
     };
     [SerializeField] private Mode mode;
+    [SerializeField] private float DistanceChangeTimeX;
+    [SerializeField] private float DistanceChangeTimeY;
+    [SerializeField] float Distance_;
     // Start is called before the first frame update
     void Start()
     {
@@ -61,23 +65,47 @@ public class CrowScript : MonoBehaviour
                     direction_ = UnityEngine.Random.Range(-1, 2);
                 }
                 transform.position += new Vector3(direction_*moveSpeed,0, 0)*Time.deltaTime;
+                Distance_ = Vector2.Distance(transform.position, targetPos);
+                if (Distance_ < 15)
+                {
+                    DistanceChangeTimeX=1f;
+                    DistanceChangeTimeY=1.5f;
+                }
+                else
+                if (Distance_ < 20)
+                {
+                    DistanceChangeTimeX=2;
+                    DistanceChangeTimeY=2.5f;
+                }
+                else
+                if (Distance_ < 25)
+                {
+                    DistanceChangeTimeX=2.5f;
+                    DistanceChangeTimeY=3f;
+                }
+                else
+                {
+                    DistanceChangeTimeX=3;
+                    DistanceChangeTimeY=3.5f;
+                }
 
                 if (coolTime < 0)
                 {
                     mode = Mode.attak;
                     startPos = transform.position;
-                    easetime = 1.0f;
+                    easetime = 1.2f;
                     coolTime = kMaxcoolTime;
+                    Attak();
                 }
                 isTakeAway = false;
                 break;
             case Mode.attak:
                 
-                Attak();
+               // Attak();
                 float distance = Vector2.Distance(transform.position, targetPos);
                 if (distance <= 0.1f)
                 {
-                    mode = Mode.stay;
+                    mode = Mode.stay;                   
                 }
                 //if (easetime < 0f)
                 //{
@@ -120,19 +148,16 @@ public class CrowScript : MonoBehaviour
 
     private void Attak()
     {
-        easetime -= Time.deltaTime * 0.5f;
-        float t = (easetime / 1.0f);
-        float y = Mathf.Lerp(targetPos.y, startPos.y, EaseInSine(t));
-        float x = Mathf.Lerp(targetPos.x, startPos.x, EaseOutQuart(t));
-        transform.position = new Vector3(x, y, 0);
+        transform.DOMoveX(targetPos.x, 2f).SetEase(Ease.InBack);
+        transform.DOMoveY(targetPos.y, 2.5f).SetEase(Ease.OutQuad);
+       // transform.DOMove(targetPos, 0.5f).SetEase(Ease.OutBounce);
+        //Vector3 direction = targetPos - transform.position;
 
-        Vector3 direction = targetPos - transform.position;
+        //// �E��E��E��E��E�x�E�N�E�g�E��E��E�𐳋K�E��E��E�i�E��E��E��E��E��E�1�E�ɂ��E��E�j
+        //direction.Normalize();
 
-        // �E��E��E��E��E�x�E�N�E�g�E��E��E�𐳋K�E��E��E�i�E��E��E��E��E��E�1�E�ɂ��E��E�j
-        direction.Normalize();
-
-        // �E�ڕW�E�ʒu�E�̕��E��E��E�Ɉ�葬�E�x�E�ňړ�
-        transform.position += direction * moveSpeed * Time.deltaTime;
+        //// �E�ڕW�E�ʒu�E�̕��E��E��E�Ɉ�葬�E�x�E�ňړ�
+        //transform.position += direction * moveSpeed * Time.deltaTime;
 
 
 
@@ -207,7 +232,8 @@ public class CrowScript : MonoBehaviour
           ? (Mathf.Pow(2 * t, 2) * ((c2 + 1) * 2 * t - c2)) / 2
           : (Mathf.Pow(2 * t - 2, 2) * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2;
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    
+private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag(targetTag))
         {
@@ -228,6 +254,7 @@ public class CrowScript : MonoBehaviour
         {
             mode = Mode.stan;
             stan.SetRun(kStanTime); //スタースタン
+            transform.DOKill();//イージングを止める
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
