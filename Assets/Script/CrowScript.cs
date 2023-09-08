@@ -39,6 +39,9 @@ public class CrowScript : MonoBehaviour
         stan
     };
     [SerializeField] private Mode mode;
+    [SerializeField] private float DistanceChangeTimeX;
+    [SerializeField] private float DistanceChangeTimeY;
+    [SerializeField] float Distance_;
     // Start is called before the first frame update
     void Start()
     {
@@ -63,6 +66,29 @@ public class CrowScript : MonoBehaviour
                     direction_ = UnityEngine.Random.Range(-1, 2);
                 }
                 transform.position += new Vector3(direction_*moveSpeed,0, 0)*Time.deltaTime;
+                Distance_ = Vector2.Distance(transform.position, targetPos);
+                if (Distance_ < 15)
+                {
+                    DistanceChangeTimeX=1f;
+                    DistanceChangeTimeY=1.5f;
+                }
+                else
+                if (Distance_ < 20)
+                {
+                    DistanceChangeTimeX=2;
+                    DistanceChangeTimeY=2.5f;
+                }
+                else
+                if (Distance_ < 25)
+                {
+                    DistanceChangeTimeX=2.5f;
+                    DistanceChangeTimeY=3f;
+                }
+                else
+                {
+                    DistanceChangeTimeX=3;
+                    DistanceChangeTimeY=3.5f;
+                }
 
                 if (coolTime < 0)
                 {
@@ -70,12 +96,13 @@ public class CrowScript : MonoBehaviour
                     startPos = transform.position;
                     easetime = 1.2f;
                     coolTime = kMaxcoolTime;
+                    Attak();
                 }
                 isTakeAway = false;
                 break;
             case Mode.attak:
                 
-                Attak();
+               // Attak();
                 float distance = Vector2.Distance(transform.position, targetPos);
                 if (distance <= 0.1f)
                 {
@@ -122,8 +149,9 @@ public class CrowScript : MonoBehaviour
 
     private void Attak()
     {
-        transform.DOMove(targetPos, 1.0f).SetEase(Ease.OutCubic);
-
+        transform.DOMoveX(targetPos.x, 2f).SetEase(Ease.InBack);
+        transform.DOMoveY(targetPos.y, 2.5f).SetEase(Ease.OutQuad);
+       // transform.DOMove(targetPos, 0.5f).SetEase(Ease.OutBounce);
         //Vector3 direction = targetPos - transform.position;
 
         //// �E��E��E��E��E�x�E�N�E�g�E��E��E�𐳋K�E��E��E�i�E��E��E��E��E��E�1�E�ɂ��E��E�j
@@ -227,6 +255,7 @@ private void OnTriggerEnter2D(Collider2D collision)
         {
             mode = Mode.stan;
             stan.SetRun(kStanTime); //スタースタン
+            transform.DOKill();//イージングを止める
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
