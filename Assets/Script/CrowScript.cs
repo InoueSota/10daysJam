@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TreeEditor;
 using Unity.Mathematics;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 //using static UnityEngine.GraphicsBuffer;
@@ -10,7 +11,6 @@ using UnityEngine.UIElements;
 public class CrowScript : MonoBehaviour
 {
     private FeatherAParticlesManager featherA;
-
     public string targetTag = "Child"; // ・ｽ・ｽ・ｽ・ｽ・ｽﾎ象ゑｿｽTag・ｽ・ｽ
     public Vector3 targetPos;
     public Vector3 startPos;
@@ -24,13 +24,16 @@ public class CrowScript : MonoBehaviour
     float angleY;
     private GameObject player;
     private int direction_ = 1;
-    float easetime = 1.0f;
+   public float easetime = 1.0f;
+    public float stanTime = 2.0f;
+    const float kStanTime = 2.0f;
     public enum Mode
     {
         stay,
         attak,
         leave,
-        takeaway
+        takeaway,
+        stan
     };
     [SerializeField] private Mode mode;
 
@@ -52,10 +55,10 @@ public class CrowScript : MonoBehaviour
                 FindClosestChild();
                 transform.position = Vector2.MoveTowards(transform.position, new Vector2(targetPos.x + (10 * direction_), 14.0f), Time.deltaTime * moveSpeed);
                 coolTime -= Time.deltaTime;
-                direction_ = UnityEngine.Random.Range(-1,2);
+                direction_ = UnityEngine.Random.Range(-1, 2);
+                transform.position += new Vector3(direction_,0, 0)*Time.deltaTime;
 
-
-                    if (coolTime < 0)
+                if (coolTime < 0)
                 {
                     mode = Mode.attak;
                     startPos = transform.position;
@@ -71,6 +74,10 @@ public class CrowScript : MonoBehaviour
                 {
                     mode = Mode.stay;
                 }
+                //if (easetime < 0f)
+                //{
+                //    mode = Mode.stay;
+                //}
                 break;
             case Mode.leave:
 
@@ -93,18 +100,25 @@ public class CrowScript : MonoBehaviour
                 }
 
                 break;
-
+            case Mode.stan:
+                Debug.Log("stan");
+                stanTime -= Time.deltaTime;
+                if (stanTime < 0)
+                {
+                    mode = Mode.stay;
+                    stanTime = kStanTime;
+                }
+                break;
         }
 
     }
 
     private void Attak()
     {
-
         easetime -= Time.deltaTime * 0.5f;
         float t = (easetime / 1.0f);
         float y = Mathf.Lerp(targetPos.y, startPos.y, EaseInSine(t));
-        float x = Mathf.Lerp(targetPos.x, startPos.x, EaseOutQuart(t));
+        float x = Mathf.Lerp(targetPos.x, startPos.x, EaseOutQuart(t*0.8f));
         transform.position = new Vector3(x, y, 0);
 
         Vector3 direction = targetPos - transform.position;
@@ -179,26 +193,32 @@ public class CrowScript : MonoBehaviour
     {
         return 1 - Mathf.Cos((t * Mathf.PI) / 2);
     }
+    float EaseInOutBack(float t)
+    {
+        const float c1 = 1.70158f;
+        const float c2 = c1 * 1.525f;
+
+        return t < 0.5
+          ? (Mathf.Pow(2 * t, 2) * ((c2 + 1) * 2 * t - c2)) / 2
+          : (Mathf.Pow(2 * t - 2, 2) * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2;
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag(targetTag))
         {
             if (mode == Mode.attak)
             {
-                mode = Mode.takeaway;
-                if (!isTakeAway) featherA.SetRunning(collision.transform.position);
+                mode = Mode.takeaway;                
                 isTakeAway = true;
-
             }
-
+            if (!isTakeAway) featherA.SetRunning(collision.transform.position);
             //collision.gameObject.GetComponent<ChildManager>().isTakedAway = true;
             //closestChild.transform.parent = transform;
 
         }
-
-        else if (collision.CompareTag("Ground") && !isTakeAway)
+        if (collision.CompareTag("Ground")&& mode == Mode.attak)
         {
-            mode = Mode.stay;
+            mode = Mode.stan;
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
