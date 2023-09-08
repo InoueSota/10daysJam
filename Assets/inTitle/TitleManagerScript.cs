@@ -76,7 +76,7 @@ public class TitleManagerScript : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetAxisRaw("Abutton") != 0 || Input.GetAxisRaw("Start") != 0)
         {
 
             changer.ChangeScene("GameScene");

@@ -46,6 +46,19 @@ public class PlayerManager : MonoBehaviour
     private GameObject[] targets;
     private GameObject closeCrow;
 
+    //入力とるやつ
+    private int inputJump = 0;
+    private int preInputJump = 0;
+
+    private int inputOrder = 0;
+    private int preInputOrder = 0;
+
+    //横
+    private int inputHorizontal = 0;
+    //縦
+    private int inputVertical = 0;
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -94,9 +107,9 @@ public class PlayerManager : MonoBehaviour
             this.GetComponent<SpriteRenderer>().color = Color.white;
 
             // 指示 - 左猛進
-            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+            if (inputHorizontal < 0)
             {
-                if (Input.GetKeyDown(KeyCode.J))
+                if (inputOrder != 0 && preInputOrder == 0)
                 {
                     orderLeft = true;
                     orderRight = false;
@@ -104,9 +117,9 @@ public class PlayerManager : MonoBehaviour
                 }
             }
             // 指示 - 右猛進
-            else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+            else if (inputHorizontal > 0)
             {
-                if (Input.GetKeyDown(KeyCode.J))
+                if (inputOrder != 0 && preInputOrder == 0)
                 {
                     orderLeft = false;
                     orderRight = true;
@@ -114,9 +127,9 @@ public class PlayerManager : MonoBehaviour
                 }
             }
             // 指示 - 積み上げ
-            else if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
+            else if (inputVertical > 0)
             {
-                if (Input.GetKeyDown(KeyCode.J))
+                if (inputOrder != 0 && preInputOrder == 0)
                 {
                     allChild.stackCount = 0;
                     allChild.DiffInitialize();
@@ -124,9 +137,9 @@ public class PlayerManager : MonoBehaviour
                 }
             }
             // 指示 - 集合,待機
-            else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
+            else if (inputVertical < 0)
             {
-                if (Input.GetKeyDown(KeyCode.J))
+                if (inputOrder != 0 && preInputOrder == 0)
                 {
                     allChild.DiffInitialize();
                     orderDown = true;
@@ -138,7 +151,7 @@ public class PlayerManager : MonoBehaviour
             this.GetComponent<SpriteRenderer>().color = Color.red;
 
             // 指示 - カラスに攻撃
-            if (Input.GetKeyDown(KeyCode.J))
+            if (inputOrder != 0 && preInputOrder == 0)
             {
                 CheckDiffChild(ORDERPATTERN.ATTACK);
                 orderAttack = true;
@@ -150,8 +163,17 @@ public class PlayerManager : MonoBehaviour
     {
         inputMove = Vector2.zero;
 
+        preInputJump = inputJump;
+        preInputOrder = inputOrder;
+
+        inputJump = (int)Input.GetAxisRaw("Abutton");
+        inputOrder = (int)Input.GetAxisRaw("Xbutton");
+
+        inputHorizontal = (int)Input.GetAxisRaw("Horizontal");
+        inputVertical = (int)Input.GetAxisRaw("Vertical");
+
         // X軸移動
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+        if (inputHorizontal < 0)
         {
             inputMove.x = -1f;
             direction = DIRECTION.LEFT;
@@ -161,7 +183,7 @@ public class PlayerManager : MonoBehaviour
                 sP.flipX = true;
             }
         }
-        else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+        else if (inputHorizontal > 0)
         {
             inputMove.x = 1f;
             direction = DIRECTION.RIGHT;
@@ -172,7 +194,7 @@ public class PlayerManager : MonoBehaviour
             }
         }
         //ジャンプ処理（Y軸イドウ）
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (inputJump != 0 && preInputJump == 0)
         {
             isJump = true;
         }
