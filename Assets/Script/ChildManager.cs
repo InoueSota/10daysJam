@@ -76,11 +76,13 @@ public class ChildManager : MonoBehaviour
     // 食べたら大きさを変える
     private Vector3 kAddScale = new Vector3(0.15f, 0.15f, 0.15f);
 
-    //// 迷っている時間
-    //[SerializeField] private float lostTime = 0f;
-    //private float lostLeftTime = 0f;
-    //[SerializeField] private float changeOfDirectionIntervalTime = 0f;
-    //private float changeOfDirectionIntervalLeftTime = 0f;
+    // 迷っている時間
+    [SerializeField] private float lostTime = 0f;
+    private float lostLeftTime = 0f;
+
+    // パニック
+    private bool isPanic = false;
+    private float changeOfDirectionIntervalLeftTime = 0f;
 
     void Start()
     {
@@ -171,7 +173,7 @@ public class ChildManager : MonoBehaviour
     // 重力処理
     void Gravity()
     {
-        if (!judgeGround && (moveType == MoveType.FOLLOW || moveType == MoveType.STACKCANCEL || moveType == MoveType.STACKATTACK))
+        if (!judgeGround && (moveType == MoveType.FOLLOW || moveType == MoveType.STACKCANCEL || moveType == MoveType.STACKATTACK || moveType == MoveType.LOST || moveType == MoveType.PANIC))
         {
             velocity.y -= 3.0f * Time.deltaTime * 9.81f;
         }
@@ -395,20 +397,67 @@ public class ChildManager : MonoBehaviour
     // 迷い関係
     void MoveLost()
     {
+        // 迷い時間を減らす
+        lostLeftTime -= Time.deltaTime;
+
+        if (judgeGround)
+        {
+            velocity.x = 0f;
+        }
+
+        // キョロキョロさせる
+        if (lostLeftTime % 2f < 0.5f)
+        {
+            isFlipX = false;
+        }
+        else if ((lostLeftTime + 1f) % 2 < 0.5f)
+        {
+            isFlipX = true;
+        }
+
+        // 迷いきったらパニックになる
+        if (lostLeftTime < 0f)
+        {
+            float x = Random.Range(-3f, 3f);
+            velocity.x = x;
+            float randomInterval = Random.Range(0.2f, 1.0f);
+            changeOfDirectionIntervalLeftTime = randomInterval;
+            isPanic = true;
+            ChangeMoveType(MoveType.PANIC);
+        }
+
 
     }
 
     // パニック関係
     void MovePanic()
     {
-        
+        // 向かう方向を再設定するまでの時間
+        changeOfDirectionIntervalLeftTime -= Time.deltaTime;
+        if (changeOfDirectionIntervalLeftTime < 0f && judgeGround)
+        {
+            velocity.x = Random.Range(3f, 6f);
+            velocity.y = Random.Range(3f, 6f);
+            changeOfDirectionIntervalLeftTime = Random.Range(0.2f, 1.0f);
+
+            // ランダムに取得した数字が0ならX軸速度をマイナスにする
+            int randomMinus = Random.Range(0, 99);
+            if (randomMinus % 2 == 0)
+            {
+                velocity.x *= -1f;
+            }
+        }
+    }
+    public bool GetIsPanic()
+    {
+        return isPanic;
     }
 
     // 当たり判定（対象によって行動が変わる）
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // カラスに当たった際は攻撃
-        if (isThrow &&　collision.CompareTag("Crow"))
+        if (isThrow && collision.CompareTag("Crow"))
         {
             velocity.y = 5.0f;
             isCrawHit = true;
@@ -440,12 +489,23 @@ public class ChildManager : MonoBehaviour
         {
             judgeGround = true;
         }
+
+        // 障害物に当たったら迷う
+        if (isDash && collision.gameObject.CompareTag("Obstacle"))
+        {
+            ChangeMoveType(MoveType.LOST);
+            lostLeftTime = lostTime;
+            velocity.x = Random.Range(2f, 7f) * -orderDirection;
+            velocity.y = Random.Range(3f, 6f);
+            judgeGround = false;
+            isDash = false;
+        }
     }
 
     // 画像の反転
     void ImageFlip()
     {
-        if (!isAddDiff && moveType != MoveType.STACK)
+        if (!isAddDiff && moveType != MoveType.STACK && moveType != MoveType.LOST)
         {
             if (!isFlipX && velocity.x < 0f)
             {
@@ -456,7 +516,7 @@ public class ChildManager : MonoBehaviour
                 isFlipX = false;
             }
         }
-        else if (isAddDiff || moveType == MoveType.STACK)
+        else if (isAddDiff || moveType == MoveType.STACK && moveType != MoveType.LOST)
         {
             if (playerDirection == 0)
             {
