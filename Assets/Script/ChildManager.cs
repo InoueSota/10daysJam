@@ -13,12 +13,14 @@ public class ChildManager : MonoBehaviour
     public GameObject player;
     private PlayerManager playerManager;
     // どれくらいの差か
-    [SerializeField]private Vector3 diffPosition = Vector3.zero;
+    private Vector3 diffPosition = Vector3.zero;
     public float diff = 0f;
     public bool isAddDiff = false;
     // 追いかける強さ
-    [SerializeField] private float followPower = 0f;
+    private float followPower = 12f;
 
+    // 基本移動速度
+    private Vector3 velocity = Vector3.zero;
     // プレイヤーの向き
     private int playerDirection = 1;
 
@@ -32,15 +34,14 @@ public class ChildManager : MonoBehaviour
         STACKATTACK,// 積まれた状態の攻撃
         STAY,       // その場に待機
         ATTACKCROW, // カラスに攻撃
+        EATGRASS,   // 草を食べる
     }
-    [SerializeField] private MoveType moveType = MoveType.FOLLOW;
+    private MoveType moveType = MoveType.FOLLOW;
 
+    // 猛進フラグ
+    private bool isDash = false;
     // 猛進速度
-    [SerializeField] private float dashSpeed = 8f;
-
-    // 基本移動速度
-    [SerializeField] private Vector3 velocity = Vector3.zero;
-
+    private float dashSpeed = 12f;
     // 速度を方向に応じて変化させる
     private int orderDirection = 0;
     const int kLeft = -1;
@@ -48,24 +49,29 @@ public class ChildManager : MonoBehaviour
 
     // 積み上げの高さをカウントで変える
     private int stackIndex = 0;
-    // 積み上げフラグ
-    public bool isPiledUp = false;
     // 積み上げ座標
     private Vector3 stackPos = Vector3.zero;
     // 積み上げを中断した時のランダム速度
     private float cancelRandomX = 0f;
 
-    // 攻撃時間
-    [SerializeField] private float attackCrowTime = 0f;
+    // 攻撃最大時間
+    private float attackCrowTime = 1.5f;
     private float attackCrowLeftTime = 0f;
     // 攻撃終了フラグ
     private bool isFinishAttackCrow = false;
     // １つずつ投げるためのフラグ
-    [SerializeField] private bool isThrow = false;
+    private bool isThrow = false;
     // カラスに当たったかフラグ
     private bool isCrawHit = false;
     // カラスに連れられたかフラグ
     public bool isTakedAway = false;
+
+    // 草関係
+    // 食事に掛かる時間
+    [SerializeField] private float eatGrassTime = 0f;
+    private float eatGrassLeftTime = 0f;
+    // 食べたら大きさを変える
+    private Vector3 kAddScale = new Vector3(0.15f, 0.15f, 0.15f);
 
     void Start()
     {
@@ -144,7 +150,6 @@ public class ChildManager : MonoBehaviour
                 // 指示 - 集合,待機
                 if (playerManager.orderDown)
                 {
-                    isPiledUp = false;
                     transform.parent.gameObject.GetComponent<AllChildScript>().stackCount = 0;
                     cancelRandomX = Random.Range(3.0f, 6.0f);
                     ChangeMoveType(MoveType.STACKCANCEL);
@@ -169,6 +174,11 @@ public class ChildManager : MonoBehaviour
                 MoveAttackCrow();
 
                 break;
+            case MoveType.EATGRASS:
+
+                MoveEatGrass();
+
+                break;
         }
 
     }
@@ -179,6 +189,7 @@ public class ChildManager : MonoBehaviour
         moveType = nextMoveType;
     }
 
+    // 追いかけ関係
     void GetPlayerDiffPosition()
     {
         if (!isAddDiff)
@@ -211,8 +222,6 @@ public class ChildManager : MonoBehaviour
         }
         diffPosition = new(player.transform.position.x + diff, transform.position.y, transform.position.z);
     }
-
-    // フォロー時の動き
     void MoveFollow()
     {
         // 親とどれくらい離れるかを取得
@@ -242,12 +251,34 @@ public class ChildManager : MonoBehaviour
         }
     }
 
-    // ダッシュ時の動き
+    // 猛進関係
+    public void DashInitialize(bool isLeft)
+    {
+        if (isLeft)
+        {
+            orderDirection = kLeft;
+        }
+        else
+        {
+            orderDirection = kRight;
+        }
+        isAddDiff = false;
+        isDash = true;
+        ChangeMoveType(MoveType.DASH);
+    }
     void MoveDash()
     {
         velocity.x = dashSpeed * orderDirection;
     }
 
+    // 積み上げ関係
+    void StackAttackInitialize()
+    {
+        velocity.x = 8f * orderDirection;
+        velocity.y = 8f;
+        transform.parent.gameObject.GetComponent<AllChildScript>().stackCount = 0;
+        ChangeMoveType(MoveType.STACKATTACK);
+    }
     void MoveToStack()
     {
         if (Mathf.Abs(player.transform.position.x - transform.position.x) < 0.2f)
@@ -255,7 +286,6 @@ public class ChildManager : MonoBehaviour
             stackIndex = transform.parent.gameObject.GetComponent<AllChildScript>().stackCount;
             stackPos.x = playerManager.transform.position.x;
             stackPos.y = (playerManager.transform.position.y + playerManager.transform.localScale.y * 0.5f) + transform.localScale.y * 0.5f;
-            isPiledUp = true;
             isAddDiff = false;
             transform.parent.gameObject.GetComponent<AllChildScript>().stackCount++;
             ChangeMoveType(MoveType.STACK);
@@ -274,7 +304,6 @@ public class ChildManager : MonoBehaviour
             }
         }
     }
-
     void MoveStack()
     {
         Vector3 pos = stackPos;
@@ -284,7 +313,6 @@ public class ChildManager : MonoBehaviour
 
         transform.position = pos;
     }
-
     void MoveStackCancel()
     {
         velocity.x = cancelRandomX;
@@ -296,7 +324,6 @@ public class ChildManager : MonoBehaviour
             ChangeMoveType(MoveType.FOLLOW);
         }
     }
-
     void MoveStackAttack()
     {
         velocity.y -= 3.0f * Time.deltaTime * 9.81f;
@@ -309,6 +336,21 @@ public class ChildManager : MonoBehaviour
         }
     }
 
+    // カラスに攻撃関係
+    public bool GetIsThrow()
+    {
+        return isThrow;
+    }
+    public void ThrowInitialize()
+    {
+        velocity = playerManager.GetNearCrawPos() - player.transform.position;
+        velocity = velocity.normalized * 30.0f;
+        transform.position = player.transform.position;
+        attackCrowLeftTime = attackCrowTime;
+        isFinishAttackCrow = false;
+        isThrow = true;
+        ChangeMoveType(MoveType.ATTACKCROW);
+    }
     void MoveAttackCrow()
     {
         if (isThrow)
@@ -332,6 +374,38 @@ public class ChildManager : MonoBehaviour
         }
     }
 
+    // 草食事関係
+    void MoveEatGrass()
+    {
+        eatGrassLeftTime -= Time.deltaTime;
+        if (eatGrassLeftTime < 0f) 
+        {
+            transform.localScale += kAddScale;
+            ChangeMoveType(MoveType.FOLLOW);
+        }
+    }
+
+    // 当たり判定（対象によって行動が変わる）
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // カラスに当たった際は攻撃
+        if (isThrow &&　collision.CompareTag("Crow"))
+        {
+            velocity.y = 5.0f;
+            isCrawHit = true;
+        }
+
+        // 草に当たったら時間をかけたのちに食べる
+        if (isDash && collision.CompareTag("Grass"))
+        {
+            ChangeMoveType(MoveType.EATGRASS);
+            velocity = Vector3.zero;
+            eatGrassLeftTime = eatGrassTime;
+            isDash = false;
+        }
+    }
+
+    // 画像の反転
     void ImageFlip()
     {
         if (!isAddDiff && moveType != MoveType.STACK)
@@ -357,53 +431,5 @@ public class ChildManager : MonoBehaviour
             }
         }
         this.GetComponent<SpriteRenderer>().flipX = isFlipX;
-    }
-
-    void StackAttackInitialize()
-    {
-        velocity.x = 8f * orderDirection;
-        velocity.y = 8f;
-        transform.parent.gameObject.GetComponent<AllChildScript>().stackCount = 0;
-        isPiledUp = false;
-        ChangeMoveType(MoveType.STACKATTACK);
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Crow"))
-        {
-            velocity.y = 5.0f;
-            isCrawHit = true;
-        }
-    }
-
-    public void DashInitialize(bool isLeft)
-    {
-        if (isLeft)
-        {
-            orderDirection = kLeft;
-        }
-        else
-        {
-            orderDirection = kRight;
-        }
-        isAddDiff = false;
-        ChangeMoveType(MoveType.DASH);
-    }
-
-    public bool GetIsThrow()
-    {
-        return isThrow;
-    }
-
-    public void ThrowInitialize()
-    {
-        velocity = playerManager.GetNearCrawPos() - player.transform.position;
-        velocity = velocity.normalized * 30.0f;
-        transform.position = player.transform.position;
-        attackCrowLeftTime = attackCrowTime;
-        isFinishAttackCrow = false;
-        isThrow = true;
-        ChangeMoveType(MoveType.ATTACKCROW);
     }
 }
