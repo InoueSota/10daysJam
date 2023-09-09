@@ -100,13 +100,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c6acbbc9d2dcbb43a43eb2d876abade, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  halfSize: 0
   moveSpeed: 10
-  Jumpforce: 10
-  orderPileUp: 0
-  orderRight: 0
+  velocity: {x: 0, y: 0, z: 0}
+  judgeGround: 0
+  allChildObj: {fileID: 0}
   orderLeft: 0
+  orderRight: 0
+  orderStack: 0
   orderDown: 0
   orderAttack: 0
+  targetMarkObj: {fileID: 0}
+  dummyObj: {fileID: 0}
 --- !u!61 &6111210653953210399
 BoxCollider2D:
   m_ObjectHideFlags: 0

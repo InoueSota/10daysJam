@@ -527,29 +527,19 @@ public class ChildManager : MonoBehaviour
     {
         if (isThrow && collision.CompareTag("Crow"))
         {
-        // カラスに当たった際は攻撃
-            if (collision.gameObject != playerManager.dummyObj)
+            // かかしのHP処理
+            EnemyStatus enemyStatus = collision.GetComponent<EnemyStatus>();
+            if (enemyStatus)
             {
-                velocity.y = 5.0f;
-                isCrawHit = true;
-            }
-            // カラスの”かかし”に当たった際は攻撃
-            else
-            {
-                // かかしのHP処理
-                DummyManager dummyManager = collision.GetComponent<DummyManager>();
-                if (dummyManager)
+                enemyStatus.Damage();
+                // ダメージを与えHPがなくなったら死亡
+                if (enemyStatus.GetHP() <= 0)
                 {
-                    dummyManager.Damage();
-                    // ダメージを与えHPがなくなったら死亡
-                    if (dummyManager.GetHP() <= 0)
-                    {
-                        Destroy(collision.gameObject);
-                    }
+                    Destroy(collision.gameObject);
                 }
-                velocity.y = 5.0f;
-                isCrawHit = true;
             }
+            velocity.y = 5.0f;
+            isCrawHit = true;
         }
 
         // 草に当たったら時間をかけたのちに食べる

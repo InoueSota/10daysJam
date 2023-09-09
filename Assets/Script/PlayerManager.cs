@@ -58,7 +58,6 @@ public class PlayerManager : MonoBehaviour
     private GameObject[] targets;
     private GameObject closeCrow;
     public GameObject targetMarkObj;
-    public GameObject dummyObj;
 
     // 入力とるやつ
     private int inputJump = 0;
@@ -170,7 +169,7 @@ public class PlayerManager : MonoBehaviour
                 {
                     StackInitialize();
                 }
-                else if (!orderStack)
+                else if (judgeGround && !orderStack)
                 {
                     // 指示 - カラスに攻撃
                     CheckDiffChild(false);
