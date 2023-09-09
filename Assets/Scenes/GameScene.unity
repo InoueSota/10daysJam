@@ -806,7 +806,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a1fc4e931f32a043991ef3335f0a3a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  childCount: {fileID: 0}
   allChildObj: {fileID: 1994064167}
 --- !u!1001 &788808389
 PrefabInstance:
