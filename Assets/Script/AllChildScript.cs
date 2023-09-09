@@ -22,13 +22,26 @@ public class AllChildScript : MonoBehaviour
     public void AddChildObjects(GameObject[] children)
     {
         // q‚ğ”‚¦‚é
-        int childCount = 0;
+        int childCount_ = 0;
 
         foreach (Transform child in transform)
         {
-            children[childCount] = child.gameObject;
-            childCount++;
+            children[childCount_] = child.gameObject;
+            childCount_++;
         }
+    }
+
+    public int ChildrenCount()
+    {
+        // q‚ğ”‚¦‚é
+        int childCount_ = 0;
+
+        foreach (Transform child in transform)
+        {
+            childCount_++;
+        }
+
+        return childCount_;
     }
 
     public void DiffInitialize()
