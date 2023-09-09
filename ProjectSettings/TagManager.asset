@@ -12,6 +12,7 @@ TagManager:
   - Grass
   - Obstacle
   - Wall
+  - Dummy
   layers:
   - Default
   - TransparentFX

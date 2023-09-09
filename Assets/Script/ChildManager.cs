@@ -525,6 +525,24 @@ public class ChildManager : MonoBehaviour
     // 当たり判定（対象によって行動が変わる）
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // カラスの”かかし”に当たった際は攻撃
+        if (isThrow && collision.CompareTag("Dummy"))
+        {
+            // かかしのHP処理
+            DummyManager dummyManager = collision.GetComponent<DummyManager>();
+            if (dummyManager)
+            {
+                dummyManager.Damage();
+                // ダメージを与えHPがなくなったら死亡
+                if (dummyManager.GetHP() <= 0)
+                {
+                    Destroy(collision.gameObject);
+                }
+            }
+            velocity.y = 5.0f;
+            isCrawHit = true;
+        }
+
         // カラスに当たった際は攻撃
         if (isThrow && collision.CompareTag("Crow"))
         {
