@@ -59,6 +59,7 @@ public class PlayerManager : MonoBehaviour
     // カラス関係
     private GameObject[] targets;
     private GameObject closeCrow;
+    public GameObject targetMarkObj;
 
     // 入力とるやつ
     private int inputJump = 0;
@@ -101,12 +102,30 @@ public class PlayerManager : MonoBehaviour
     }
     private void OrderChildren()
     {
+        // 近くのカラスを取得
         closeCrow = SearchCrow();
+        // 近くにカラスがいるならターゲットマークをその位置に描画する
+        if (closeCrow)
+        {
+            if (!targetMarkObj.activeInHierarchy)
+            {
+                targetMarkObj.SetActive(true);
+            }
+            targetMarkObj.transform.position = closeCrow.transform.position;
+        }
+        else
+        {
+            if (targetMarkObj.activeInHierarchy)
+            {
+                targetMarkObj.SetActive(false);
+            }
+        }
+
         orderDown = false;
 
         if (inputOrder != 0 && preInputOrder == 0)
         {
-            if (closeCrow == null)
+            if (!closeCrow)
             {
                 // 指示 - 左猛進
                 if (!orderStack && inputDirection == INPUTDIRECTION.LEFT)
@@ -157,23 +176,13 @@ public class PlayerManager : MonoBehaviour
                 {
                     StackInitialize();
                 }
-                else if (!orderStack)
+                else if (judgeGround && !orderStack)
                 {
                     // 指示 - カラスに攻撃
                     CheckDiffChild(false);
                     orderAttack = true;
                 }
             }
-        }
-
-        // 色変更
-        if (!closeCrow)
-        {
-            GetComponent<SpriteRenderer>().color = Color.white;
-        }
-        else
-        {
-            GetComponent<SpriteRenderer>().color = Color.red;
         }
     }
 
@@ -262,7 +271,7 @@ public class PlayerManager : MonoBehaviour
         //ジャンプ処理（Y軸イドウ）
         if (inputJump != 0 && preInputJump == 0)
         {
-            velocity.y = 9f;
+            velocity.y = 13f;
             isJump = true;
         }
     }
@@ -458,7 +467,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (!judgeGround)
         {
-            velocity.y -= 3.0f * Time.deltaTime * 9.81f;
+            velocity.y -= 5.0f * Time.deltaTime * 9.81f;
         }
         else if (!isJump)
         {
