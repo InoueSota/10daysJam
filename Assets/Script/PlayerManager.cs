@@ -57,6 +57,8 @@ public class PlayerManager : MonoBehaviour
     // カラス関係
     private GameObject[] targets;
     private GameObject closeCrow;
+    public GameObject targetMarkObj;
+    public GameObject dummyObj;
 
     // 入力とるやつ
     private int inputJump = 0;
@@ -94,12 +96,30 @@ public class PlayerManager : MonoBehaviour
     }
     private void OrderChildren()
     {
+        // 近くのカラスを取得
         closeCrow = SearchCrow();
+        // 近くにカラスがいるならターゲットマークをその位置に描画する
+        if (closeCrow)
+        {
+            if (!targetMarkObj.activeInHierarchy)
+            {
+                targetMarkObj.SetActive(true);
+            }
+            targetMarkObj.transform.position = closeCrow.transform.position;
+        }
+        else
+        {
+            if (targetMarkObj.activeInHierarchy)
+            {
+                targetMarkObj.SetActive(false);
+            }
+        }
+
         orderDown = false;
 
         if (inputOrder != 0 && preInputOrder == 0)
         {
-            if (closeCrow == null)
+            if (!closeCrow)
             {
                 // 指示 - 左猛進
                 if (!orderStack && inputDirection == INPUTDIRECTION.LEFT)
@@ -157,16 +177,6 @@ public class PlayerManager : MonoBehaviour
                     orderAttack = true;
                 }
             }
-        }
-
-        // 色変更
-        if (!closeCrow)
-        {
-            GetComponent<SpriteRenderer>().color = Color.white;
-        }
-        else
-        {
-            GetComponent<SpriteRenderer>().color = Color.red;
         }
     }
 

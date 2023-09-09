@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DummyManager : MonoBehaviour
 {
-    private int HP = 10;
+    public int HP = 10;
 
     void Start()
     {

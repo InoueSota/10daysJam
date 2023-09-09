@@ -412,7 +412,7 @@ public class ChildManager : MonoBehaviour
             velocity.x = 0;
             velocity.y -= 8.0f * Time.deltaTime * 9.81f;
 
-            if (this.transform.position.y < 0.55f)
+            if (judgeGround)
             {
                 isCrawHit = false;
                 isThrow = false;
@@ -525,29 +525,31 @@ public class ChildManager : MonoBehaviour
     // 当たり判定（対象によって行動が変わる）
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // カラスの”かかし”に当たった際は攻撃
-        if (isThrow && collision.CompareTag("Dummy"))
-        {
-            // かかしのHP処理
-            DummyManager dummyManager = collision.GetComponent<DummyManager>();
-            if (dummyManager)
-            {
-                dummyManager.Damage();
-                // ダメージを与えHPがなくなったら死亡
-                if (dummyManager.GetHP() <= 0)
-                {
-                    Destroy(collision.gameObject);
-                }
-            }
-            velocity.y = 5.0f;
-            isCrawHit = true;
-        }
-
-        // カラスに当たった際は攻撃
         if (isThrow && collision.CompareTag("Crow"))
         {
-            velocity.y = 5.0f;
-            isCrawHit = true;
+        // カラスに当たった際は攻撃
+            if (collision.gameObject != playerManager.dummyObj)
+            {
+                velocity.y = 5.0f;
+                isCrawHit = true;
+            }
+            // カラスの”かかし”に当たった際は攻撃
+            else
+            {
+                // かかしのHP処理
+                DummyManager dummyManager = collision.GetComponent<DummyManager>();
+                if (dummyManager)
+                {
+                    dummyManager.Damage();
+                    // ダメージを与えHPがなくなったら死亡
+                    if (dummyManager.GetHP() <= 0)
+                    {
+                        Destroy(collision.gameObject);
+                    }
+                }
+                velocity.y = 5.0f;
+                isCrawHit = true;
+            }
         }
 
         // 草に当たったら時間をかけたのちに食べる
