@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -20,7 +21,7 @@ public class ChildManager : MonoBehaviour
     private float followPower = 12f;
 
     // 基本移動速度
-    private Vector3 velocity = Vector3.zero;
+    public Vector3 velocity = Vector3.zero;
     // プレイヤーの向き
     private int playerDirection = 1;
     // 接地判定
@@ -204,7 +205,7 @@ public class ChildManager : MonoBehaviour
     // 重力処理
     void Gravity()
     {
-        if (!judgeGround && (moveType == MoveType.FOLLOW || moveType == MoveType.STACKCANCEL || moveType == MoveType.STACKATTACK || moveType == MoveType.LOST || moveType == MoveType.PANIC))
+        if (!judgeGround && moveType != MoveType.STACK && moveType != MoveType.ATTACKCROW)
         {
             velocity.y -= 3.0f * Time.deltaTime * 9.81f;
         }
@@ -305,16 +306,22 @@ public class ChildManager : MonoBehaviour
     // 積み上げ関係
     void MoveToStack()
     {
-        if (judgeGround)
+        if (CanReceiveOrder() && Mathf.Abs(player.transform.position.x - transform.position.x) < 0.2f)
         {
-            if (Mathf.Abs(player.transform.position.x - transform.position.x) < 0.2f)
+            stackIndex = transform.parent.gameObject.GetComponent<AllChildScript>().stackCount;
+            stackPos.x = playerManager.transform.position.x;
+            stackPos.y = (playerManager.transform.position.y + playerManager.transform.localScale.y * 0.5f) + 0.5f;
+            isAddDiff = false;
+            transform.parent.gameObject.GetComponent<AllChildScript>().stackCount++;
+            ChangeMoveType(MoveType.STACK);
+        }
+        else
+        {
+            if (Mathf.Abs(player.transform.position.x - transform.position.x) < 1.0f)
             {
-                stackIndex = transform.parent.gameObject.GetComponent<AllChildScript>().stackCount;
-                stackPos.x = playerManager.transform.position.x;
-                stackPos.y = (playerManager.transform.position.y + playerManager.transform.localScale.y * 0.5f) + 0.5f;
-                isAddDiff = false;
-                transform.parent.gameObject.GetComponent<AllChildScript>().stackCount++;
-                ChangeMoveType(MoveType.STACK);
+                // 離れた座標に向かう
+                transform.position += new Vector3(player.transform.position.x - transform.position.x, 0f, 0f) * (followPower * Time.deltaTime);
+                velocity.x = 0f;
             }
             else
             {
@@ -336,7 +343,7 @@ public class ChildManager : MonoBehaviour
         Vector3 pos = stackPos;
 
         pos.x = playerManager.transform.position.x;
-        pos.y = stackPos.y + stackIndex * 1f;
+        pos.y = (playerManager.transform.position.y + playerManager.transform.localScale.y * 0.5f) + 0.5f + stackIndex * 1f;
 
         transform.position = pos;
     }
@@ -447,7 +454,7 @@ public class ChildManager : MonoBehaviour
         }
 
         // 近くに行ったら戻す
-        if (judgeGround && playerManager.GetJudgeGround() && Mathf.Abs(player.transform.position.x - transform.position.x) < 3f)
+        if (CanReceiveOrder() && Mathf.Abs(player.transform.position.x - transform.position.x) < 3f)
         {
             if (playerManager.orderStack)
             {
@@ -490,7 +497,7 @@ public class ChildManager : MonoBehaviour
             }
         }
 
-        if (judgeGround && playerManager.GetJudgeGround() && Mathf.Abs(player.transform.position.x - transform.position.x) < 0.5f)
+        if (CanReceiveOrder() && Mathf.Abs(player.transform.position.x - transform.position.x) < 0.5f)
         {
             if (playerManager.orderStack)
             {
@@ -568,7 +575,7 @@ public class ChildManager : MonoBehaviour
                 Vector3 upVector = new Vector3(0, 1, 0);
                 float dotUN = Vector3.Dot(upVector, otherNormal);
                 float dotDeg = Mathf.Acos(dotUN) * Mathf.Rad2Deg;
-                if (dotDeg > 45) { judgeGround = true; }
+                if (dotDeg < 45) { judgeGround = true; }
             }
         }
         if (isDash && collision.gameObject.CompareTag("Wall"))
@@ -581,11 +588,28 @@ public class ChildManager : MonoBehaviour
             isDash = false;
         }
     }
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        // 接地判定（false → true）
+        if (!judgeGround && collision.gameObject.CompareTag("Ground"))
+        {
+            judgeGround = true;
+        }
+        if (!judgeGround && collision.gameObject.CompareTag("Obstacle"))
+        {
+            ContactPoint2D[] contacts = collision.contacts;
+            Vector3 otherNormal = contacts[0].normal;
+            Vector3 upVector = new Vector3(0, 1, 0);
+            float dotUN = Vector3.Dot(upVector, otherNormal);
+            float dotDeg = Mathf.Acos(dotUN) * Mathf.Rad2Deg;
+            if (dotDeg < 45) { judgeGround = true; }
+        }
+    }
 
     // 画像の反転
     void ImageFlip()
     {
-        if (!isAddDiff && moveType != MoveType.STACK && moveType != MoveType.LOST)
+        if (((!isAddDiff && moveType != MoveType.TOSTACK) || (moveType == MoveType.TOSTACK && velocity.x != 0f)) && moveType != MoveType.STACK && moveType != MoveType.LOST)
         {
             if (!isFlipX && velocity.x < 0f)
             {
@@ -596,7 +620,7 @@ public class ChildManager : MonoBehaviour
                 isFlipX = false;
             }
         }
-        else if (isAddDiff || moveType == MoveType.STACK && moveType != MoveType.LOST)
+        else if ((isAddDiff || moveType == MoveType.STACK || moveType == MoveType.TOSTACK) && moveType != MoveType.LOST)
         {
             if (playerDirection == 0)
             {
@@ -608,5 +632,16 @@ public class ChildManager : MonoBehaviour
             }
         }
         this.GetComponent<SpriteRenderer>().flipX = isFlipX;
+    }
+
+    bool CanReceiveOrder()
+    {
+        float playerBottomY = player.transform.position.y - playerManager.halfSize;
+        float childBottomY = transform.position.y - transform.localScale.y * 0.5f;
+        if (judgeGround && playerManager.GetJudgeGround() && Mathf.Abs(playerBottomY - childBottomY) < 0.1f)
+        {
+            return true;
+        }
+        return false;
     }
 }

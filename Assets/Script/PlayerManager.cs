@@ -8,13 +8,16 @@ public class PlayerManager : MonoBehaviour
 {
     Rigidbody2D rb;
     SpriteRenderer sP;
-    float halfSize = 0f;
+    public float halfSize = 0f;
     
     // 入力された速度を格納する（最大１）
     Vector2 inputMove = Vector2.zero;
     // 移動速度
     [SerializeField] float moveSpeed = 0f;
-    [SerializeField] float Jumpforce = 0f;
+    // 基本移動速度を格納する
+    private Vector3 velocity = Vector3.zero;
+    // ジャンプ
+    private bool isJump = false;
     // 接地判定
     [SerializeField] private bool judgeGround = false;
     // 左右どちらを向いているか
@@ -22,7 +25,12 @@ public class PlayerManager : MonoBehaviour
         LEFT,
         RIGHT
     }
-    DIRECTION direction = DIRECTION.RIGHT;
+    private DIRECTION direction = DIRECTION.RIGHT;
+
+    // 障害物に当たりに行けてしまうのを解消する
+    private DIRECTION checkIsSameDirection = DIRECTION.RIGHT;
+    private bool isEnterObstacle = false;
+    private GameObject collisionObstacle = null;
 
     private enum INPUTDIRECTION
     {
@@ -38,7 +46,6 @@ public class PlayerManager : MonoBehaviour
     AllChildScript allChild;
     // 子ガモを格納する
     private GameObject[] children;
-    public bool isJump;
 
     // 指示関係
     public bool orderLeft;      // 指示 - 左猛進
@@ -74,23 +81,16 @@ public class PlayerManager : MonoBehaviour
         children = new GameObject[30];
     }
 
-
     void Update()
     {
         InputMove();
         Move();
+        Gravity();
         OrderChildren();
     }
     private void FixedUpdate()
     {
-        if (isJump)
-        {
-            float jumpForce = Jumpforce * Time.deltaTime;
-            rb.velocity = new Vector2(rb.velocity.x, Jumpforce);
-           // rb.AddForce(Vector3.up * Jumpforce, ForceMode2D.Impulse);
-            Debug.Log("jump");
-            isJump = false;
-        }
+        rb.velocity = velocity;
     }
     private void OrderChildren()
     {
@@ -213,10 +213,19 @@ public class PlayerManager : MonoBehaviour
                 sP.flipX = false;
             }
         }
-        //ジャンプ処理（Y軸イドウ）
-        if (inputJump != 0 && preInputJump == 0)
+
+        // 障害物に当たりに行けてしまうのを解消する
+        CheckOblstacleY();
+        if (isEnterObstacle)
         {
-            isJump = true;
+            if (checkIsSameDirection == direction)
+            {
+                inputMove.x = 0f;
+            }
+            else
+            {
+                isEnterObstacle = false;
+            }
         }
 
         // 入力された方向を取得する
@@ -242,6 +251,13 @@ public class PlayerManager : MonoBehaviour
     {
         float deltaMoveSpeed = moveSpeed * Time.deltaTime;
         transform.position = new Vector3(transform.position.x + inputMove.x * deltaMoveSpeed, transform.position.y, transform.position.z);
+
+        //ジャンプ処理（Y軸イドウ）
+        if (inputJump != 0 && preInputJump == 0)
+        {
+            velocity.y = 9f;
+            isJump = true;
+        }
     }
 
     public DIRECTION GetDirection()
@@ -384,22 +400,67 @@ public class PlayerManager : MonoBehaviour
         // 接地判定（false → true）
         if (!judgeGround && collision.gameObject.CompareTag("Ground"))
         {
+            isJump = false;
             judgeGround = true;
         }
 
-        // 障害物に当たったら迷う
         if (collision.gameObject.CompareTag("Obstacle"))
         {
             ContactPoint2D[] contacts = collision.contacts;
             Vector3 otherNormal = contacts[0].normal;
-            Vector3 upVector = new Vector3(0, 1, 0);
-            float dotUN = Vector3.Dot(upVector, otherNormal);
+            float dotUN = Vector3.Dot(Vector3.up, otherNormal);
             float dotDeg = Mathf.Acos(dotUN) * Mathf.Rad2Deg;
-            if (dotDeg > 45) { judgeGround = true; }
+            if (dotDeg < 45) { judgeGround = true; }
+            else if (dotDeg >= 45 && dotDeg <= 135)
+            {
+                collisionObstacle = collision.gameObject;
+                checkIsSameDirection = direction;
+                isEnterObstacle = true;
+            }
+        }
+
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            isEnterObstacle = true;
+            checkIsSameDirection = direction;
+        }
+    }
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        // 接地判定（false → true）
+        if (!judgeGround && collision.gameObject.CompareTag("Ground"))
+        {
+            judgeGround = true;
         }
     }
     public bool GetJudgeGround()
     {
         return judgeGround;
+    }
+    // 重力処理
+    void Gravity()
+    {
+        if (!judgeGround)
+        {
+            velocity.y -= 3.0f * Time.deltaTime * 9.81f;
+        }
+        else if (!isJump)
+        {
+            velocity.y = 0f;
+        }
+    }
+
+    // 障害物に当たったのち、障害物に当たることのない高さにまで上昇したら横移動を可能にする
+    void CheckOblstacleY()
+    {
+        if (collisionObstacle && isEnterObstacle)
+        {
+            // 高さの判定
+            if (transform.position.y - halfSize > collisionObstacle.transform.position.y + collisionObstacle.transform.localScale.y * 0.5f ||
+                transform.position.y + halfSize < collisionObstacle.transform.position.y - collisionObstacle.transform.localScale.y * 0.5f)
+            {
+                isEnterObstacle = false;
+            }
+        }
     }
 }
