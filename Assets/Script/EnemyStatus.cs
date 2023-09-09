@@ -22,7 +22,10 @@ public class EnemyStatus : MonoBehaviour
 
     void Update()
     {
-        hpSlider.value = (float)HP / (float)maxHP;
+        if (hpSlider)
+        {
+            hpSlider.value = (float)HP / (float)maxHP;
+        }
     }
 
     public void Damage()
