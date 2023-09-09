@@ -487,7 +487,7 @@ public class ChildManager : MonoBehaviour
         {
             velocity.x = Random.Range(3f, 6f);
             velocity.y = Random.Range(3f, 6f);
-            changeOfDirectionIntervalLeftTime = Random.Range(0.2f, 1.0f);
+            changeOfDirectionIntervalLeftTime = Random.Range(0.5f, 1.0f);
 
             // ランダムに取得した数字が0ならX軸速度をマイナスにする
             int randomMinus = Random.Range(0, 99);

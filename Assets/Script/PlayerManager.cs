@@ -15,7 +15,7 @@ public class PlayerManager : MonoBehaviour
     // 移動速度
     [SerializeField] float moveSpeed = 0f;
     // 基本移動速度を格納する
-    private Vector3 velocity = Vector3.zero;
+    public Vector3 velocity = Vector3.zero;
     // ジャンプ
     private bool isJump = false;
     // 接地判定
@@ -410,7 +410,7 @@ public class PlayerManager : MonoBehaviour
             Vector3 otherNormal = contacts[0].normal;
             float dotUN = Vector3.Dot(Vector3.up, otherNormal);
             float dotDeg = Mathf.Acos(dotUN) * Mathf.Rad2Deg;
-            if (dotDeg < 45) { judgeGround = true; }
+            if (dotDeg < 45) { judgeGround = true; isJump = false; }
             else if (dotDeg >= 45 && dotDeg <= 135)
             {
                 collisionObstacle = collision.gameObject;
@@ -430,7 +430,16 @@ public class PlayerManager : MonoBehaviour
         // 接地判定（false → true）
         if (!judgeGround && collision.gameObject.CompareTag("Ground"))
         {
+            isJump = false;
             judgeGround = true;
+        }
+        if (!judgeGround && collision.gameObject.CompareTag("Obstacle"))
+        {
+            ContactPoint2D[] contacts = collision.contacts;
+            Vector3 otherNormal = contacts[0].normal;
+            float dotUN = Vector3.Dot(Vector3.up, otherNormal);
+            float dotDeg = Mathf.Acos(dotUN) * Mathf.Rad2Deg;
+            if (dotDeg < 45) { judgeGround = true; isJump = false; }
         }
     }
     public bool GetJudgeGround()
