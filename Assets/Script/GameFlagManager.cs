@@ -8,6 +8,8 @@ public class GameFlagManager : MonoBehaviour
     private bool clearTutorial;
     // かかしの親オブジェクト
     [SerializeField] private GameObject dummyParentObj;
+    // かかしを倒す指示を書いたオブジェクト
+    [SerializeField] private GameObject orderKillDummyObj;
 
     // ↓ チュートリアルクリア後
     // ゲーム開始するフラグ
@@ -25,6 +27,7 @@ public class GameFlagManager : MonoBehaviour
         if (!clearTutorial && dummyParentObj && CountChildObjects(dummyParentObj) == 1)
         {
             Destroy(dummyParentObj);
+            Destroy(orderKillDummyObj);
             clearTutorial = true;
         }
 
