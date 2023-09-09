@@ -8,6 +8,8 @@ public class PlayerManager : MonoBehaviour
 {
     Rigidbody2D rb;
     SpriteRenderer sP;
+    Animator anim;
+
     public float halfSize = 0f;
     
     // 入力された速度を格納する（最大１）
@@ -70,10 +72,14 @@ public class PlayerManager : MonoBehaviour
     //縦
     private int inputVertical = 0;
 
+    Vector3 prePos = Vector3.zero;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sP = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
+
         halfSize = transform.localScale.x * 0.5f;
         transform.position = new (transform.position.x + halfSize, transform.position.y + halfSize, transform.position.z);
 
@@ -87,6 +93,7 @@ public class PlayerManager : MonoBehaviour
         Move();
         Gravity();
         OrderChildren();
+        Animation();
     }
     private void FixedUpdate()
     {
@@ -471,5 +478,52 @@ public class PlayerManager : MonoBehaviour
                 isEnterObstacle = false;
             }
         }
+    }
+
+    void Animation()
+    {
+        Vector3 thisPos = this.transform.position;
+
+        bool isWalk = false;
+        bool jump = false;
+        bool isJump = false;
+        bool isFall = false;
+        bool flight = false;
+
+        if (thisPos.x != prePos.x)
+        {
+            isWalk = true;
+        }
+
+        if (velocity.y > 0)
+        {
+            isJump = true;
+        }
+
+        if (velocity.y < 0)
+        {
+            isFall = true;
+        }
+
+        if (inputJump != 0 && preInputJump == 0)
+        {
+            if (judgeGround == true)
+            {
+                jump = true;
+            }
+            else
+            {
+                flight = true;
+            }
+        }
+
+        anim.SetBool("isWalk", isWalk);
+
+        anim.SetBool("isFall", isFall);
+        anim.SetBool("isJump", isJump);
+        if (jump == true) anim.SetTrigger("jump");
+        if (flight == true) anim.SetTrigger("flight");
+
+        prePos = thisPos;
     }
 }

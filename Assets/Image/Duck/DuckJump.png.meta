@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9c95852968a8b284faeaf952ed1b2789
+guid: 023ce2ae0c5570b4a8d10ea5679e3c47
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -45,8 +45,8 @@ TextureImporter:
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 9
-  spritePivot: {x: 0.5, y: 0.25}
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
@@ -67,8 +67,8 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
+    maxTextureSize: 16384
+    resizeAlgorithm: 1
     textureFormat: -1
     textureCompression: 0
     compressionQuality: 50
@@ -105,7 +105,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Duck_0
+      name: DuckJump_0
       rect:
         serializedVersion: 2
         x: 0
@@ -119,14 +119,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: efbf4af35fffc08468f48791a532b6ea
-      internalID: 31970279
+      spriteID: 677c89ce694a22b49962b080afe42aaa
+      internalID: -346151193
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Duck_1
+      name: DuckJump_1
       rect:
         serializedVersion: 2
         x: 32
@@ -140,14 +140,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8822f2e0d29c0a74c9a72738a56a7cb8
-      internalID: 325743267
+      spriteID: 3103c658ea77bcb4da38b9293a54189b
+      internalID: -243790165
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Duck_2
+      name: DuckJump_2
       rect:
         serializedVersion: 2
         x: 64
@@ -161,29 +161,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fac3f0e59b0fa014d9f0817a68f6317a
-      internalID: -840483771
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Duck_3
-      rect:
-        serializedVersion: 2
-        x: 96
-        y: 0
-        width: 32
-        height: 32
-      alignment: 9
-      pivot: {x: 0.5, y: 0.25}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9bb62870fdfcc4b43809cfec39d27f4b
-      internalID: -1654105170
+      spriteID: db4bae2a9f96fc948ba97135e0bd7773
+      internalID: -1710464778
       vertices: []
       indices: 
       edges: []
@@ -199,10 +178,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Duck_0: 31970279
-      Duck_1: 325743267
-      Duck_2: -840483771
-      Duck_3: -1654105170
+      DuckJump_0: -346151193
+      DuckJump_1: -243790165
+      DuckJump_2: -1710464778
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

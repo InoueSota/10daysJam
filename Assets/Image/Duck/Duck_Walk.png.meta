@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9c95852968a8b284faeaf952ed1b2789
+guid: ecc36f792ad254f40a49fe740dd6bedf
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -45,8 +45,8 @@ TextureImporter:
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 9
-  spritePivot: {x: 0.5, y: 0.25}
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
@@ -67,8 +67,8 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
+    maxTextureSize: 16384
+    resizeAlgorithm: 1
     textureFormat: -1
     textureCompression: 0
     compressionQuality: 50
@@ -105,7 +105,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Duck_0
+      name: Duck_Walk_0
       rect:
         serializedVersion: 2
         x: 0
@@ -119,14 +119,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: efbf4af35fffc08468f48791a532b6ea
-      internalID: 31970279
+      spriteID: cd6669c1f0098f343af588295eefdf34
+      internalID: -1620355727
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Duck_1
+      name: Duck_Walk_1
       rect:
         serializedVersion: 2
         x: 32
@@ -140,14 +140,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8822f2e0d29c0a74c9a72738a56a7cb8
-      internalID: 325743267
+      spriteID: 1f9b3049d74176448b3ca0adee2464e9
+      internalID: -1042045706
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Duck_2
+      name: Duck_Walk_2
       rect:
         serializedVersion: 2
         x: 64
@@ -161,14 +161,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fac3f0e59b0fa014d9f0817a68f6317a
-      internalID: -840483771
+      spriteID: 2e10c1a0da59cba439202ea2aa4221a3
+      internalID: 859691314
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Duck_3
+      name: Duck_Walk_3
       rect:
         serializedVersion: 2
         x: 96
@@ -182,8 +182,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9bb62870fdfcc4b43809cfec39d27f4b
-      internalID: -1654105170
+      spriteID: f2a2954b8279dc54c91ccb6c6cde5031
+      internalID: 668354417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Duck_Walk_4
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6dd0a3a823f48b54cae6c09e541a8709
+      internalID: 1871296341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Duck_Walk_5
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b66754f485f2874fb2a716a74a14881
+      internalID: 215591755
       vertices: []
       indices: 
       edges: []
@@ -199,10 +241,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Duck_0: 31970279
-      Duck_1: 325743267
-      Duck_2: -840483771
-      Duck_3: -1654105170
+      Duck_Walk_0: -1620355727
+      Duck_Walk_1: -1042045706
+      Duck_Walk_2: 859691314
+      Duck_Walk_3: 668354417
+      Duck_Walk_4: 1871296341
+      Duck_Walk_5: 215591755
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
