@@ -79,6 +79,8 @@ public class ChildManager : MonoBehaviour
     private float eatGrassLeftTime = 0f;
     // 食べたら大きさを変える
     private Vector3 kAddScale = new Vector3(0.15f, 0.15f, 0.15f);
+    // 草を格納して食事後に消す
+    private GameObject grassObj = null;
 
     // 迷っている時間
     [SerializeField] private float lostTime = 0f;
@@ -243,12 +245,12 @@ public class ChildManager : MonoBehaviour
                 // 親の方に行く - 左
                 if (player.transform.position.x - transform.position.x < 0f)
                 {
-                    velocity.x = -10.0f;
+                    velocity.x = -12.0f;
                 }
                 // 親の方に行く - 右
                 else
                 {
-                    velocity.x = 10.0f;
+                    velocity.x = 12.0f;
                 }
             }
         }
@@ -429,6 +431,11 @@ public class ChildManager : MonoBehaviour
         {
             transform.localScale += kAddScale;
             ChangeMoveType(MoveType.FOLLOW);
+
+            if (grassObj)
+            {
+                Destroy(grassObj);
+            }
         }
     }
 
@@ -532,6 +539,7 @@ public class ChildManager : MonoBehaviour
             velocity = Vector3.zero;
             eatGrassLeftTime = eatGrassTime;
             isDash = false;
+            grassObj = collision.gameObject;
         }
     }
 

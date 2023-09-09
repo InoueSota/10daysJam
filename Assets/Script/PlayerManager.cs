@@ -255,7 +255,7 @@ public class PlayerManager : MonoBehaviour
         //ジャンプ処理（Y軸イドウ）
         if (inputJump != 0 && preInputJump == 0)
         {
-            velocity.y = 9f;
+            velocity.y = 13f;
             isJump = true;
         }
     }
@@ -451,7 +451,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (!judgeGround)
         {
-            velocity.y -= 3.0f * Time.deltaTime * 9.81f;
+            velocity.y -= 5.0f * Time.deltaTime * 9.81f;
         }
         else if (!isJump)
         {
