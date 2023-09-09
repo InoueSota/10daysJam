@@ -55,6 +55,9 @@ TagManager:
   - name: Character
     uniqueID: 1549049961
     locked: 0
+  - name: UI
+    uniqueID: 2682514717
+    locked: 0
   - name: SceneChange
     uniqueID: 2712366633
     locked: 0
