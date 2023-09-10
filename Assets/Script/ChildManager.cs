@@ -535,21 +535,40 @@ public class ChildManager : MonoBehaviour
     // 当たり判定（対象によって行動が変わる）
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (isThrow && collision.CompareTag("Crow"))
+        if (collision.CompareTag("Crow"))
         {
-            // かかしのHP処理
+            // カラスのHP処理
             EnemyStatus enemyStatus = collision.GetComponent<EnemyStatus>();
-            if (enemyStatus)
+            if (isThrow)
             {
-                enemyStatus.Damage();
-                // ダメージを与えHPがなくなったら死亡
-                if (enemyStatus.GetHP() <= 0)
+                if (enemyStatus)
                 {
-                    Destroy(collision.gameObject);
+                    enemyStatus.Damage(1);
+                    // ダメージを与えHPがなくなったら死亡
+                    if (enemyStatus.GetHP() <= 0)
+                    {
+                        Destroy(collision.gameObject);
+                    }
+                }
+                velocity.y = 5.0f;
+                isCrawHit = true;
+            }
+            else if (moveType == MoveType.STACKATTACK)
+            {
+                CrowScript crowScript = collision.GetComponent<CrowScript>();
+                if (crowScript && crowScript.IsStan())
+                {
+                    if (enemyStatus)
+                    {
+                        enemyStatus.Damage(2);
+                        // ダメージを与えHPがなくなったら死亡
+                        if (enemyStatus.GetHP() <= 0)
+                        {
+                            Destroy(collision.gameObject);
+                        }
+                    }
                 }
             }
-            velocity.y = 5.0f;
-            isCrawHit = true;
         }
 
         // 草に当たったら時間をかけたのちに食べる

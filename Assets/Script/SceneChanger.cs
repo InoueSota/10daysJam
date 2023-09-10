@@ -21,7 +21,7 @@ public class SceneChanger : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
-    private void init()
+    public void init()
     {
         isChanging = false;
         ct = 0.0f;

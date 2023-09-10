@@ -29,8 +29,8 @@ public class CrowScript : MonoBehaviour
     private GameObject player;
     private int direction_ = 1;
     //[SerializeField] float easetime = 1.0f;
-    private float stanTime = 2.0f;
-    [SerializeField] const float kStanTime = 2.0f;
+    private float stanTime = 4.0f;
+    [SerializeField] const float kStanTime = 4.0f;
     public enum Mode
     {
         stay,
@@ -278,6 +278,15 @@ public class CrowScript : MonoBehaviour
             //closestChild.GetComponent<ChildManager>().isTakedAway = true;
         }
 
+    }
+
+    public bool IsStan()
+    {
+        if (mode == Mode.stan)
+        {
+            return true;
+        }
+        return false;
     }
 
 

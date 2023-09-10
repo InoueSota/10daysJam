@@ -28,11 +28,11 @@ public class EnemyStatus : MonoBehaviour
         }
     }
 
-    public void Damage()
+    public void Damage(int damage)
     {
         if (HP > 0)
         {
-            HP--;
+            HP -= damage;
         }
     }
 

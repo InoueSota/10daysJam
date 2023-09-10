@@ -71,7 +71,7 @@ public class SpawnManager : MonoBehaviour
                         // ”­¶ŠÔŠu‚ğcsvƒtƒ@ƒCƒ‹‚©‚ç“Ç‚İ‚Ş
                         interval = float.Parse(csvDatas[i][1]);
 
-                        GameObject crow = Instantiate(enemyObj, position, Quaternion.identity);
+                        GameObject enemy = Instantiate(enemyObj, position, Quaternion.identity);
 
                         ints[i] = 0;
                         break;

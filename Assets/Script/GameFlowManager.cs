@@ -23,6 +23,9 @@ public class GameFlowManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timeLimitText;
     private NumberChangeManager timeLimitTextManager;
 
+    // シーンを変えるオブジェクト
+    private SceneChanger sceneChanger;
+
     void Start()
     {
         gameFlagManager = gameFlagManagerObj.GetComponent<GameFlagManager>();
@@ -32,6 +35,8 @@ public class GameFlowManager : MonoBehaviour
 
         timeLimit = 60f;
         timeLimitTextManager = timeLimitText.GetComponent<NumberChangeManager>();
+
+        sceneChanger = GameObject.FindGameObjectWithTag("SceneChanger").GetComponent<SceneChanger>();
     }
 
     void Update()
@@ -73,7 +78,7 @@ public class GameFlowManager : MonoBehaviour
         timeLimit -= Time.deltaTime;
         if (timeLimit < 0f)
         {
-            SceneManager.LoadScene("Result");
+            sceneChanger.ChangeScene("Result");
         }
     }
 }
