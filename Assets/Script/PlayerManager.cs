@@ -2,24 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using UnityEngine;
+using static ChildManager;
 
 public class PlayerManager : MonoBehaviour
 {
     Rigidbody2D rb;
     SpriteRenderer sP;
-    float halfSize = 0f;
+    Animator anim;
+
+    public float halfSize = 0f;
     
-    // “ü—Í‚³‚ê‚½‘¬“x‚ğŠi”[‚·‚éiÅ‘å‚Pj
+    // å…¥åŠ›ã•ã‚ŒãŸé€Ÿåº¦ã‚’æ ¼ç´ã™ã‚‹ï¼ˆæœ€å¤§ï¼‘ï¼‰
     Vector2 inputMove = Vector2.zero;
-    // ˆÚ“®‘¬“x
+    // ç§»å‹•é€Ÿåº¦
     [SerializeField] float moveSpeed = 0f;
-    [SerializeField] float Jumpforce = 0f;
-    // ¶‰E‚Ç‚¿‚ç‚ğŒü‚¢‚Ä‚¢‚é‚©
+    // åŸºæœ¬ç§»å‹•é€Ÿåº¦ã‚’æ ¼ç´ã™ã‚‹
+    public Vector3 velocity = Vector3.zero;
+    // ã‚¸ãƒ£ãƒ³ãƒ—
+    private bool isJump = false;
+    // æ¥åœ°åˆ¤å®š
+    [SerializeField] private bool judgeGround = false;
+    // å·¦å³ã©ã¡ã‚‰ã‚’å‘ã„ã¦ã„ã‚‹ã‹
     public enum DIRECTION {
         LEFT,
         RIGHT
     }
-    DIRECTION direction = DIRECTION.RIGHT;
+    private DIRECTION direction = DIRECTION.RIGHT;
+
+    // éšœå®³ç‰©ã«å½“ãŸã‚Šã«è¡Œã‘ã¦ã—ã¾ã†ã®ã‚’è§£æ¶ˆã™ã‚‹
+    private DIRECTION checkIsSameDirection = DIRECTION.RIGHT;
+    private bool isEnterObstacle = false;
+    private GameObject collisionObstacle = null;
 
     private enum INPUTDIRECTION
     {
@@ -30,40 +43,44 @@ public class PlayerManager : MonoBehaviour
     }
     INPUTDIRECTION inputDirection = INPUTDIRECTION.RIGHT;
 
-    // ‘SqƒKƒ‚
+    // å…¨å­ã‚¬ãƒ¢
     public GameObject allChildObj;
     AllChildScript allChild;
-    // qƒKƒ‚‚ğŠi”[‚·‚é
+    // å­ã‚¬ãƒ¢ã‚’æ ¼ç´ã™ã‚‹
     private GameObject[] children;
-    public bool isJump;
 
-    // w¦ŠÖŒW
-    public bool orderLeft;      // w¦ - ¶–Òi
-    public bool orderRight;     // w¦ - ‰E–Òi
-    public bool orderStack;     // w¦ - Ï‚İã‚°
-    public bool orderDown;      // w¦ - W‡,‘Ò‹@
-    public bool orderAttack;    // w¦ - ƒJƒ‰ƒX‚ÉUŒ‚
+    // æŒ‡ç¤ºé–¢ä¿‚
+    public bool orderLeft;      // æŒ‡ç¤º - å·¦çŒ›é€²
+    public bool orderRight;     // æŒ‡ç¤º - å³çŒ›é€²
+    public bool orderStack;     // æŒ‡ç¤º - ç©ã¿ä¸Šã’
+    public bool orderDown;      // æŒ‡ç¤º - é›†åˆ,å¾…æ©Ÿ
+    public bool orderAttack;    // æŒ‡ç¤º - ã‚«ãƒ©ã‚¹ã«æ”»æ’ƒ
 
-    // ƒJƒ‰ƒXŠÖŒW
+    // ã‚«ãƒ©ã‚¹é–¢ä¿‚
     private GameObject[] targets;
     private GameObject closeCrow;
+    public GameObject targetMarkObj;
 
-    // “ü—Í‚Æ‚é‚â‚Â
+    // å…¥åŠ›ã¨ã‚‹ã‚„ã¤
     private int inputJump = 0;
     private int preInputJump = 0;
 
     private int inputOrder = 0;
     private int preInputOrder = 0;
 
-    //‰¡
+    //æ¨ª
     private int inputHorizontal = 0;
-    //c
+    //ç¸¦
     private int inputVertical = 0;
+
+    Vector3 prePos = Vector3.zero;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sP = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
+
         halfSize = transform.localScale.x * 0.5f;
         transform.position = new (transform.position.x + halfSize, transform.position.y + halfSize, transform.position.z);
 
@@ -71,48 +88,60 @@ public class PlayerManager : MonoBehaviour
         children = new GameObject[30];
     }
 
-
     void Update()
     {
         InputMove();
         Move();
+        Gravity();
         OrderChildren();
+        Animation();
     }
     private void FixedUpdate()
     {
-        if (isJump)
-        {
-            float jumpForce = Jumpforce * Time.deltaTime;
-            rb.velocity = new Vector2(rb.velocity.x, Jumpforce);
-           // rb.AddForce(Vector3.up * Jumpforce, ForceMode2D.Impulse);
-            Debug.Log("jump");
-            isJump = false;
-        }
+        rb.velocity = velocity;
     }
     private void OrderChildren()
     {
+        // è¿‘ãã®ã‚«ãƒ©ã‚¹ã‚’å–å¾—
         closeCrow = SearchCrow();
+        // è¿‘ãã«ã‚«ãƒ©ã‚¹ãŒã„ã‚‹ãªã‚‰ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãƒãƒ¼ã‚¯ã‚’ãã®ä½ç½®ã«æç”»ã™ã‚‹
+        if (closeCrow)
+        {
+            if (!targetMarkObj.activeInHierarchy)
+            {
+                targetMarkObj.SetActive(true);
+            }
+            targetMarkObj.transform.position = closeCrow.transform.position;
+        }
+        else
+        {
+            if (targetMarkObj.activeInHierarchy)
+            {
+                targetMarkObj.SetActive(false);
+            }
+        }
+
         orderDown = false;
 
         if (inputOrder != 0 && preInputOrder == 0)
         {
-            if (closeCrow == null)
+            if (!closeCrow)
             {
-                // w¦ - ¶–Òi
+                // æŒ‡ç¤º - å·¦çŒ›é€²
                 if (!orderStack && inputDirection == INPUTDIRECTION.LEFT)
                 {
                     OrderInitialize();
                     orderLeft = true;
                     CheckDiffChild(true);
                 }
-                // w¦ - ‰E–Òi
+                // æŒ‡ç¤º - å³çŒ›é€²
                 else if (!orderStack && inputDirection == INPUTDIRECTION.RIGHT)
                 {
                     OrderInitialize();
                     orderRight = true;
                     CheckDiffChild(true);
                 }
-                // w¦ - Ï‚İã‚°
+                // æŒ‡ç¤º - ç©ã¿ä¸Šã’
                 else if (!orderStack && inputDirection == INPUTDIRECTION.UP)
                 {
                     OrderInitialize();
@@ -120,12 +149,12 @@ public class PlayerManager : MonoBehaviour
                     allChild.DiffInitialize();
                     orderStack = true;
                 }
-                // w¦ - Ï‚İã‚°UŒ‚
+                // æŒ‡ç¤º - ç©ã¿ä¸Šã’æ”»æ’ƒ
                 else if (orderStack && (inputDirection == INPUTDIRECTION.LEFT || inputDirection == INPUTDIRECTION.RIGHT))
                 {
                     StackInitialize();
                 }
-                // w¦ - W‡,‘Ò‹@
+                // æŒ‡ç¤º - é›†åˆ,å¾…æ©Ÿ
                 else if (inputDirection == INPUTDIRECTION.DOWN)
                 {
                     OrderInitialize();
@@ -135,7 +164,7 @@ public class PlayerManager : MonoBehaviour
             }
             else
             {
-                // ƒJƒ‰ƒX‚ª‹ß‚­‚É‚¢‚é‚Æ‚«‚àÏ‚İã‚°‚ç‚ê‚é‚æ‚¤‚É‚·‚é
+                // ã‚«ãƒ©ã‚¹ãŒè¿‘ãã«ã„ã‚‹ã¨ãã‚‚ç©ã¿ä¸Šã’ã‚‰ã‚Œã‚‹ã‚ˆã†ã«ã™ã‚‹
                 if (!orderStack && inputDirection == INPUTDIRECTION.UP)
                 {
                     OrderInitialize();
@@ -147,23 +176,13 @@ public class PlayerManager : MonoBehaviour
                 {
                     StackInitialize();
                 }
-                else if (!orderStack)
+                else if (judgeGround && !orderStack)
                 {
-                    // w¦ - ƒJƒ‰ƒX‚ÉUŒ‚
+                    // æŒ‡ç¤º - ã‚«ãƒ©ã‚¹ã«æ”»æ’ƒ
                     CheckDiffChild(false);
                     orderAttack = true;
                 }
             }
-        }
-
-        // F•ÏX
-        if (!closeCrow)
-        {
-            GetComponent<SpriteRenderer>().color = Color.white;
-        }
-        else
-        {
-            GetComponent<SpriteRenderer>().color = Color.red;
         }
     }
 
@@ -189,7 +208,7 @@ public class PlayerManager : MonoBehaviour
         inputHorizontal = (int)Input.GetAxisRaw("Horizontal");
         inputVertical = (int)Input.GetAxisRaw("Vertical");
 
-        // X²ˆÚ“®
+        // Xè»¸ç§»å‹•
         if (inputHorizontal < 0)
         {
             inputMove.x = -1f;
@@ -210,13 +229,22 @@ public class PlayerManager : MonoBehaviour
                 sP.flipX = false;
             }
         }
-        //ƒWƒƒƒ“ƒvˆ—iY²ƒCƒhƒEj
-        if (inputJump != 0 && preInputJump == 0)
+
+        // éšœå®³ç‰©ã«å½“ãŸã‚Šã«è¡Œã‘ã¦ã—ã¾ã†ã®ã‚’è§£æ¶ˆã™ã‚‹
+        CheckOblstacleY();
+        if (isEnterObstacle)
         {
-            isJump = true;
+            if (checkIsSameDirection == direction)
+            {
+                inputMove.x = 0f;
+            }
+            else
+            {
+                isEnterObstacle = false;
+            }
         }
 
-        // “ü—Í‚³‚ê‚½•ûŒü‚ğæ“¾‚·‚é
+        // å…¥åŠ›ã•ã‚ŒãŸæ–¹å‘ã‚’å–å¾—ã™ã‚‹
         if (inputHorizontal < 0)
         {
             inputDirection = INPUTDIRECTION.LEFT;
@@ -239,6 +267,13 @@ public class PlayerManager : MonoBehaviour
     {
         float deltaMoveSpeed = moveSpeed * Time.deltaTime;
         transform.position = new Vector3(transform.position.x + inputMove.x * deltaMoveSpeed, transform.position.y, transform.position.z);
+
+        //ã‚¸ãƒ£ãƒ³ãƒ—å‡¦ç†ï¼ˆYè»¸ã‚¤ãƒ‰ã‚¦ï¼‰
+        if (inputJump != 0 && preInputJump == 0)
+        {
+            velocity.y = 13f;
+            isJump = true;
+        }
     }
 
     public DIRECTION GetDirection()
@@ -272,18 +307,18 @@ public class PlayerManager : MonoBehaviour
     {
         OrderInitialize();
         allChild.DiffInitialize();
-        // ¶Ï‚İã‚°UŒ‚
+        // å·¦ç©ã¿ä¸Šã’æ”»æ’ƒ
         if (inputDirection == INPUTDIRECTION.LEFT)
         {
             orderLeft = true;
         }
-        // ‰EÏ‚İã‚°UŒ‚
+        // å³ç©ã¿ä¸Šã’æ”»æ’ƒ
         else if (inputDirection == INPUTDIRECTION.RIGHT)
         {
             orderRight = true;
         }
 
-        // ‘S‚Ä‚ÌqƒKƒ‚‚ğæ“¾‚·‚é
+        // å…¨ã¦ã®å­ã‚¬ãƒ¢ã‚’å–å¾—ã™ã‚‹
         allChild.AddChildObjects(children);
         for (int i = 0; i < children.GetLength(0); i++)
         {
@@ -296,14 +331,14 @@ public class PlayerManager : MonoBehaviour
 
     private void CheckDiffChild(bool isOrderDash)
     {
-        // ‘S‚Ä‚ÌqƒKƒ‚‚ğæ“¾‚·‚é
+        // å…¨ã¦ã®å­ã‚¬ãƒ¢ã‚’å–å¾—ã™ã‚‹
         allChild.AddChildObjects(children);
 
         GameObject nearChild = null;
         int nearChildNumber = 0;
         bool isAssignment = false;
 
-        // eƒKƒ‚‚Éˆê”Ô‹ß‚¢qƒKƒ‚‚ğæ“¾‚·‚é
+        // è¦ªã‚¬ãƒ¢ã«ä¸€ç•ªè¿‘ã„å­ã‚¬ãƒ¢ã‚’å–å¾—ã™ã‚‹
         for (int i = 0; i < children.GetLength(0); i++)
         {
             ChildManager childManager = null;
@@ -311,12 +346,12 @@ public class PlayerManager : MonoBehaviour
             {
                 childManager = children[i].GetComponent<ChildManager>();
             }
-            // w¦‚ğo‚¹‚éó‘Ô‚©”»’è‚·‚é
+            // æŒ‡ç¤ºã‚’å‡ºã›ã‚‹çŠ¶æ…‹ã‹åˆ¤å®šã™ã‚‹
             if (childManager && !childManager.isTakedAway && childManager.isAddDiff &&
                 (isOrderDash ||
                 (!isOrderDash && !childManager.GetIsThrow())))
             {
-                // ‹——£‚ğ”»’è‚·‚é
+                // è·é›¢ã‚’åˆ¤å®šã™ã‚‹
                 if (!isAssignment || (nearChild && Vector3.Distance(nearChild.transform.position, transform.position) > Vector3.Distance(children[i].transform.position, transform.position)))
                 {
                     nearChild = children[i];
@@ -334,7 +369,7 @@ public class PlayerManager : MonoBehaviour
                 childManager = nearChild.GetComponent<ChildManager>();
             }
 
-            // w¦‚Ì“à—e‚É‚æ‚Á‚Ä•Ï‚¦‚é
+            // æŒ‡ç¤ºã®å†…å®¹ã«ã‚ˆã£ã¦å¤‰ãˆã‚‹
             if (isOrderDash)
             {
                 childManager.DashInitialize(orderLeft);
@@ -348,7 +383,7 @@ public class PlayerManager : MonoBehaviour
             {
                 if (children[i] && nearChildNumber != i)
                 {
-                    // ‘O‚É‚¸‚ç‚·
+                    // å‰ã«ãšã‚‰ã™
                     if (direction == DIRECTION.LEFT)
                     {
                         children[i].GetComponent<ChildManager>().diff -= 1.5f;
@@ -361,5 +396,143 @@ public class PlayerManager : MonoBehaviour
             }
             allChild.SubtractDiffSize();
         }
+    }
+
+    // æ¥åœ°åˆ¤å®š
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        // æ¥åœ°åˆ¤å®šï¼ˆtrue â†’ falseï¼‰
+        if (judgeGround && collision.gameObject.CompareTag("Ground"))
+        {
+            judgeGround = false;
+        }
+        if (judgeGround && collision.gameObject.CompareTag("Obstacle"))
+        {
+            judgeGround = false;
+        }
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // æ¥åœ°åˆ¤å®šï¼ˆfalse â†’ trueï¼‰
+        if (!judgeGround && collision.gameObject.CompareTag("Ground"))
+        {
+            isJump = false;
+            judgeGround = true;
+        }
+
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            ContactPoint2D[] contacts = collision.contacts;
+            Vector3 otherNormal = contacts[0].normal;
+            float dotUN = Vector3.Dot(Vector3.up, otherNormal);
+            float dotDeg = Mathf.Acos(dotUN) * Mathf.Rad2Deg;
+            if (dotDeg < 45) { judgeGround = true; isJump = false; }
+            else if (dotDeg >= 45 && dotDeg <= 135)
+            {
+                collisionObstacle = collision.gameObject;
+                checkIsSameDirection = direction;
+                isEnterObstacle = true;
+            }
+        }
+
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            isEnterObstacle = true;
+            checkIsSameDirection = direction;
+        }
+    }
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        // æ¥åœ°åˆ¤å®šï¼ˆfalse â†’ trueï¼‰
+        if (!judgeGround && collision.gameObject.CompareTag("Ground"))
+        {
+            isJump = false;
+            judgeGround = true;
+        }
+        if (!judgeGround && collision.gameObject.CompareTag("Obstacle"))
+        {
+            ContactPoint2D[] contacts = collision.contacts;
+            Vector3 otherNormal = contacts[0].normal;
+            float dotUN = Vector3.Dot(Vector3.up, otherNormal);
+            float dotDeg = Mathf.Acos(dotUN) * Mathf.Rad2Deg;
+            if (dotDeg < 45) { judgeGround = true; isJump = false; }
+        }
+    }
+    public bool GetJudgeGround()
+    {
+        return judgeGround;
+    }
+    // é‡åŠ›å‡¦ç†
+    void Gravity()
+    {
+        if (!judgeGround)
+        {
+            velocity.y -= 5.0f * Time.deltaTime * 9.81f;
+        }
+        else if (!isJump)
+        {
+            velocity.y = 0f;
+        }
+    }
+
+    // éšœå®³ç‰©ã«å½“ãŸã£ãŸã®ã¡ã€éšœå®³ç‰©ã«å½“ãŸã‚‹ã“ã¨ã®ãªã„é«˜ã•ã«ã¾ã§ä¸Šæ˜‡ã—ãŸã‚‰æ¨ªç§»å‹•ã‚’å¯èƒ½ã«ã™ã‚‹
+    void CheckOblstacleY()
+    {
+        if (collisionObstacle && isEnterObstacle)
+        {
+            // é«˜ã•ã®åˆ¤å®š
+            if (transform.position.y - halfSize > collisionObstacle.transform.position.y + collisionObstacle.transform.localScale.y * 0.5f ||
+                transform.position.y + halfSize < collisionObstacle.transform.position.y - collisionObstacle.transform.localScale.y * 0.5f)
+            {
+                isEnterObstacle = false;
+            }
+        }
+    }
+
+    void Animation()
+    {
+        Vector3 thisPos = this.transform.position;
+
+        bool isWalk = false;
+        bool jump = false;
+        bool isJump = false;
+        bool isFall = false;
+        bool flight = false;
+
+        if (thisPos.x != prePos.x)
+        {
+            isWalk = true;
+        }
+
+        if (velocity.y > 0)
+        {
+            isJump = true;
+        }
+
+        if (velocity.y < 0)
+        {
+            isFall = true;
+        }
+
+        if (inputJump != 0 && preInputJump == 0)
+        {
+            if (judgeGround == true)
+            {
+                jump = true;
+            }
+            else
+            {
+                flight = true;
+            }
+        }
+
+        anim.SetBool("isWalk", isWalk);
+
+        anim.SetBool("isFall", isFall);
+        anim.SetBool("isJump", isJump);
+        if (jump == true) anim.SetTrigger("jump");
+        if (flight == true) anim.SetTrigger("flight");
+
+        prePos = thisPos;
     }
 }

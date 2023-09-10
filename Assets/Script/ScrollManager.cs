@@ -45,7 +45,7 @@ public class ScrollManager : MonoBehaviour
         float diffX = playerTransform.position.x - transform.position.x;
 
         // 前提条件
-        if (!isScroll && playerTransform.position.x > 0)
+        if (!isScroll)
         {
             //差分が＋なので右にスクロールする
             if (diffX > halfWidth)
