@@ -1,26 +1,29 @@
-ï»¿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class CrowSpawnManager : MonoBehaviour
+public class SpawnManager : MonoBehaviour
 {
-    // CSVãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã¿æ•µã‚’ç™ºç”Ÿã•ã›ã‚‹
+    // CSVƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚İ“G‚ğ”­¶‚³‚¹‚é
     TextAsset csvFile;
     List<string[]> csvDatas = new List<string[]>();
     List<int> ints = new List<int>();
 
-    // ã‚«ãƒ©ã‚¹ã®ãƒ—ãƒ¬ãƒãƒ–
-    [SerializeField] private GameObject crowObj;
-    // ã‚²ãƒ¼ãƒ å†…ã®ã‚«ãƒ©ã‚¹ã‚’æ•°ãˆã‚‹
-    private GameObject[] crowObjs;
+    // ”­¶‚³‚¹‚é‘ÎÛ‚Ì“G‚Ì–¼‘O
+    [SerializeField] private string spawnObj;
 
-    // ç™ºç”Ÿé–“éš”
+    // ‘ÎÛ‚Ì“G‚ÌƒvƒŒƒnƒu
+    [SerializeField] private GameObject enemyObj;
+    // ƒQ[ƒ€“à‚Ì‘ÎÛ‚Ì“G‚ğ”‚¦‚é
+    private GameObject[] enemyObjs;
+
+    // ”­¶ŠÔŠu
     private float interval;
 
-    // ã‚«ãƒ¡ãƒ©ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+    // ƒJƒƒ‰‚ÌƒIƒuƒWƒFƒNƒg
     public GameObject cameraObj;
-    // ã‚«ãƒ¡ãƒ©ã®ç¸¦å¹…ã®åŠåˆ†
+    // ƒJƒƒ‰‚Ìc•‚Ì”¼•ª
     private float halfHeight;
 
     void Start()
@@ -31,15 +34,15 @@ public class CrowSpawnManager : MonoBehaviour
 
     void Update()
     {
-        // ã‚²ãƒ¼ãƒ å†…ã®ã‚«ãƒ©ã‚¹ã‚’æ•°ãˆã‚‹
-        crowObjs = GameObject.FindGameObjectsWithTag("Crow");
+        // ƒQ[ƒ€“à‚Ì‘ÎÛ‚Ì“G‚ğ”‚¦‚é
+        enemyObjs = GameObject.FindGameObjectsWithTag(spawnObj);
 
         if (interval <= 0f)
         {
-            // ã‚«ãƒ©ã‚¹ãŒã‚²ãƒ¼ãƒ å†…ã«å‡ºã™ããªã„ã‚ˆã†ã«ã™ã‚‹
-            if (crowObjs.Length <= 1)
+            // ‘ÎÛ‚Ì“G‚ªƒQ[ƒ€“à‚Éo‚·‚¬‚È‚¢‚æ‚¤‚É‚·‚é
+            if (enemyObjs.Length <= 1)
             {
-                // ã‚‚ã—ã‚‚csvãƒ•ã‚¡ã‚¤ãƒ«ã®ä¸­èº«ã‚’å…¨ã¦æ¶ˆè²»ã—ãŸã‚‰å†åº¦ä½¿ãˆã‚‹ã‚ˆã†ã«ãƒªã‚µã‚¤ã‚¯ãƒ«ã™ã‚‹
+                // ‚à‚µ‚àcsvƒtƒ@ƒCƒ‹‚Ì’†g‚ğ‘S‚ÄÁ”ï‚µ‚½‚çÄ“xg‚¦‚é‚æ‚¤‚ÉƒŠƒTƒCƒNƒ‹‚·‚é
                 bool useUp = true;
                 for (int i = 0; i < csvDatas.Count; i++)
                 {
@@ -61,14 +64,14 @@ public class CrowSpawnManager : MonoBehaviour
                 {
                     if (ints[i] == 1)
                     {
-                        // åº§æ¨™ã‚’csvãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰èª­ã¿è¾¼ã‚€
+                        // À•W‚ğcsvƒtƒ@ƒCƒ‹‚©‚ç“Ç‚İ‚Ş
                         Vector3 position = new(float.Parse(csvDatas[i][0]), 0f, 0f);
-                        // Yåº§æ¨™ã‚’ç”»é¢å¤–ã‹ã‚‰ç™»å ´ã•ã›ã‚‹ãŸã‚ã«é«˜ãã™ã‚‹
+                        // YÀ•W‚ğ‰æ–ÊŠO‚©‚ç“oê‚³‚¹‚é‚½‚ß‚É‚‚­‚·‚é
                         position.y += halfHeight;
-                        // ç™ºç”Ÿé–“éš”ã‚’csvãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰èª­ã¿è¾¼ã‚€
+                        // ”­¶ŠÔŠu‚ğcsvƒtƒ@ƒCƒ‹‚©‚ç“Ç‚İ‚Ş
                         interval = float.Parse(csvDatas[i][1]);
 
-                        GameObject crow = Instantiate(crowObj, position, Quaternion.identity);
+                        GameObject crow = Instantiate(enemyObj, position, Quaternion.identity);
 
                         ints[i] = 0;
                         break;
@@ -78,11 +81,11 @@ public class CrowSpawnManager : MonoBehaviour
         }
         else
         {
-            // ç™ºç”Ÿé–“éš”æ™‚é–“ã‚’æ¸›ã‚‰ã™
+            // ”­¶ŠÔŠuŠÔ‚ğŒ¸‚ç‚·
             interval -= Time.deltaTime;
 
-            // ã‚«ãƒ©ã‚¹ãŒä¸€ç¾½ã‚‚ã„ãªã‹ã£ãŸã‚‰ç™ºç”Ÿé–“éš”ã‚’ç„¡ãã™
-            if (crowObjs.Length == 0)
+            // ‘ÎÛ‚Ì“G‚ª‚P‘Ì‚à‚¢‚È‚©‚Á‚½‚ç”­¶ŠÔŠu‚ğ–³‚­‚·
+            if (enemyObjs.Length == 0)
             {
                 interval = 0f;
             }
@@ -91,7 +94,7 @@ public class CrowSpawnManager : MonoBehaviour
 
     void LoadEnemyData()
     {
-        csvFile = Resources.Load("Crow") as TextAsset;
+        csvFile = Resources.Load(spawnObj) as TextAsset;
         StringReader reader = new StringReader(csvFile.text);
 
         while (reader.Peek() != -1)

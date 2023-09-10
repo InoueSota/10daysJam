@@ -63,7 +63,7 @@ public class ChildManager : MonoBehaviour
     private float cancelRandomX = 0f;
 
     // 攻撃最大時間
-    private float attackCrowTime = 1.5f;
+    private float attackCrowTime = 0.5f;
     private float attackCrowLeftTime = 0f;
     // 攻撃終了フラグ
     private bool isFinishAttackCrow = false;
@@ -587,7 +587,11 @@ public class ChildManager : MonoBehaviour
         // 障害物に当たったら迷う
         if (collision.gameObject.CompareTag("Obstacle"))
         {
-            if (isDash)
+            if (isThrow)
+            {
+                isCrawHit = true;
+            }
+            else if (isDash)
             {
                 ChangeMoveType(MoveType.LOST);
                 lostLeftTime = lostTime;
