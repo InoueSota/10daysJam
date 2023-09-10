@@ -12,6 +12,7 @@ public class CrowScript : MonoBehaviour
 {
     private FeatherAParticlesManager featherA;
     private StanParticlesManager stan;
+    private float halfHeight;
 
     public string targetTag = "Child"; // �E��E��E��E��E�Ώۂ�Tag�E��E�
     public Vector3 targetPos;
@@ -46,7 +47,8 @@ public class CrowScript : MonoBehaviour
     {
         featherA = GetComponent<FeatherAParticlesManager>();
         stan = GetComponent<StanParticlesManager>();
-        player = GameObject.Find("Player");       
+        player = GameObject.Find("Player");
+        halfHeight = Camera.main.ScreenToWorldPoint(new(0f, Screen.height, 0f)).y;
     }
 
     // Update is called once per frame
@@ -126,7 +128,7 @@ public class CrowScript : MonoBehaviour
                     closestChild.GetComponent<ChildManager>().takeAwayCrowObj = gameObject;
                     closestChild.GetComponent<ChildManager>().isTakedAway = true;
                 }
-                if (transform.position.y > 20)
+                if (transform.position.y > halfHeight + transform.localScale.y)
                 {
                     Destroy(closestChild.gameObject);
                     mode = Mode.stay;
