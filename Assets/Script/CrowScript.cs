@@ -12,6 +12,7 @@ public class CrowScript : MonoBehaviour
 {
     private FeatherAParticlesManager featherA;
     private StanParticlesManager stan;
+    private float halfWidth;
     private float halfHeight;
 
     public string targetTag = "Child"; // �E��E��E��E��E�Ώۂ�Tag�E��E�
@@ -48,6 +49,7 @@ public class CrowScript : MonoBehaviour
         featherA = GetComponent<FeatherAParticlesManager>();
         stan = GetComponent<StanParticlesManager>();
         player = GameObject.Find("Player");
+        halfWidth = Camera.main.ScreenToWorldPoint(new(Screen.width, 0f, 0f)).x;
         halfHeight = Camera.main.ScreenToWorldPoint(new(0f, Screen.height, 0f)).y;
     }
 
@@ -147,6 +149,15 @@ public class CrowScript : MonoBehaviour
                 break;
         }
 
+        // 画面内に収めさせる
+        if (transform.position.x - transform.localScale.x * 0.5f < -halfWidth)
+        {
+            transform.position = new(-halfWidth + transform.localScale.x * 0.5f, transform.position.y);
+        }
+        else if (transform.position.x + transform.localScale.x * 0.5f > halfWidth)
+        {
+            transform.position = new(halfWidth - transform.localScale.x * 0.5f, transform.position.y);
+        }
     }
 
     private void Attak()

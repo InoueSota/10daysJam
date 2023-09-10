@@ -97,7 +97,7 @@ public class CatScript : MonoBehaviour
 
             case Mode.Hikkaku:
                 isEase = false;
-                if (target.GetComponent<PlayerManager>().isCatAttack)
+                if (target && target.GetComponent<PlayerManager>().isCatAttack)
                 {
                     GameObject[] children = GameObject.FindGameObjectsWithTag("Child");
 
