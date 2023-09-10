@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class AllChildScript : MonoBehaviour
 {
@@ -9,16 +12,33 @@ public class AllChildScript : MonoBehaviour
     private float diff;
     private float diffSize = 1.5f;
 
-    public void AddChildObjects(GameObject[] children)
+    [SerializeField] private GameObject playerObj;
+    private PlayerManager playerManager;
+    private GameObject[] children;
+    [SerializeField] private float checkDiff;
+
+    void Start()
+    {
+        playerManager = playerObj.GetComponent<PlayerManager>();
+
+        children = new GameObject[30];
+        children = GameObject.FindGameObjectsWithTag("Child");
+    }
+
+    void Update()
+    {
+        ChildrenCount();
+    }
+
+    public void AddChildObjects(GameObject[] children_)
     {
         // éqÇêîÇ¶ÇÈ
         int childCount_ = 0;
 
         foreach (Transform child in transform)
         {
-            children[childCount_] = child.gameObject;
+            children_[childCount_] = child.gameObject;
             childCount_++;
-            ResultManager.childCount = childCount_;
         }
     }
 
@@ -31,7 +51,7 @@ public class AllChildScript : MonoBehaviour
         {
             childCount_++;
         }
-
+        ResultManager.childCount = childCount_;
         return childCount_;
     }
 
@@ -58,5 +78,47 @@ public class AllChildScript : MonoBehaviour
     public void SubtractDiffSize()
     {
         diff -= diffSize;
+    }
+
+    public void TakeOffDiffUpdate()
+    {
+        for (int i = 0; i < children.GetLength(0); i++)
+        {
+            if (children[i])
+            {
+                ChildManager childManager = children[i].GetComponent<ChildManager>();
+                if (childManager && childManager.isTakedAway)
+                {
+                    checkDiff = childManager.diff;
+                    break;
+                }
+            }
+        }
+
+        for (int i = 0; i < children.GetLength(0); i++)
+        {
+            if (children[i])
+            {
+                ChildManager childManager = children[i].GetComponent<ChildManager>();
+                // ç∂å¸Ç´
+                if (playerManager && (int)playerManager.GetDirection() == 0)
+                {
+                    if (childManager && checkDiff < childManager.diff)
+                    {
+                        childManager.diff -= diffSize;
+                        continue;
+                    }
+                }
+                // âEå¸Ç´
+                else if (playerManager && (int)playerManager.GetDirection() == 1)
+                {
+                    if (childManager && checkDiff > childManager.diff)
+                    {
+                        childManager.diff += diffSize;
+                        continue;
+                    }
+                }
+            }
+        }
     }
 }

@@ -129,6 +129,7 @@ public class CrowScript : MonoBehaviour
                 {
                     closestChild.GetComponent<ChildManager>().takeAwayCrowObj = gameObject;
                     closestChild.GetComponent<ChildManager>().isTakedAway = true;
+                    GameObject.FindGameObjectWithTag("ChildManager").GetComponent<AllChildScript>().TakeOffDiffUpdate();
                 }
                 if (transform.position.y > halfHeight + transform.localScale.y)
                 {
@@ -251,9 +252,9 @@ public class CrowScript : MonoBehaviour
     {
         if (collision.CompareTag(targetTag))
         {
-            if (mode == Mode.attak)
+            if (!isTakeAway && mode == Mode.attak)
             {
-                mode = Mode.takeaway;                
+                mode = Mode.takeaway;
                 isTakeAway = true;
             }
             if (collision.GetComponent<ChildManager>().GetIsThrow())
