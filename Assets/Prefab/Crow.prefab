@@ -395,6 +395,7 @@ GameObject:
   - component: {fileID: 6700715944245316401}
   - component: {fileID: 1565551657187820618}
   - component: {fileID: 3906877290160037469}
+  - component: {fileID: 1724675788463761029}
   m_Layer: 0
   m_Name: Crow
   m_TagString: Crow
@@ -570,3 +571,24 @@ MonoBehaviour:
   HP: 0
   maxHP: 10
   HPUI: {fileID: 2327973944145892035}
+--- !u!95 &1724675788463761029
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7514164298105999574}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d576211560f54db4e8482bdc27f740bc, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
