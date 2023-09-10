@@ -56,10 +56,14 @@ public class PlayerManager : MonoBehaviour
     public bool orderDown;      // 指示 - 集合,待機
     public bool orderAttack;    // 指示 - カラスに攻撃
 
-    // カラス関係
-    private GameObject[] targets;
-    private GameObject closeCrow;
+    // 敵関係
+    // 最近敵を格納する
+    private GameObject closeEnemy;
     public GameObject targetMarkObj;
+    // カラスを全て格納する
+    private GameObject[] allCrows;
+    // ネコを全て格納する
+    private GameObject[] allCats;
 
     // 入力とるやつ
     private int inputJump = 0;
@@ -77,6 +81,11 @@ public class PlayerManager : MonoBehaviour
 
     float speedDownTime;
     public bool isCatAttack;
+
+    // ゲームのフラグを管理するオブジェクト
+    [SerializeField] private GameObject gameFlowManagerObj;
+    private GameFlowManager gameFlowManager;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -88,6 +97,8 @@ public class PlayerManager : MonoBehaviour
 
         allChild = allChildObj.GetComponent<AllChildScript>();
         children = new GameObject[30];
+
+        gameFlowManager = gameFlowManagerObj.GetComponent<GameFlowManager>();
     }
 
     void Update()
@@ -112,16 +123,16 @@ public class PlayerManager : MonoBehaviour
     }
     private void OrderChildren()
     {
-        // 近くのカラスを取得
-        closeCrow = SearchCrow();
-        // 近くにカラスがいるならターゲットマークをその位置に描画する
-        if (closeCrow)
+        // 近くの敵を取得
+        closeEnemy = SearchEnemy();
+        // 近くに敵がいるならターゲットマークをその位置に描画する
+        if (closeEnemy)
         {
             if (!targetMarkObj.activeInHierarchy)
             {
                 targetMarkObj.SetActive(true);
             }
-            targetMarkObj.transform.position = closeCrow.transform.position;
+            targetMarkObj.transform.position = closeEnemy.transform.position;
         }
         else
         {
@@ -135,7 +146,7 @@ public class PlayerManager : MonoBehaviour
 
         if (inputOrder != 0 && preInputOrder == 0)
         {
-            if (!closeCrow)
+            if (!closeEnemy)
             {
                 // 指示 - 左猛進
                 if (!orderStack && inputDirection == INPUTDIRECTION.LEFT)
@@ -174,7 +185,7 @@ public class PlayerManager : MonoBehaviour
             }
             else
             {
-                // カラスが近くにいるときも積み上げられるようにする
+                // 敵が近くにいるときも積み上げられるようにする
                 if (!orderStack && inputDirection == INPUTDIRECTION.UP)
                 {
                     OrderInitialize();
@@ -188,7 +199,7 @@ public class PlayerManager : MonoBehaviour
                 }
                 else if (judgeGround && !orderStack)
                 {
-                    // 指示 - カラスに攻撃
+                    // 指示 - 敵に攻撃
                     CheckDiffChild(false);
                     orderAttack = true;
                 }
@@ -291,26 +302,58 @@ public class PlayerManager : MonoBehaviour
         return direction;
     }
 
-    private GameObject SearchCrow()
+    private GameObject SearchEnemy()
     {
-        targets = GameObject.FindGameObjectsWithTag("Crow");
-        GameObject nearCrow = null;
+        allCrows = GameObject.FindGameObjectsWithTag("Crow");
+        allCats = GameObject.FindGameObjectsWithTag("Cat");
+        GameObject nearEnemy = null;
 
-        foreach (GameObject t in targets)
+        bool isNearEnemy = false;
+        float nearEnemyDistance = 0f;
+
+        foreach (GameObject crow in allCrows)
         {
-            float tDist = Vector3.Distance(transform.position, t.transform.position);
+            float tDist = Vector3.Distance(transform.position, crow.transform.position);
 
-            if (tDist < 12.0f)
+            // 近い敵を発見した時、それが最初だったら攻撃範囲内のみで判定する
+            if (!isNearEnemy && tDist < 12.0f)
             {
-                nearCrow = t;
+                nearEnemy = crow;
+                nearEnemyDistance = tDist;
+                isNearEnemy = true;
+            }
+            // もしも二体目以降の近い敵なら、現在の最近敵との距離と比較する
+            else if (isNearEnemy && nearEnemyDistance > tDist)
+            {
+                nearEnemy = crow;
+                nearEnemyDistance = tDist;
             }
         }
-        return nearCrow;
+
+        foreach (GameObject cat in allCats)
+        {
+            float tDist = Vector3.Distance(transform.position, cat.transform.position);
+
+            // 近い敵を発見した時、それが最初だったら攻撃範囲内のみで判定する
+            if (!isNearEnemy && tDist < 12.0f)
+            {
+                nearEnemy = cat;
+                nearEnemyDistance = tDist;
+                isNearEnemy = true;
+            }
+            // もしも二体目以降の近い敵なら、現在の最近敵との距離と比較する
+            else if (isNearEnemy && nearEnemyDistance > tDist)
+            {
+                nearEnemy = cat;
+                nearEnemyDistance = tDist;
+            }
+        }
+        return nearEnemy;
     }
 
     public Vector3 GetNearCrawPos()
     {
-        return closeCrow.transform.position;
+        return closeEnemy.transform.position;
     }
 
     private void StackInitialize()
@@ -578,5 +621,10 @@ public class PlayerManager : MonoBehaviour
 
 
         }
+    }
+
+    public GameFlowManager GetGameFlowManager()
+    {
+        return gameFlowManager;
     }
 }

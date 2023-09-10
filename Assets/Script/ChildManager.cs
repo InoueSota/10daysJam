@@ -547,7 +547,14 @@ public class ChildManager : MonoBehaviour
                     // ダメージを与えHPがなくなったら死亡
                     if (enemyStatus.GetHP() <= 0)
                     {
+                        // スコアを加算する
+                        playerManager.GetGameFlowManager().AddScore(1000);
                         Destroy(collision.gameObject);
+                    }
+                    else
+                    {
+                        // スコアを加算する
+                        playerManager.GetGameFlowManager().AddScore(100);
                     }
                 }
                 velocity.y = 5.0f;
@@ -564,8 +571,61 @@ public class ChildManager : MonoBehaviour
                         // ダメージを与えHPがなくなったら死亡
                         if (enemyStatus.GetHP() <= 0)
                         {
+                            // スコアを加算する
+                            playerManager.GetGameFlowManager().AddScore(2000);
                             Destroy(collision.gameObject);
                         }
+                        else
+                        {
+                            // スコアを加算する
+                            playerManager.GetGameFlowManager().AddScore(200);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (collision.CompareTag("Cat"))
+        {
+            // カラスのHP処理
+            EnemyStatus enemyStatus = collision.GetComponent<EnemyStatus>();
+            if (isThrow)
+            {
+                if (enemyStatus)
+                {
+                    enemyStatus.Damage(1);
+                    // ダメージを与えHPがなくなったら死亡
+                    if (enemyStatus.GetHP() <= 0)
+                    {
+                        // スコアを加算する
+                        playerManager.GetGameFlowManager().AddScore(1000);
+                        Destroy(collision.gameObject);
+                    }
+                    else
+                    {
+                        // スコアを加算する
+                        playerManager.GetGameFlowManager().AddScore(100);
+                    }
+                }
+                velocity.y = 5.0f;
+                isCrawHit = true;
+            }
+            else if (moveType == MoveType.STACKATTACK)
+            {
+                if (enemyStatus)
+                {
+                    enemyStatus.Damage(2);
+                    // ダメージを与えHPがなくなったら死亡
+                    if (enemyStatus.GetHP() <= 0)
+                    {
+                        // スコアを加算する
+                        playerManager.GetGameFlowManager().AddScore(2000);
+                        Destroy(collision.gameObject);
+                    }
+                    else
+                    {
+                        // スコアを加算する
+                        playerManager.GetGameFlowManager().AddScore(200);
                     }
                 }
             }

@@ -13,6 +13,7 @@ TagManager:
   - Obstacle
   - Wall
   - Cat
+  - ChildManager
   layers:
   - Default
   - TransparentFX

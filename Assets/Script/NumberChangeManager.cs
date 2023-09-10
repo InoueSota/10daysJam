@@ -9,6 +9,9 @@ public class NumberChangeManager : MonoBehaviour
     TextMeshProUGUI numberText;
     private int number;
 
+    // ”š‚ğ•`‰æ‚·‚éÛ‚ÉAŒ…‚ğŒ¸‚ç‚·‚©
+    [SerializeField] private bool reduceDigits = true;
+
     void Start()
     {
         numberText = GetComponent<TextMeshProUGUI>();
@@ -18,33 +21,40 @@ public class NumberChangeManager : MonoBehaviour
     {
         if (numberText)
         {
-            if (number > 1000000)
+            if (reduceDigits)
             {
-                numberText.text = string.Format("{0:0000000}", number);
-            }
-            else if (number > 100000)
-            {
-                numberText.text = string.Format("{0:000000}", number);
-            }
-            else if (number > 10000)
-            {
-                numberText.text = string.Format("{0:00000}", number);
-            }
-            else if (number > 1000)
-            {
-                numberText.text = string.Format("{0:0000}", number);
-            }
-            else if (number > 100)
-            {
-                numberText.text = string.Format("{0:000}", number);
-            }
-            else if (number > 10)
-            {
-                numberText.text = string.Format("{0:00}", number);
+                if (number > 1000000)
+                {
+                    numberText.text = string.Format("{0:0000000}", number);
+                }
+                else if (number > 100000)
+                {
+                    numberText.text = string.Format("{0:000000}", number);
+                }
+                else if (number > 10000)
+                {
+                    numberText.text = string.Format("{0:00000}", number);
+                }
+                else if (number > 1000)
+                {
+                    numberText.text = string.Format("{0:0000}", number);
+                }
+                else if (number > 100)
+                {
+                    numberText.text = string.Format("{0:000}", number);
+                }
+                else if (number > 10)
+                {
+                    numberText.text = string.Format("{0:00}", number);
+                }
+                else
+                {
+                    numberText.text = string.Format("{0:0}", number);
+                }
             }
             else
             {
-                numberText.text = string.Format("{0:0}", number);
+                numberText.text = string.Format("{0:0000000}", number);
             }
         }
     }

@@ -23,6 +23,12 @@ public class GameFlowManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timeLimitText;
     private NumberChangeManager timeLimitTextManager;
 
+    // スコア
+    private int score;
+    // スコアのテキスト
+    [SerializeField] private TextMeshProUGUI scoreText;
+    private NumberChangeManager scoreTextManager;
+
     // シーンを変えるオブジェクト
     private SceneChanger sceneChanger;
 
@@ -35,6 +41,8 @@ public class GameFlowManager : MonoBehaviour
 
         timeLimit = 60f;
         timeLimitTextManager = timeLimitText.GetComponent<NumberChangeManager>();
+
+        scoreTextManager = scoreText.GetComponent<NumberChangeManager>();
 
         sceneChanger = GameObject.FindGameObjectWithTag("SceneChanger").GetComponent<SceneChanger>();
     }
@@ -55,6 +63,10 @@ public class GameFlowManager : MonoBehaviour
             TimeLimit();
             // 制限時間を描画する
             if (timeLimitTextManager) { timeLimitTextManager.SetNumber((int)Mathf.Ceil(timeLimit)); }
+
+            // スコアを描画する
+            if (scoreTextManager) { scoreTextManager.SetNumber(score); }
+            ResultManager.score = score;
         }
     }
 
@@ -80,5 +92,10 @@ public class GameFlowManager : MonoBehaviour
         {
             sceneChanger.ChangeScene("Result");
         }
+    }
+
+    public void AddScore(int addValue)
+    {
+        score += addValue;
     }
 }
