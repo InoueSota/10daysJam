@@ -84,14 +84,12 @@ public class CatScript : MonoBehaviour
                         spriteRenderer.flipX = false;
                     }
                     float distance = Vector2.Distance(transform.position, target.transform.position);
-                    if (distance <= 7.0f && !isEase)
-                    {
-                        isEase = true;
-                        easePos = target.transform.position;
-                        transform.DOMoveX(easePos.x, 1.0f).SetEase(Ease.InBack).OnComplete(EaseEndFanction);
-                        isAttack = true;
+                    if (distance <= 3.0f)
+                    {                     
+                       // easePos = target.transform.position;
                         mode = Mode.Hikkaku;
                     }
+                    transform.position = new Vector2( Vector2.MoveTowards(transform.position, target.transform.position, Time.deltaTime*3).x,transform.position.y);
                 }
                 break;
 
