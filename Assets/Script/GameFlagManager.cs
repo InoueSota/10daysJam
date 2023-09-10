@@ -18,6 +18,8 @@ public class GameFlagManager : MonoBehaviour
     [SerializeField] private GameObject orderSaveChildrenObj;
     // カラスの発生を制御するオブジェクト
     [SerializeField] private GameObject crowSpawnManagerObj;
+    // ネコの発生を制御するオブジェクト
+    [SerializeField] private GameObject catSpawnManagerObj;
 
     void Start()
     {
@@ -35,9 +37,10 @@ public class GameFlagManager : MonoBehaviour
             clearTutorial = true;
         }
 
-        if (isStart && crowSpawnManagerObj && !crowSpawnManagerObj.activeSelf)
+        if (isStart && crowSpawnManagerObj && !crowSpawnManagerObj.activeSelf && !catSpawnManagerObj.activeSelf)
         {
             crowSpawnManagerObj.SetActive(true);
+            catSpawnManagerObj.SetActive(true);
         }
     }
 

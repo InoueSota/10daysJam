@@ -18,17 +18,23 @@ public class SpawnManager : MonoBehaviour
     // ゲーム内の対象の敵を数える
     private GameObject[] enemyObjs;
 
+    // 画面外から発生させる際、左右の画面外からなのか、上の画面外からなのかをフラグで決める
+    [SerializeField] private bool isOutOfWidth = false;
+
     // 発生間隔
     private float interval;
 
     // カメラのオブジェクト
     public GameObject cameraObj;
+    // カメラの横幅の半分
+    private float halfWidth;
     // カメラの縦幅の半分
     private float halfHeight;
 
     void Start()
     {
         LoadEnemyData();
+        halfWidth = Camera.main.ScreenToWorldPoint(new(Screen.width, 0f, 0f)).x;
         halfHeight = Camera.main.ScreenToWorldPoint(new(0f, Screen.height, 0f)).y;
     }
 
@@ -64,10 +70,23 @@ public class SpawnManager : MonoBehaviour
                 {
                     if (ints[i] == 1)
                     {
-                        // 座標をcsvファイルから読み込む
-                        Vector3 position = new(float.Parse(csvDatas[i][0]), 0f, 0f);
-                        // Y座標を画面外から登場させるために高くする
-                        position.y += halfHeight;
+                        Vector3 position = Vector3.zero;
+                        // 画面外出現 - 横
+                        if (isOutOfWidth)
+                        {
+                            // 座標をcsvファイルから読み込む
+                            position = new(0f, 1.3f, 0f);
+                            // Y座標を画面外から登場させるために高くする
+                            position.x += halfWidth * float.Parse(csvDatas[i][0]) + 1.5f;
+                        }
+                        // 画面外出現 - 縦
+                        else
+                        {
+                            // 座標をcsvファイルから読み込む
+                            position = new(float.Parse(csvDatas[i][0]), 0f, 0f);
+                            // Y座標を画面外から登場させるために高くする
+                            position.y += halfHeight;
+                        }
                         // 発生間隔をcsvファイルから読み込む
                         interval = float.Parse(csvDatas[i][1]);
 
