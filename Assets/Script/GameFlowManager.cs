@@ -66,6 +66,7 @@ public class GameFlowManager : MonoBehaviour
 
             // ƒXƒRƒA‚ğ•`‰æ‚·‚é
             if (scoreTextManager) { scoreTextManager.SetNumber(score); }
+            ResultManager.score = score;
         }
     }
 

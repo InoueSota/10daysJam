@@ -9,16 +9,6 @@ public class AllChildScript : MonoBehaviour
     private float diff;
     private float diffSize = 1.5f;
 
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-
-    }
-
     public void AddChildObjects(GameObject[] children)
     {
         // éqÇêîÇ¶ÇÈ
@@ -28,6 +18,7 @@ public class AllChildScript : MonoBehaviour
         {
             children[childCount_] = child.gameObject;
             childCount_++;
+            ResultManager.childCount = childCount_;
         }
     }
 
