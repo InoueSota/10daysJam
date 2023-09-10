@@ -75,6 +75,7 @@ public class PlayerManager : MonoBehaviour
 
     Vector3 prePos = Vector3.zero;
 
+    float speedDownTime;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -90,6 +91,14 @@ public class PlayerManager : MonoBehaviour
 
     void Update()
     {
+        if(speedDownTime > 0) {
+            moveSpeed = 5.0f;
+            speedDownTime -= Time.deltaTime;
+        }
+        else
+        {
+            moveSpeed = 10.0f;
+        }
         InputMove();
         Move();
         Gravity();
@@ -534,5 +543,10 @@ public class PlayerManager : MonoBehaviour
         if (flight == true) anim.SetTrigger("flight");
 
         prePos = thisPos;
+    }
+   public void SetSpeedDown()
+    {
+        speedDownTime = 2.0f;
+
     }
 }

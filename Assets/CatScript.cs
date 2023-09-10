@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 
 public class CatScript : MonoBehaviour
 {
+    public float pushForce = 10.0f; // 吹っ飛ばす力の大きさ
     enum Mode
     {
         Scan,
@@ -19,10 +20,13 @@ public class CatScript : MonoBehaviour
     private float distance;
     [SerializeField] Vector2 childPos;
     [SerializeField] GameObject target;
-    public string TargetTag = "Child";
+    public string TargetTag = "Player";
     SpriteRenderer spriteRenderer;
     [SerializeField] Vector3 easePos;
     bool isEase;
+    public Vector2 direction_;
+    GameObject player;
+    bool isAttack;
     // Start is called before the first frame update
     void Start()
     {
@@ -41,7 +45,7 @@ public class CatScript : MonoBehaviour
                 foreach (Collider2D col in colliders)
                 {
                     Debug.Log("Detected Object: " + col.gameObject.name);
-                    if (col.gameObject.tag == "Child")
+                    if (col.gameObject.tag == TargetTag)
                     {
                         // 範囲内のオブジェクトへの参照を取得
                         target = col.gameObject;
@@ -55,10 +59,10 @@ public class CatScript : MonoBehaviour
             case Mode.Chase:
                 if (target != null) // targetがnullでないことを確認
                 {
-                    Vector2 direction = target.transform.position - transform.position;
-                    direction.Normalize();
-                    transform.position += new Vector3(direction.x * 5, 0, 0) * Time.deltaTime;
-                    if (direction.x > 0)
+                    direction_ = target.transform.position - transform.position;
+                    direction_.Normalize();
+                    transform.position += new Vector3(direction_.x * 5, 0, 0) * Time.deltaTime;
+                    if (direction_.x > 0)
                     {
                         spriteRenderer.flipX = true;
                     }
@@ -91,8 +95,34 @@ public class CatScript : MonoBehaviour
         }
 
     }
+    private void FixedUpdate()
+    {
+        if (isAttack)
+        {
+            Vector2 forceDirection = direction_.normalized;
+            target.GetComponent<Rigidbody2D>().AddForce(forceDirection * 10,ForceMode2D.Impulse);
+        }
+    }
     void EaseEndFanction()
     {
         mode = Mode.Hikkaku;
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player")) // プレイヤーオブジェクトとの衝突を検出
+        {
+            // Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
+            isAttack = true;
+
+
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player")) // プレイヤーオブジェクトとの衝突を検出
+        {
+            // Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
+            isAttack = false;
+        }
     }
 }
