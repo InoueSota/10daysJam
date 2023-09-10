@@ -211,7 +211,7 @@ public class ChildManager : MonoBehaviour
         {
             velocity.y -= 3.0f * Time.deltaTime * 9.81f;
         }
-        else if (moveType == MoveType.FOLLOW)
+        else if (moveType == MoveType.FOLLOW || moveType == MoveType.DASH)
         {
             velocity.y = 0f;
         }
