@@ -114,8 +114,6 @@ public class CrowScript : MonoBehaviour
                 break;
             case Mode.leave:
 
-
-
                 break;
             case Mode.takeaway:
                 Vector3 direction = targetPos - transform.position;
@@ -123,7 +121,6 @@ public class CrowScript : MonoBehaviour
                 direction.Normalize();
                 transform.position += new Vector3(-direction.x * moveSpeed, moveSpeed, 0) * Time.deltaTime;
                 closestChild.transform.position = transform.position;
-
                 closestChild.GetComponent<ChildManager>().isTakedAway = true;
                 if (transform.position.y > 20)
                 {
