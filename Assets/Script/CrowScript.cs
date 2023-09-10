@@ -12,6 +12,8 @@ public class CrowScript : MonoBehaviour
 {
     private FeatherAParticlesManager featherA;
     private StanParticlesManager stan;
+    private float halfWidth;
+    private float halfHeight;
 
     public string targetTag = "Child"; // �E��E��E��E��E�Ώۂ�Tag�E��E�
     public Vector3 targetPos;
@@ -46,7 +48,9 @@ public class CrowScript : MonoBehaviour
     {
         featherA = GetComponent<FeatherAParticlesManager>();
         stan = GetComponent<StanParticlesManager>();
-        player = GameObject.Find("Player");       
+        player = GameObject.Find("Player");
+        halfWidth = Camera.main.ScreenToWorldPoint(new(Screen.width, 0f, 0f)).x;
+        halfHeight = Camera.main.ScreenToWorldPoint(new(0f, Screen.height, 0f)).y;
     }
 
     // Update is called once per frame
@@ -114,8 +118,6 @@ public class CrowScript : MonoBehaviour
                 break;
             case Mode.leave:
 
-
-
                 break;
             case Mode.takeaway:
                 Vector3 direction = targetPos - transform.position;
@@ -123,9 +125,12 @@ public class CrowScript : MonoBehaviour
                 direction.Normalize();
                 transform.position += new Vector3(-direction.x * moveSpeed, moveSpeed, 0) * Time.deltaTime;
                 closestChild.transform.position = transform.position;
-
-                closestChild.GetComponent<ChildManager>().isTakedAway = true;
-                if (transform.position.y > 20)
+                if (!closestChild.GetComponent<ChildManager>().isTakedAway)
+                {
+                    closestChild.GetComponent<ChildManager>().takeAwayCrowObj = gameObject;
+                    closestChild.GetComponent<ChildManager>().isTakedAway = true;
+                }
+                if (transform.position.y > halfHeight + transform.localScale.y)
                 {
                     Destroy(closestChild.gameObject);
                     mode = Mode.stay;
@@ -144,6 +149,15 @@ public class CrowScript : MonoBehaviour
                 break;
         }
 
+        // 画面内に収めさせる
+        if (transform.position.x - transform.localScale.x * 0.5f < -halfWidth)
+        {
+            transform.position = new(-halfWidth + transform.localScale.x * 0.5f, transform.position.y);
+        }
+        else if (transform.position.x + transform.localScale.x * 0.5f > halfWidth)
+        {
+            transform.position = new(halfWidth - transform.localScale.x * 0.5f, transform.position.y);
+        }
     }
 
     private void Attak()
@@ -233,7 +247,7 @@ public class CrowScript : MonoBehaviour
           : (Mathf.Pow(2 * t - 2, 2) * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2;
     }
     
-private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag(targetTag))
         {

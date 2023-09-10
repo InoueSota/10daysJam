@@ -75,6 +75,8 @@ public class PlayerManager : MonoBehaviour
 
     Vector3 prePos = Vector3.zero;
 
+    float speedDownTime;
+    public bool isCatAttack;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -90,6 +92,14 @@ public class PlayerManager : MonoBehaviour
 
     void Update()
     {
+        if(speedDownTime > 0) {
+            moveSpeed = 5.0f;
+            speedDownTime -= Time.deltaTime;
+        }
+        else
+        {
+            moveSpeed = 10.0f;
+        }
         InputMove();
         Move();
         Gravity();
@@ -267,7 +277,7 @@ public class PlayerManager : MonoBehaviour
     {
         float deltaMoveSpeed = moveSpeed * Time.deltaTime;
         transform.position = new Vector3(transform.position.x + inputMove.x * deltaMoveSpeed, transform.position.y, transform.position.z);
-
+        
         //ジャンプ処理（Y軸イドウ）
         if (inputJump != 0 && preInputJump == 0)
         {
@@ -418,6 +428,7 @@ public class PlayerManager : MonoBehaviour
         {
             isJump = false;
             judgeGround = true;
+            isCatAttack = false;
         }
 
         if (collision.gameObject.CompareTag("Obstacle"))
@@ -440,6 +451,7 @@ public class PlayerManager : MonoBehaviour
             isEnterObstacle = true;
             checkIsSameDirection = direction;
         }
+        
     }
     private void OnCollisionStay2D(Collision2D collision)
     {
@@ -448,6 +460,7 @@ public class PlayerManager : MonoBehaviour
         {
             isJump = false;
             judgeGround = true;
+            isCatAttack = false;
         }
         if (!judgeGround && collision.gameObject.CompareTag("Obstacle"))
         {
@@ -469,7 +482,7 @@ public class PlayerManager : MonoBehaviour
         {
             velocity.y -= 5.0f * Time.deltaTime * 9.81f;
         }
-        else if (!isJump)
+        else if (!isJump&&!isCatAttack)
         {
             velocity.y = 0f;
         }
@@ -534,5 +547,36 @@ public class PlayerManager : MonoBehaviour
         if (flight == true) anim.SetTrigger("flight");
 
         prePos = thisPos;
+    }
+   public void SetSpeedDown()
+    {
+        speedDownTime = 2.0f;
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Cat")&&!isCatAttack)
+        {
+            Debug.Log("nyannyan");
+            //rb.velocity = new Vector2(collision.GetComponent<CatScript>().direction_.x, 5f);
+            if (collision.GetComponent<CatScript>().isAttack)
+            {
+                isCatAttack = true;
+
+                velocity.y = 13f;
+                velocity.x = collision.GetComponent<CatScript>().direction_.x*13f;
+            }
+           
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Cat"))
+        {
+
+            //isCatAttack = false;
+            velocity.x = 0;
+
+
+        }
     }
 }

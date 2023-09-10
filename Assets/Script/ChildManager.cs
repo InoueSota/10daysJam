@@ -63,7 +63,7 @@ public class ChildManager : MonoBehaviour
     private float cancelRandomX = 0f;
 
     // 攻撃最大時間
-    private float attackCrowTime = 1.5f;
+    private float attackCrowTime = 0.5f;
     private float attackCrowLeftTime = 0f;
     // 攻撃終了フラグ
     private bool isFinishAttackCrow = false;
@@ -73,6 +73,8 @@ public class ChildManager : MonoBehaviour
     private bool isCrawHit = false;
     // カラスに連れられたかフラグ
     public bool isTakedAway = false;
+    // 連れられたカラスのオブジェクト
+    public GameObject takeAwayCrowObj = null;
 
     // 食事に掛かる時間
     [SerializeField] private float eatGrassTime = 0f;
@@ -125,6 +127,14 @@ public class ChildManager : MonoBehaviour
             
             ImageFlip();
         }
+        // カラスに連れられたとき
+        else
+        {
+            if (!takeAwayCrowObj)
+            {
+                isTakedAway = false;
+            }
+        }
     }
 
     void Move()
@@ -176,12 +186,12 @@ public class ChildManager : MonoBehaviour
                     // 親の方に行く - 左
                     if (stayRandomPositionX - transform.position.x < 0f)
                     {
-                        velocity.x = -10.0f;
+                        velocity.x = -12.0f;
                     }
                     // 親の方に行く - 右
                     else
                     {
-                        velocity.x = 10.0f;
+                        velocity.x = 12.0f;
                     }
                 }
                 if (playerManager.orderDown)
@@ -211,7 +221,7 @@ public class ChildManager : MonoBehaviour
         {
             velocity.y -= 3.0f * Time.deltaTime * 9.81f;
         }
-        else if (moveType == MoveType.FOLLOW)
+        else if (moveType == MoveType.FOLLOW || moveType == MoveType.DASH)
         {
             velocity.y = 0f;
         }
@@ -577,7 +587,11 @@ public class ChildManager : MonoBehaviour
         // 障害物に当たったら迷う
         if (collision.gameObject.CompareTag("Obstacle"))
         {
-            if (isDash)
+            if (isThrow)
+            {
+                isCrawHit = true;
+            }
+            else if (isDash)
             {
                 ChangeMoveType(MoveType.LOST);
                 lostLeftTime = lostTime;
