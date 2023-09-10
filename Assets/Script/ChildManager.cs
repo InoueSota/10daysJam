@@ -73,6 +73,8 @@ public class ChildManager : MonoBehaviour
     private bool isCrawHit = false;
     // カラスに連れられたかフラグ
     public bool isTakedAway = false;
+    // 連れられたカラスのオブジェクト
+    public GameObject takeAwayCrowObj = null;
 
     // 食事に掛かる時間
     [SerializeField] private float eatGrassTime = 0f;
@@ -125,6 +127,14 @@ public class ChildManager : MonoBehaviour
             
             ImageFlip();
         }
+        // カラスに連れられたとき
+        else
+        {
+            if (!takeAwayCrowObj)
+            {
+                isTakedAway = false;
+            }
+        }
     }
 
     void Move()
@@ -176,12 +186,12 @@ public class ChildManager : MonoBehaviour
                     // 親の方に行く - 左
                     if (stayRandomPositionX - transform.position.x < 0f)
                     {
-                        velocity.x = -10.0f;
+                        velocity.x = -12.0f;
                     }
                     // 親の方に行く - 右
                     else
                     {
-                        velocity.x = 10.0f;
+                        velocity.x = 12.0f;
                     }
                 }
                 if (playerManager.orderDown)
@@ -211,7 +221,7 @@ public class ChildManager : MonoBehaviour
         {
             velocity.y -= 3.0f * Time.deltaTime * 9.81f;
         }
-        else if (moveType == MoveType.FOLLOW)
+        else if (moveType == MoveType.FOLLOW || moveType == MoveType.DASH)
         {
             velocity.y = 0f;
         }

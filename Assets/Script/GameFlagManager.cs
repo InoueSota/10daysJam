@@ -14,6 +14,9 @@ public class GameFlagManager : MonoBehaviour
     // ↓ チュートリアルクリア後
     // ゲーム開始するフラグ
     private bool isStart;
+    // 子ガモを守り切る指示を書いたオブジェクト
+    [SerializeField] private GameObject orderSaveChildrenObj;
+    // カラスの発生を制御するオブジェクト
     [SerializeField] private GameObject crowSpawnManagerObj;
 
     void Start()
@@ -28,6 +31,7 @@ public class GameFlagManager : MonoBehaviour
         {
             Destroy(dummyParentObj);
             Destroy(orderKillDummyObj);
+            orderSaveChildrenObj.SetActive(true);
             clearTutorial = true;
         }
 

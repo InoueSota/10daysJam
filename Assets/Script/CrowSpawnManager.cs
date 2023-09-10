@@ -20,13 +20,13 @@ public class CrowSpawnManager : MonoBehaviour
 
     // カメラのオブジェクト
     public GameObject cameraObj;
-    // カメラの横幅の半分
-    private float halfWidth;
+    // カメラの縦幅の半分
+    private float halfHeight;
 
     void Start()
     {
         LoadEnemyData();
-        halfWidth = Camera.main.ScreenToWorldPoint(new(Screen.width, 0f, 0f)).x;
+        halfHeight = Camera.main.ScreenToWorldPoint(new(0f, Screen.height, 0f)).y;
     }
 
     void Update()
@@ -62,11 +62,11 @@ public class CrowSpawnManager : MonoBehaviour
                     if (ints[i] == 1)
                     {
                         // 座標をcsvファイルから読み込む
-                        Vector3 position = new(0f, float.Parse(csvDatas[i][1]), 0f);
-                        // X座標は ”✚かー” で受け取り、カメラ外から出現させるためにずらす
-                        position.x = float.Parse(csvDatas[i][0]) * halfWidth;
+                        Vector3 position = new(float.Parse(csvDatas[i][0]), 0f, 0f);
+                        // Y座標を画面外から登場させるために高くする
+                        position.y += halfHeight;
                         // 発生間隔をcsvファイルから読み込む
-                        interval = float.Parse(csvDatas[i][2]);
+                        interval = float.Parse(csvDatas[i][1]);
 
                         GameObject crow = Instantiate(crowObj, position, Quaternion.identity);
 
