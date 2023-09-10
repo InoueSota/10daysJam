@@ -111,6 +111,7 @@ MonoBehaviour:
   orderDown: 0
   orderAttack: 0
   targetMarkObj: {fileID: 0}
+  isCatAttack: 0
 --- !u!61 &6111210653953210399
 BoxCollider2D:
   m_ObjectHideFlags: 0
