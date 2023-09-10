@@ -121,7 +121,11 @@ public class CrowScript : MonoBehaviour
                 direction.Normalize();
                 transform.position += new Vector3(-direction.x * moveSpeed, moveSpeed, 0) * Time.deltaTime;
                 closestChild.transform.position = transform.position;
-                closestChild.GetComponent<ChildManager>().isTakedAway = true;
+                if (!closestChild.GetComponent<ChildManager>().isTakedAway)
+                {
+                    closestChild.GetComponent<ChildManager>().takeAwayCrowObj = gameObject;
+                    closestChild.GetComponent<ChildManager>().isTakedAway = true;
+                }
                 if (transform.position.y > 20)
                 {
                     Destroy(closestChild.gameObject);
@@ -230,7 +234,7 @@ public class CrowScript : MonoBehaviour
           : (Mathf.Pow(2 * t - 2, 2) * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2;
     }
     
-private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag(targetTag))
         {
