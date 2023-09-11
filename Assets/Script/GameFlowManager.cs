@@ -72,7 +72,7 @@ public class GameFlowManager : MonoBehaviour
 
         if (gameFlagManager && gameFlagManager.GetClearTutorial() && gameFlagManager.GetIsStart())
         {
-            if (IsGoal())
+            if (IsGoal() || ResultManager.childCount <= 0)
             {
                 gameFlagManager.SetFinish();
             }
