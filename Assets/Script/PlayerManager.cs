@@ -614,8 +614,8 @@ public class PlayerManager : MonoBehaviour
 
                 velocity.y = 13f;
                 velocity.x = collision.GetComponent<CatScript>().direction_.x*13f;
+                judgeGround = false;
             }
-           
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
