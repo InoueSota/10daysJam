@@ -144,11 +144,19 @@ public class CrowScript : MonoBehaviour
                     if (closestChild)
                     {
                         closestChild.transform.position = transform.position;
-                        if (!closestChild.GetComponent<ChildManager>().isTakedAway)
+                        ChildManager childManager = closestChild.GetComponent<ChildManager>();
+                        if (!childManager.isTakedAway)
                         {
-                            closestChild.GetComponent<ChildManager>().takeAwayCrowObj = gameObject;
-                            closestChild.GetComponent<ChildManager>().isTakedAway = true;
-                            GameObject.FindGameObjectWithTag("ChildManager").GetComponent<AllChildScript>().TakeOffDiffUpdate();
+                            childManager.takeAwayCrowObj = gameObject;
+                            childManager.isTakedAway = true;
+                            if (childManager.GetMoveType() == ChildManager.MoveType.STACK)
+                            {
+                                GameObject.FindGameObjectWithTag("ChildManager").GetComponent<AllChildScript>().StackTakeOffUpdate();
+                            }
+                            else
+                            {
+                                GameObject.FindGameObjectWithTag("ChildManager").GetComponent<AllChildScript>().TakeOffDiffUpdate();
+                            }
                         }
                         if (transform.position.y > halfHeight + transform.localScale.y)
                         {

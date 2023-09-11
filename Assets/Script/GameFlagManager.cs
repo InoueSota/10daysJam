@@ -34,7 +34,7 @@ public class GameFlagManager : MonoBehaviour
         isFinish = false;
         sceneChanger = GameObject.FindGameObjectWithTag("SceneChanger").GetComponent<SceneChanger>();
     }
-
+        
     void Update()
     {
         if (!clearTutorial && dummyParentObj && CountChildObjects(dummyParentObj) == 1)

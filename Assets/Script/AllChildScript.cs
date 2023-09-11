@@ -8,8 +8,9 @@ using UnityEngine.Playables;
 public class AllChildScript : MonoBehaviour
 {
     public int stackCount;
+    [SerializeField] private int checkStackCount;
 
-    private float diff;
+    public float diff;
     private float diffSize = 1.5f;
 
     [SerializeField] private GameObject playerObj;
@@ -23,6 +24,8 @@ public class AllChildScript : MonoBehaviour
 
         children = new GameObject[30];
         children = GameObject.FindGameObjectsWithTag("Child");
+
+        ChildrenCount();
     }
 
     void Update()
@@ -78,6 +81,39 @@ public class AllChildScript : MonoBehaviour
     public void SubtractDiffSize()
     {
         diff -= diffSize;
+        if (diff < 0.5f)
+        {
+            diff = 0.5f;
+        }
+    }
+
+    public void StackTakeOffUpdate()
+    {
+        for (int i = 0; i < children.GetLength(0); i++)
+        {
+            if (children[i])
+            {
+                ChildManager childManager = children[i].GetComponent<ChildManager>();
+                if (childManager && childManager.isTakedAway)
+                {
+                    checkStackCount = childManager.stackIndex;
+                    break;
+                }
+            }
+        }
+
+        for (int i = 0; i < children.GetLength(0); i++)
+        {
+            if (children[i])
+            {
+                ChildManager childManager = children[i].GetComponent<ChildManager>();
+                if (childManager && checkStackCount < childManager.stackIndex)
+                {
+                    childManager.stackIndex -= 1;
+                    continue;
+                }
+            }
+        }
     }
 
     public void TakeOffDiffUpdate()
