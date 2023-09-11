@@ -35,6 +35,13 @@ public class CrowScript : MonoBehaviour
     // カメラ
     private GameObject cameraObj;
     private ScrollManager scrollManager;
+    // カメラの中に入ったかフラグ
+    private bool isEnterCamera;
+
+    // ゲーム開始管理オブジェクト
+    [SerializeField] private GameObject gameFlagObj;
+    private GameFlagManager gameFlagManager;
+
     public enum Mode
     {
         stay,
@@ -57,119 +64,133 @@ public class CrowScript : MonoBehaviour
         halfHeight = Camera.main.ScreenToWorldPoint(new(0f, Screen.height, 0f)).y;
         cameraObj = GameObject.FindGameObjectWithTag("MainCamera");
         scrollManager = cameraObj.GetComponent<ScrollManager>();
+        isEnterCamera = false;
+        gameFlagManager = gameFlagObj.GetComponent<GameFlagManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        switch (mode)
+        if (isEnterCamera && gameFlagManager.GetIsStart())
         {
-            case Mode.stay:
-                angleX += Time.deltaTime;
-                angleY += Time.deltaTime * 10;
-                FindClosestChild();
-                transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x, 14.0f), Time.deltaTime * moveSpeed);
-                coolTime -= Time.deltaTime;
-                if ((int)angleX % 3 == 0)
-                {
-                    direction_ = UnityEngine.Random.Range(-1, 2);
-                }
-                transform.position += new Vector3(direction_*moveSpeed,0, 0)*Time.deltaTime;
-                Distance_ = Vector2.Distance(transform.position, targetPos);
-                //if (Distance_ < 15)
-                //{
-                //    DistanceChangeTimeX=1f;
-                //    DistanceChangeTimeY=1.5f;
-                //}
-                //else
-                //if (Distance_ < 20)
-                //{
-                //    DistanceChangeTimeX=2;
-                //    DistanceChangeTimeY=2.5f;
-                //}
-                //else
-                //if (Distance_ < 25)
-                //{
-                //    DistanceChangeTimeX=2.5f;
-                //    DistanceChangeTimeY=3f;
-                //}
-                //else
-                //{
-                //    DistanceChangeTimeX=3;
-                //    DistanceChangeTimeY=3.5f;
-                //}
-
-                if (coolTime < 0)
-                {
-                    mode = Mode.attak;
-                    startPos = transform.position;
-                    //easetime = 1.2f;
-                    coolTime = kMaxcoolTime;
-                    Attak();
-                }
-                isTakeAway = false;
-                break;
-            case Mode.attak:
-                
-               // Attak();
-                float distance = Vector2.Distance(transform.position, targetPos);
-                if (distance <= 0.1f)
-                {
-                    mode = Mode.stay;                   
-                }
-                //if (easetime < 0f)
-                //{
-                //    mode = Mode.stay;
-                //}
-                break;
-            case Mode.leave:
-
-                break;
-            case Mode.takeaway:
-                Vector3 direction = targetPos - transform.position;
-                // �����x�N�g���𐳋K���i������1�ɂ���j
-                direction.Normalize();
-                transform.position += new Vector3(-direction.x * moveSpeed, moveSpeed, 0) * Time.deltaTime;
-                if (closestChild)
-                {
-                    closestChild.transform.position = transform.position;
-                    if (!closestChild.GetComponent<ChildManager>().isTakedAway)
+            switch (mode)
+            {
+                case Mode.stay:
+                    angleX += Time.deltaTime;
+                    angleY += Time.deltaTime * 10;
+                    FindClosestChild();
+                    transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x, 14.0f), Time.deltaTime * moveSpeed);
+                    coolTime -= Time.deltaTime;
+                    if ((int)angleX % 3 == 0)
                     {
-                        closestChild.GetComponent<ChildManager>().takeAwayCrowObj = gameObject;
-                        closestChild.GetComponent<ChildManager>().isTakedAway = true;
-                        GameObject.FindGameObjectWithTag("ChildManager").GetComponent<AllChildScript>().TakeOffDiffUpdate();
+                        direction_ = UnityEngine.Random.Range(-1, 2);
                     }
-                    if (transform.position.y > halfHeight + transform.localScale.y)
+                    transform.position += new Vector3(direction_ * moveSpeed, 0, 0) * Time.deltaTime;
+                    Distance_ = Vector2.Distance(transform.position, targetPos);
+                    //if (Distance_ < 15)
+                    //{
+                    //    DistanceChangeTimeX=1f;
+                    //    DistanceChangeTimeY=1.5f;
+                    //}
+                    //else
+                    //if (Distance_ < 20)
+                    //{
+                    //    DistanceChangeTimeX=2;
+                    //    DistanceChangeTimeY=2.5f;
+                    //}
+                    //else
+                    //if (Distance_ < 25)
+                    //{
+                    //    DistanceChangeTimeX=2.5f;
+                    //    DistanceChangeTimeY=3f;
+                    //}
+                    //else
+                    //{
+                    //    DistanceChangeTimeX=3;
+                    //    DistanceChangeTimeY=3.5f;
+                    //}
+
+                    if (coolTime < 0)
                     {
-                        Destroy(closestChild.gameObject);
+                        mode = Mode.attak;
+                        startPos = transform.position;
+                        //easetime = 1.2f;
+                        coolTime = kMaxcoolTime;
+                        Attak();
+                    }
+                    isTakeAway = false;
+                    break;
+                case Mode.attak:
+
+                    // Attak();
+                    float distance = Vector2.Distance(transform.position, targetPos);
+                    if (distance <= 0.1f)
+                    {
                         mode = Mode.stay;
-                        coolTime = kMaxcoolTime * 1.5f;
                     }
-                }
-                break;
-            case Mode.stan:
-                Debug.Log("stan");
-                stanTime -= Time.deltaTime;
-                if (stanTime < 0)
-                {
-                    mode = Mode.stay;
-                    stanTime = kStanTime;
-                }
-                break;
-        }
+                    //if (easetime < 0f)
+                    //{
+                    //    mode = Mode.stay;
+                    //}
+                    break;
+                case Mode.leave:
 
-        // 画面内に収めさせる
-        float thisLeft = transform.position.x - transform.localScale.x * 0.5f;
-        float thisRight = transform.position.x + transform.localScale.x * 0.5f;
-        float cameraLeft = scrollManager.GetScrollValue() - halfWidth;
-        float cameraRight = scrollManager.GetScrollValue() + halfWidth;
-        if (thisLeft < cameraLeft)
-        {
-            transform.position = new(cameraLeft + transform.localScale.x * 0.5f, transform.position.y, transform.position.z);
+                    break;
+                case Mode.takeaway:
+                    Vector3 direction = targetPos - transform.position;
+                    // �����x�N�g���𐳋K���i������1�ɂ���j
+                    direction.Normalize();
+                    transform.position += new Vector3(-direction.x * moveSpeed, moveSpeed, 0) * Time.deltaTime;
+                    if (closestChild)
+                    {
+                        closestChild.transform.position = transform.position;
+                        if (!closestChild.GetComponent<ChildManager>().isTakedAway)
+                        {
+                            closestChild.GetComponent<ChildManager>().takeAwayCrowObj = gameObject;
+                            closestChild.GetComponent<ChildManager>().isTakedAway = true;
+                            GameObject.FindGameObjectWithTag("ChildManager").GetComponent<AllChildScript>().TakeOffDiffUpdate();
+                        }
+                        if (transform.position.y > halfHeight + transform.localScale.y)
+                        {
+                            Destroy(closestChild.gameObject);
+                            mode = Mode.stay;
+                            coolTime = kMaxcoolTime * 1.5f;
+                        }
+                    }
+                    break;
+                case Mode.stan:
+                    Debug.Log("stan");
+                    stanTime -= Time.deltaTime;
+                    if (stanTime < 0)
+                    {
+                        mode = Mode.stay;
+                        stanTime = kStanTime;
+                    }
+                    break;
+            }
+
+            // 画面内に収めさせる
+            float thisLeft = transform.position.x - transform.localScale.x * 0.5f;
+            float thisRight = transform.position.x + transform.localScale.x * 0.5f;
+            float cameraLeft = scrollManager.GetScrollValue() - halfWidth;
+            float cameraRight = scrollManager.GetScrollValue() + halfWidth;
+            if (thisLeft < cameraLeft)
+            {
+                transform.position = new(cameraLeft + transform.localScale.x * 0.5f, transform.position.y, transform.position.z);
+            }
+            if (thisRight > cameraRight)
+            {
+                transform.position = new(cameraRight - transform.localScale.x * 0.5f, transform.position.y, transform.position.z);
+            }
         }
-        if (thisRight > cameraRight)
+        else
         {
-            transform.position = new(cameraRight - transform.localScale.x * 0.5f, transform.position.y, transform.position.z);
+            float thisRight = transform.position.x + transform.localScale.x * 0.5f;
+            float cameraRight = scrollManager.GetScrollValue() + halfWidth;
+            if (thisRight < cameraRight)
+            {
+                isEnterCamera = true;
+            }
         }
     }
 
