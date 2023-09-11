@@ -197,9 +197,16 @@ public class PlayerManager : MonoBehaviour
                 {
                     StackInitialize();
                 }
+                // 指示 - 集合,待機
+                else if (orderStack && inputDirection == INPUTDIRECTION.DOWN)
+                {
+                    OrderInitialize();
+                    allChild.DiffInitialize();
+                    orderDown = true;
+                }
+                // 指示 - 敵に攻撃
                 else if (judgeGround && !orderStack)
                 {
-                    // 指示 - 敵に攻撃
                     CheckDiffChild(false);
                     orderAttack = true;
                 }

@@ -23,7 +23,7 @@ public class ChildManager : MonoBehaviour
     // 基本移動速度
     public Vector3 velocity = Vector3.zero;
     // プレイヤーの向き
-    private int playerDirection = 1;
+    public int playerDirection = 1;
     // 接地判定
     [SerializeField]private bool judgeGround = false;
 
@@ -246,13 +246,14 @@ public class ChildManager : MonoBehaviour
         {
             if (Mathf.Abs(player.transform.position.x - transform.position.x) < 0.5f)
             {
+                float diffSize = transform.parent.gameObject.GetComponent<AllChildScript>().AddDiffSize();
                 if (playerDirection == 0)
                 {
-                    diff = transform.parent.gameObject.GetComponent<AllChildScript>().AddDiffSize();
+                    diff = diffSize;
                 }
                 else
                 {
-                    diff = -transform.parent.gameObject.GetComponent<AllChildScript>().AddDiffSize();
+                    diff = -diffSize;
                 }
                 isAddDiff = true;
             }

@@ -10,7 +10,7 @@ public class AllChildScript : MonoBehaviour
     public int stackCount;
     [SerializeField] private int checkStackCount;
 
-    private float diff;
+    public float diff;
     private float diffSize = 1.5f;
 
     [SerializeField] private GameObject playerObj;
@@ -81,6 +81,10 @@ public class AllChildScript : MonoBehaviour
     public void SubtractDiffSize()
     {
         diff -= diffSize;
+        if (diff < 0.5f)
+        {
+            diff = 0.5f;
+        }
     }
 
     public void StackTakeOffUpdate()
