@@ -26,8 +26,13 @@ public class GameFlowManager : MonoBehaviour
     // スコア
     private int score;
     // スコアのテキスト
+    [SerializeField] private TextMeshProUGUI scoreLetterText;
+    private NumberChangeManager scoreLetterTextManager;
     [SerializeField] private TextMeshProUGUI scoreText;
     private NumberChangeManager scoreTextManager;
+    // スコアをゲーム内で描画するため
+    public GameObject canvas;
+    public GameObject scoreIngamePrefab;
 
     // シーンを変えるオブジェクト
     private SceneChanger sceneChanger;
@@ -42,6 +47,7 @@ public class GameFlowManager : MonoBehaviour
         timeLimit = 60f;
         timeLimitTextManager = timeLimitText.GetComponent<NumberChangeManager>();
 
+        scoreLetterTextManager = scoreLetterText.GetComponent<NumberChangeManager>();
         scoreTextManager = scoreText.GetComponent<NumberChangeManager>();
 
         sceneChanger = GameObject.FindGameObjectWithTag("SceneChanger").GetComponent<SceneChanger>();
@@ -77,6 +83,10 @@ public class GameFlowManager : MonoBehaviour
         { 
             countDownText.gameObject.SetActive(false);
             timeLimitText.gameObject.SetActive(true);
+            scoreLetterText.gameObject.SetActive(true);
+            scoreText.gameObject.SetActive(true);
+            score = 0;
+            GameObject.FindGameObjectWithTag("MainCamera").GetComponent<ScrollManager>().SetAutoScrollStart();
             gameFlagManager.SetStart(); 
         }
         else

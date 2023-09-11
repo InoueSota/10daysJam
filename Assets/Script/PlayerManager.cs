@@ -492,7 +492,14 @@ public class PlayerManager : MonoBehaviour
         if (collision.gameObject.CompareTag("Wall"))
         {
             isEnterObstacle = true;
-            checkIsSameDirection = direction;
+            if (Mathf.Abs(transform.position.x - collision.transform.position.x) > 0f)
+            {
+                checkIsSameDirection = DIRECTION.LEFT;
+            }
+            else
+            {
+                checkIsSameDirection = DIRECTION.RIGHT;
+            }
         }
         
     }
