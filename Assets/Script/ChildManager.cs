@@ -56,7 +56,7 @@ public class ChildManager : MonoBehaviour
     private float stayRandomPositionX = 0f;
 
     // 積み上げの高さをカウントで変える
-    private int stackIndex = 0;
+    public int stackIndex = 0;
     // 積み上げ座標
     private Vector3 stackPos = Vector3.zero;
     // 積み上げを中断した時のランダム速度
@@ -233,6 +233,10 @@ public class ChildManager : MonoBehaviour
     void ChangeMoveType(MoveType nextMoveType)
     {
         moveType = nextMoveType;
+    }
+    public MoveType GetMoveType()
+    {
+        return moveType;
     }
 
     // 追いかけ関係
