@@ -17,7 +17,7 @@ public class CatScript : MonoBehaviour
 
     }
     [SerializeField] Mode mode = Mode.Scan;
-    private float distance;
+    [SerializeField] float distance;
     [SerializeField] Vector2 childPos;
     [SerializeField] GameObject target;
     public string TargetTag = "Player";
@@ -33,6 +33,7 @@ public class CatScript : MonoBehaviour
    const float kBakuBakuTime=3.0f;
     float chaseCoolTime;
     const float kchaseCoolTime=3.0f;
+    //[SerializeField] float distance;
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +43,8 @@ public class CatScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        distance = Vector2.Distance(transform.position, target.transform.position);
+
         switch (mode)
         {
             case Mode.Scan:
@@ -50,7 +53,7 @@ public class CatScript : MonoBehaviour
                     chaseCoolTime -= Time.deltaTime;
                 }
                 // ゲームオブジェクトの位置を中心に、半径5の範囲内のオブジェクトを探す
-                Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 10f);
+                Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 5f);
 
                 foreach (Collider2D col in colliders)
                 {
@@ -72,7 +75,7 @@ public class CatScript : MonoBehaviour
                 {
                     direction_ = target.transform.position - transform.position;
                     direction_.Normalize();
-                    transform.position += new Vector3(direction_.x * 5, 0, 0) * Time.deltaTime;
+                   // transform.position += new Vector3(direction_.x * 5, 0, 0) * Time.deltaTime;
                     if (direction_.x > 0)
                     {
                         spriteRenderer.flipX = true;
@@ -80,21 +83,27 @@ public class CatScript : MonoBehaviour
                     }
                     else
                     {
-                        direction_.x = -1.0f;
                         spriteRenderer.flipX = false;
+                        direction_.x = -1.0f;
                     }
-                    float distance = Vector2.Distance(transform.position, target.transform.position);
-                    if (distance <= 3.0f)
-                    {                     
-                       // easePos = target.transform.position;
-                        mode = Mode.Hikkaku;
+                    if (distance <= 24.0f)
+                    {
+                        transform.position +=new Vector3( direction_.x,0,0)*Time.deltaTime*3.0f;
+                        if (distance <= 10.0f)
+                        {
+                            mode = Mode.Hikkaku;
+                        }
                     }
-                    transform.position = new Vector2( Vector2.MoveTowards(transform.position, target.transform.position, Time.deltaTime*3).x,transform.position.y);
+                    else
+                    {
+                        mode = Mode.Scan;
+                    }
+                   
                 }
                 break;
 
             case Mode.Hikkaku:
-                isEase = false;
+                Debug.Log("hikkaku");
                 if (target && target.GetComponent<PlayerManager>().isCatAttack)
                 {
                     GameObject[] children = GameObject.FindGameObjectsWithTag("Child");
