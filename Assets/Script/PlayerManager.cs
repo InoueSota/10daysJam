@@ -599,7 +599,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (collision.CompareTag("Cat")&&!isCatAttack)
         {
-            Debug.Log("nyannyan");
+            //Debug.Log("nyannyan");
             //rb.velocity = new Vector2(collision.GetComponent<CatScript>().direction_.x, 5f);
             if (collision.GetComponent<CatScript>().isAttack)
             {

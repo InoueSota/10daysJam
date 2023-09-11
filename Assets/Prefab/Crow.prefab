@@ -556,6 +556,8 @@ MonoBehaviour:
   posY: 1
   normalSize: 0.5
   sizeVariation: 0.3
+  inclinationMax: 20
+  inclinationSpeed: 0.1
 --- !u!114 &3906877290160037469
 MonoBehaviour:
   m_ObjectHideFlags: 0

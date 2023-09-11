@@ -25,6 +25,9 @@ public class StanParticlesManager : MonoBehaviour
     [SerializeField] private float normalSize = 1.0f;
     [SerializeField] private float sizeVariation = 0.5f;
 
+    private float inclination = 0.0f;
+    [SerializeField] private float inclinationMax = 45.0f;
+    [SerializeField] private float inclinationSpeed = 2.0f;
 
 
     private bool isRunnning = false;
@@ -89,8 +92,23 @@ public class StanParticlesManager : MonoBehaviour
             starSizeVec3.x = starSize;
             starSizeVec3.y = starSize;
 
+            Vector3 starInc = Vector3.zero;
+
+            inclination += inclinationSpeed;
+
+            if(Mathf.Abs(inclination) > inclinationMax)
+            {
+                inclinationSpeed *= -1;
+            }
+
+            inclination = Mathf.Clamp(inclination, -inclinationMax, inclinationMax);
+
+            starInc.z = inclination;
+
             star[i].transform.localPosition = starPos;
             star[i].transform.localScale = starSizeVec3;
+            star[i].transform.localEulerAngles = starInc;
+
         }
 
         

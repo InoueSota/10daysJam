@@ -33,12 +33,15 @@ public class CatScript : MonoBehaviour
    const float kBakuBakuTime=3.0f;
     float chaseCoolTime;
     const float kchaseCoolTime=3.0f;
+
+
+    Animator anim;
     // Start is called before the first frame update
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -54,7 +57,7 @@ public class CatScript : MonoBehaviour
 
                 foreach (Collider2D col in colliders)
                 {
-                    Debug.Log("Detected Object: " + col.gameObject.name);
+                    //Debug.Log("Detected Object: " + col.gameObject.name);
                     if (col.gameObject.tag == TargetTag)
                     {
                         // 範囲内のオブジェクトへの参照を取得
@@ -156,9 +159,11 @@ public class CatScript : MonoBehaviour
                 break;
 
 
-
+               
         }
 
+        Animation();
+        Debug.Log(mode);
     }
     private void FixedUpdate()
     {
@@ -194,6 +199,30 @@ public class CatScript : MonoBehaviour
         {
             // Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
            // isAttack = false;
+        }
+    }
+
+    void Animation()
+    {
+        switch (mode)
+        {
+            case Mode.Scan:
+                //anim.SetBool("isAttack", false);
+                break;
+            case Mode.Chase:
+                //anim.SetBool("isAttack", false);
+                break;
+
+            case Mode.Hikkaku:
+                //anim.SetBool("isAttack", true);
+                break;
+
+            case Mode.Kuwaeru:
+                //anim.SetBool("isAttack", true);
+                break;
+
+
+
         }
     }
 }
