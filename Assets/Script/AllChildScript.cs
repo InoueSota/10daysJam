@@ -23,6 +23,8 @@ public class AllChildScript : MonoBehaviour
 
         children = new GameObject[30];
         children = GameObject.FindGameObjectsWithTag("Child");
+
+        ChildrenCount();
     }
 
     void Update()

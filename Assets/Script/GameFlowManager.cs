@@ -26,6 +26,12 @@ public class GameFlowManager : MonoBehaviour
     // スクロール値を格納しているオブジェクト
     [SerializeField] private GameObject scrollManagerObj;
     private ScrollManager scrollManager;
+    // 現在位置を上部に描画するUI
+    [SerializeField] private GameObject miniDuckUI;
+    // スタート地点のUI
+    [SerializeField] private GameObject miniStartUI;
+    // ゴール地点のUI
+    [SerializeField] private GameObject miniGoalUI;
 
     // スコア
     private int score;
@@ -70,6 +76,7 @@ public class GameFlowManager : MonoBehaviour
             {
                 gameFlagManager.SetFinish();
             }
+            UpdateMiniProgress();
 
             // スコアを描画する
             if (scoreTextManager) { scoreTextManager.SetNumber(score); }
@@ -103,6 +110,12 @@ public class GameFlowManager : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    private void UpdateMiniProgress()
+    {
+        float t = scrollManager.GetScrollValue() / (goalPositionX - halfWidth);
+        miniDuckUI.transform.position = Vector3.Lerp(miniStartUI.transform.position, miniGoalUI.transform.position, t);
     }
 
     public void AddScore(int addValue)
