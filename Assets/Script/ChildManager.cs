@@ -75,6 +75,8 @@ public class ChildManager : MonoBehaviour
     public bool isTakedAway = false;
     // 連れられたカラスのオブジェクト
     public GameObject takeAwayCrowObj = null;
+    // 攻撃時に獲得できるスコア
+    private int attackScore = 0;
 
     // 食事に掛かる時間
     [SerializeField] private float eatGrassTime = 0f;
@@ -547,14 +549,16 @@ public class ChildManager : MonoBehaviour
                     // ダメージを与えHPがなくなったら死亡
                     if (enemyStatus.GetHP() <= 0)
                     {
+                        attackScore = 1000;
                         // スコアを加算する
-                        playerManager.GetGameFlowManager().AddScore(1000);
+                        AttackScoreIngame(48, 0.5f, collision);
                         Destroy(collision.gameObject);
                     }
                     else
                     {
+                        attackScore = 100;
                         // スコアを加算する
-                        playerManager.GetGameFlowManager().AddScore(100);
+                        AttackScoreIngame(32, 0.5f, collision);
                     }
                 }
                 velocity.y = 5.0f;
@@ -571,14 +575,16 @@ public class ChildManager : MonoBehaviour
                         // ダメージを与えHPがなくなったら死亡
                         if (enemyStatus.GetHP() <= 0)
                         {
+                            attackScore = 2000;
                             // スコアを加算する
-                            playerManager.GetGameFlowManager().AddScore(2000);
+                            AttackScoreIngame(48, 0.5f, collision);
                             Destroy(collision.gameObject);
                         }
                         else
                         {
+                            attackScore = 200;
                             // スコアを加算する
-                            playerManager.GetGameFlowManager().AddScore(200);
+                            AttackScoreIngame(32, 0.5f, collision);
                         }
                     }
                 }
@@ -597,14 +603,16 @@ public class ChildManager : MonoBehaviour
                     // ダメージを与えHPがなくなったら死亡
                     if (enemyStatus.GetHP() <= 0)
                     {
+                        attackScore = 1000;
                         // スコアを加算する
-                        playerManager.GetGameFlowManager().AddScore(1000);
+                        AttackScoreIngame(48, 0.5f, collision);
                         Destroy(collision.gameObject);
                     }
                     else
                     {
+                        attackScore = 100;
                         // スコアを加算する
-                        playerManager.GetGameFlowManager().AddScore(100);
+                        AttackScoreIngame(32, 0.5f, collision);
                     }
                 }
                 velocity.y = 5.0f;
@@ -618,14 +626,16 @@ public class ChildManager : MonoBehaviour
                     // ダメージを与えHPがなくなったら死亡
                     if (enemyStatus.GetHP() <= 0)
                     {
+                        attackScore = 2000;
                         // スコアを加算する
-                        playerManager.GetGameFlowManager().AddScore(2000);
+                        AttackScoreIngame(48, 0.5f, collision);
                         Destroy(collision.gameObject);
                     }
                     else
                     {
+                        attackScore = 200;
                         // スコアを加算する
-                        playerManager.GetGameFlowManager().AddScore(200);
+                        AttackScoreIngame(32, 0.5f, collision);
                     }
                 }
             }
@@ -640,6 +650,15 @@ public class ChildManager : MonoBehaviour
             isDash = false;
             grassObj = collision.gameObject;
         }
+    }
+
+    private void AttackScoreIngame(int size, float deathTime, Collider2D collision)
+    {
+        playerManager.GetGameFlowManager().AddScore(attackScore);
+        GameObject scoreText = Instantiate(playerManager.GetGameFlowManager().GetComponent<GameFlowManager>().scoreIngamePrefab);
+        scoreText.transform.SetParent(playerManager.GetGameFlowManager().GetComponent<GameFlowManager>().canvas.transform, false);
+        scoreText.GetComponent<ScoreIngameManager>().Initialized(attackScore, size, deathTime);
+        scoreText.transform.position = new(collision.transform.position.x + collision.transform.localScale.x * 0.5f, collision.transform.position.y + collision.transform.localScale.y * 0.5f, collision.transform.position.z);
     }
 
     // 接地判定

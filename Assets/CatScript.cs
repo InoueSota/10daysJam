@@ -1,7 +1,6 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -33,13 +32,25 @@ public class CatScript : MonoBehaviour
    const float kBakuBakuTime=3.0f;
     float chaseCoolTime;
     const float kchaseCoolTime=3.0f;
+
+
+    Animator anim;
+
+    // カメラ
+    private GameObject cameraObj;
+    private ScrollManager scrollManager;
+    private float halfWidth;
+
     //[SerializeField] float distance;
     // Start is called before the first frame update
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
+        halfWidth = Camera.main.ScreenToWorldPoint(new(Screen.width, 0f, 0f)).x;
+        cameraObj = GameObject.FindGameObjectWithTag("MainCamera");
+        scrollManager = cameraObj.GetComponent<ScrollManager>();
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -57,7 +68,7 @@ public class CatScript : MonoBehaviour
 
                 foreach (Collider2D col in colliders)
                 {
-                    Debug.Log("Detected Object: " + col.gameObject.name);
+                    //Debug.Log("Detected Object: " + col.gameObject.name);
                     if (col.gameObject.tag == TargetTag)
                     {
                         // 範囲内のオブジェクトへの参照を取得
@@ -163,9 +174,25 @@ public class CatScript : MonoBehaviour
                 break;
 
 
-
+               
         }
 
+        Animation();
+        Debug.Log(mode);
+
+        // 画面内に収めさせる
+        float thisLeft = transform.position.x - transform.localScale.x * 0.5f;
+        float thisRight = transform.position.x + transform.localScale.x * 0.5f;
+        float cameraLeft = scrollManager.GetScrollValue() - halfWidth;
+        float cameraRight = scrollManager.GetScrollValue() + halfWidth;
+        if (thisLeft < cameraLeft)
+        {
+            transform.position = new(cameraLeft + transform.localScale.x * 0.5f, transform.position.y, transform.position.z);
+        }
+        if (thisRight > cameraRight)
+        {
+            transform.position = new(cameraRight - transform.localScale.x * 0.5f, transform.position.y, transform.position.z);
+        }
     }
     private void FixedUpdate()
     {
@@ -201,6 +228,30 @@ public class CatScript : MonoBehaviour
         {
             // Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
            // isAttack = false;
+        }
+    }
+
+    void Animation()
+    {
+        switch (mode)
+        {
+            case Mode.Scan:
+                //anim.SetBool("isAttack", false);
+                break;
+            case Mode.Chase:
+                //anim.SetBool("isAttack", false);
+                break;
+
+            case Mode.Hikkaku:
+                //anim.SetBool("isAttack", true);
+                break;
+
+            case Mode.Kuwaeru:
+                //anim.SetBool("isAttack", true);
+                break;
+
+
+
         }
     }
 }

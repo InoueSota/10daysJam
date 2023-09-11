@@ -492,7 +492,14 @@ public class PlayerManager : MonoBehaviour
         if (collision.gameObject.CompareTag("Wall"))
         {
             isEnterObstacle = true;
-            checkIsSameDirection = direction;
+            if (Mathf.Abs(transform.position.x - collision.transform.position.x) > 0f)
+            {
+                checkIsSameDirection = DIRECTION.LEFT;
+            }
+            else
+            {
+                checkIsSameDirection = DIRECTION.RIGHT;
+            }
         }
         
     }
@@ -599,7 +606,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (collision.CompareTag("Cat")&&!isCatAttack)
         {
-            Debug.Log("nyannyan");
+            //Debug.Log("nyannyan");
             //rb.velocity = new Vector2(collision.GetComponent<CatScript>().direction_.x, 5f);
             if (collision.GetComponent<CatScript>().isAttack)
             {
@@ -607,8 +614,8 @@ public class PlayerManager : MonoBehaviour
 
                 velocity.y = 13f;
                 velocity.x = collision.GetComponent<CatScript>().direction_.x*13f;
+                judgeGround = false;
             }
-           
         }
     }
     private void OnTriggerExit2D(Collider2D collision)

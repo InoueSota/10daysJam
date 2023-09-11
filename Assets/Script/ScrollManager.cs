@@ -22,6 +22,13 @@ public class ScrollManager : MonoBehaviour
     // スクロールの終座標
     Vector3 scrollEndPosition = Vector3.zero;
 
+    // オールスクロールフラグ
+    bool isAutoScroll = false;
+    // スクロール値
+    float scrollValue = 0f;
+    // スクロールの強さ
+    [SerializeField] float scrollPower;
+
     void Start()
     {
         playerTransform = playerObj.transform;
@@ -35,7 +42,7 @@ public class ScrollManager : MonoBehaviour
 
     private void LateUpdate()
     {
-        CheckPlayerPosition();
+        //CheckPlayerPosition();
         MoveCamera();
     }
 
@@ -68,13 +75,30 @@ public class ScrollManager : MonoBehaviour
 
     void MoveCamera()
     {
-        if (isScroll)
+        if (isScroll && !isAutoScroll)
         {
             scrollLeftTime -= Time.deltaTime;
             float t = scrollLeftTime / scrollTime;
 
             transform.position = Vector3.Lerp(scrollEndPosition, scrollStartPosition, t * t * t);
             if (scrollLeftTime < 0f) { isScroll = false; }
+        } 
+        else if (!isScroll && isAutoScroll)
+        {
+            float deltaScrollPower = scrollPower * Time.deltaTime;
+            scrollValue += deltaScrollPower;
+
+            transform.position = new(scrollValue, transform.position.y, transform.position.z);
         }
+    }
+
+    public void SetAutoScrollStart()
+    {
+        isAutoScroll = true;
+    }
+
+    public float GetScrollValue()
+    {
+        return scrollValue;
     }
 }

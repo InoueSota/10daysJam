@@ -31,6 +31,10 @@ public class CrowScript : MonoBehaviour
     //[SerializeField] float easetime = 1.0f;
     private float stanTime = 4.0f;
     [SerializeField] const float kStanTime = 4.0f;
+
+    // カメラ
+    private GameObject cameraObj;
+    private ScrollManager scrollManager;
     public enum Mode
     {
         stay,
@@ -51,6 +55,8 @@ public class CrowScript : MonoBehaviour
         player = GameObject.Find("Player");
         halfWidth = Camera.main.ScreenToWorldPoint(new(Screen.width, 0f, 0f)).x;
         halfHeight = Camera.main.ScreenToWorldPoint(new(0f, Screen.height, 0f)).y;
+        cameraObj = GameObject.FindGameObjectWithTag("MainCamera");
+        scrollManager = cameraObj.GetComponent<ScrollManager>();
     }
 
     // Update is called once per frame
@@ -124,20 +130,22 @@ public class CrowScript : MonoBehaviour
                 // �����x�N�g���𐳋K���i������1�ɂ���j
                 direction.Normalize();
                 transform.position += new Vector3(-direction.x * moveSpeed, moveSpeed, 0) * Time.deltaTime;
-                closestChild.transform.position = transform.position;
-                if (!closestChild.GetComponent<ChildManager>().isTakedAway)
+                if (closestChild)
                 {
-                    closestChild.GetComponent<ChildManager>().takeAwayCrowObj = gameObject;
-                    closestChild.GetComponent<ChildManager>().isTakedAway = true;
-                    GameObject.FindGameObjectWithTag("ChildManager").GetComponent<AllChildScript>().TakeOffDiffUpdate();
+                    closestChild.transform.position = transform.position;
+                    if (!closestChild.GetComponent<ChildManager>().isTakedAway)
+                    {
+                        closestChild.GetComponent<ChildManager>().takeAwayCrowObj = gameObject;
+                        closestChild.GetComponent<ChildManager>().isTakedAway = true;
+                        GameObject.FindGameObjectWithTag("ChildManager").GetComponent<AllChildScript>().TakeOffDiffUpdate();
+                    }
+                    if (transform.position.y > halfHeight + transform.localScale.y)
+                    {
+                        Destroy(closestChild.gameObject);
+                        mode = Mode.stay;
+                        coolTime = kMaxcoolTime * 1.5f;
+                    }
                 }
-                if (transform.position.y > halfHeight + transform.localScale.y)
-                {
-                    Destroy(closestChild.gameObject);
-                    mode = Mode.stay;
-                    coolTime = kMaxcoolTime * 1.5f;
-                }
-
                 break;
             case Mode.stan:
                 Debug.Log("stan");
@@ -151,13 +159,17 @@ public class CrowScript : MonoBehaviour
         }
 
         // 画面内に収めさせる
-        if (transform.position.x - transform.localScale.x * 0.5f < -halfWidth)
+        float thisLeft = transform.position.x - transform.localScale.x * 0.5f;
+        float thisRight = transform.position.x + transform.localScale.x * 0.5f;
+        float cameraLeft = scrollManager.GetScrollValue() - halfWidth;
+        float cameraRight = scrollManager.GetScrollValue() + halfWidth;
+        if (thisLeft < cameraLeft)
         {
-            transform.position = new(-halfWidth + transform.localScale.x * 0.5f, transform.position.y);
+            transform.position = new(cameraLeft + transform.localScale.x * 0.5f, transform.position.y, transform.position.z);
         }
-        else if (transform.position.x + transform.localScale.x * 0.5f > halfWidth)
+        if (thisRight > cameraRight)
         {
-            transform.position = new(halfWidth - transform.localScale.x * 0.5f, transform.position.y);
+            transform.position = new(cameraRight - transform.localScale.x * 0.5f, transform.position.y, transform.position.z);
         }
     }
 
