@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 1537494413065667243}
   - component: {fileID: -7024712534359552531}
   - component: {fileID: -3911588650271747608}
+  - component: {fileID: 3271553135827626658}
+  - component: {fileID: 1620102233314949598}
   m_Layer: 3
   m_Name: ChildPrefab
   m_TagString: Child
@@ -100,11 +102,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  diffValue: 0
-  followValue: 0
-  dashSpeed: 8
+  diff: 0
+  isAddDiff: 0
+  velocity: {x: 0, y: 0, z: 0}
+  judgeGround: 0
   moveType: 0
-  isPileUpped: 0
+  isTakedAway: 0
+  takeAwayCrowObj: {fileID: 0}
+  eatGrassTime: 0
+  lostTime: 0
 --- !u!50 &-7024712534359552531
 Rigidbody2D:
   serializedVersion: 4
@@ -152,3 +158,37 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &3271553135827626658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4062459521392159587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8241a5d62a1c854d9b7355feb679f72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerUp: {fileID: 561529914691568245, guid: cca409ad3077ef943bfcc926b3e5e27c, type: 3}
+--- !u!95 &1620102233314949598
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4062459521392159587}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0735615a30577f748b52cce16cb4e9b4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
