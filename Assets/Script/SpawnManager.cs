@@ -26,6 +26,7 @@ public class SpawnManager : MonoBehaviour
 
     // カメラのオブジェクト
     public GameObject cameraObj;
+    ScrollManager scrollManager;
     // カメラの横幅の半分
     private float halfWidth;
     // カメラの縦幅の半分
@@ -34,6 +35,7 @@ public class SpawnManager : MonoBehaviour
     void Start()
     {
         LoadEnemyData();
+        scrollManager = cameraObj.GetComponent<ScrollManager>();
         halfWidth = Camera.main.ScreenToWorldPoint(new(Screen.width, 0f, 0f)).x;
         halfHeight = Camera.main.ScreenToWorldPoint(new(0f, Screen.height, 0f)).y;
     }
@@ -75,15 +77,15 @@ public class SpawnManager : MonoBehaviour
                         if (isOutOfWidth)
                         {
                             // 座標をcsvファイルから読み込む
-                            position = new(0f, 1.3f, 0f);
-                            // Y座標を画面外から登場させるために高くする
-                            position.x += halfWidth * float.Parse(csvDatas[i][0]) + 1.5f;
+                            position = new(0f, 1.8f, 0f);
+                            // X座標の画面外から出現させる
+                            position.x += halfWidth * float.Parse(csvDatas[i][0]) + 1.5f + scrollManager.GetScrollValue();
                         }
                         // 画面外出現 - 縦
                         else
                         {
                             // 座標をcsvファイルから読み込む
-                            position = new(float.Parse(csvDatas[i][0]), 0f, 0f);
+                            position = new(float.Parse(csvDatas[i][0]) + scrollManager.GetScrollValue(), 0f, 0f);
                             // Y座標を画面外から登場させるために高くする
                             position.y += halfHeight;
                         }

@@ -21,10 +21,18 @@ public class GameFlagManager : MonoBehaviour
     // ネコの発生を制御するオブジェクト
     [SerializeField] private GameObject catSpawnManagerObj;
 
+    // ゲーム終了フラグ
+    private bool isFinish;
+    // シーンを変えるオブジェクト
+    private SceneChanger sceneChanger;
+
     void Start()
     {
         clearTutorial = false;
         isStart = false;
+
+        isFinish = false;
+        sceneChanger = GameObject.FindGameObjectWithTag("SceneChanger").GetComponent<SceneChanger>();
     }
 
     void Update()
@@ -42,6 +50,11 @@ public class GameFlagManager : MonoBehaviour
             crowSpawnManagerObj.SetActive(true);
             catSpawnManagerObj.SetActive(true);
         }
+
+        if (isFinish)
+        {
+            sceneChanger.ChangeScene("Result");
+        }
     }
 
     public bool GetClearTutorial()
@@ -57,6 +70,11 @@ public class GameFlagManager : MonoBehaviour
     public bool GetIsStart()
     {
         return isStart;
+    }
+
+    public void SetFinish()
+    {
+        isFinish = true;
     }
 
     private int CountChildObjects(GameObject parentObj)

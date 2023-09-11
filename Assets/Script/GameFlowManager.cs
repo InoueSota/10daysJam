@@ -17,11 +17,15 @@ public class GameFlowManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI countDownText;
     private NumberChangeManager countDownTextManager;
 
-    // ゲーム内の制限時間
-    private float timeLimit;
-    // 制限時間を計測するテキスト
-    [SerializeField] private TextMeshProUGUI timeLimitText;
-    private NumberChangeManager timeLimitTextManager;
+    // ゴール地点のオブジェクト
+    [SerializeField] private GameObject goalObj;
+    // ゴール地点のX座標の値
+    private float goalPositionX;
+    // 画面の横幅の半分
+    private float halfWidth;
+    // スクロール値を格納しているオブジェクト
+    [SerializeField] private GameObject scrollManagerObj;
+    private ScrollManager scrollManager;
 
     // スコア
     private int score;
@@ -34,8 +38,6 @@ public class GameFlowManager : MonoBehaviour
     public GameObject canvas;
     public GameObject scoreIngamePrefab;
 
-    // シーンを変えるオブジェクト
-    private SceneChanger sceneChanger;
 
     void Start()
     {
@@ -44,13 +46,12 @@ public class GameFlowManager : MonoBehaviour
         countDownTime = 3f;
         countDownTextManager = countDownText.GetComponent<NumberChangeManager>();
 
-        timeLimit = 60f;
-        timeLimitTextManager = timeLimitText.GetComponent<NumberChangeManager>();
+        goalPositionX = goalObj.transform.position.x;
+        halfWidth = Camera.main.ScreenToWorldPoint(new(Screen.width, 0f, 0f)).x;
+        scrollManager = scrollManagerObj.GetComponent<ScrollManager>();
 
         scoreLetterTextManager = scoreLetterText.GetComponent<NumberChangeManager>();
         scoreTextManager = scoreText.GetComponent<NumberChangeManager>();
-
-        sceneChanger = GameObject.FindGameObjectWithTag("SceneChanger").GetComponent<SceneChanger>();
     }
 
     void Update()
@@ -65,10 +66,10 @@ public class GameFlowManager : MonoBehaviour
 
         if (gameFlagManager && gameFlagManager.GetClearTutorial() && gameFlagManager.GetIsStart())
         {
-            // 制限時間を計測する
-            TimeLimit();
-            // 制限時間を描画する
-            if (timeLimitTextManager) { timeLimitTextManager.SetNumber((int)Mathf.Ceil(timeLimit)); }
+            if (IsGoal())
+            {
+                gameFlagManager.SetFinish();
+            }
 
             // スコアを描画する
             if (scoreTextManager) { scoreTextManager.SetNumber(score); }
@@ -82,7 +83,6 @@ public class GameFlowManager : MonoBehaviour
         if (countDownTime < 0f) 
         { 
             countDownText.gameObject.SetActive(false);
-            timeLimitText.gameObject.SetActive(true);
             scoreLetterText.gameObject.SetActive(true);
             scoreText.gameObject.SetActive(true);
             score = 0;
@@ -95,17 +95,19 @@ public class GameFlowManager : MonoBehaviour
         }
     }
 
-    private void TimeLimit()
+    private bool IsGoal()
     {
-        timeLimit -= Time.deltaTime;
-        if (timeLimit < 0f)
+        float cameraLeft = scrollManager.GetScrollValue() - halfWidth;
+        if (cameraLeft > goalPositionX)
         {
-            sceneChanger.ChangeScene("Result");
+            return true;
         }
+        return false;
     }
 
     public void AddScore(int addValue)
     {
         score += addValue;
     }
+
 }

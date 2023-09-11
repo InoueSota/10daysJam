@@ -1,7 +1,6 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -36,11 +35,20 @@ public class CatScript : MonoBehaviour
 
 
     Animator anim;
+
+    // ÉJÉÅÉâ
+    private GameObject cameraObj;
+    private ScrollManager scrollManager;
+    private float halfWidth;
+
     // Start is called before the first frame update
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        halfWidth = Camera.main.ScreenToWorldPoint(new(Screen.width, 0f, 0f)).x;
+        cameraObj = GameObject.FindGameObjectWithTag("MainCamera");
+        scrollManager = cameraObj.GetComponent<ScrollManager>();
     }
     // Update is called once per frame
     void Update()
@@ -164,6 +172,20 @@ public class CatScript : MonoBehaviour
 
         Animation();
         Debug.Log(mode);
+
+        // âÊñ ì‡Ç…é˚ÇﬂÇ≥ÇπÇÈ
+        float thisLeft = transform.position.x - transform.localScale.x * 0.5f;
+        float thisRight = transform.position.x + transform.localScale.x * 0.5f;
+        float cameraLeft = scrollManager.GetScrollValue() - halfWidth;
+        float cameraRight = scrollManager.GetScrollValue() + halfWidth;
+        if (thisLeft < cameraLeft)
+        {
+            transform.position = new(cameraLeft + transform.localScale.x * 0.5f, transform.position.y, transform.position.z);
+        }
+        if (thisRight > cameraRight)
+        {
+            transform.position = new(cameraRight - transform.localScale.x * 0.5f, transform.position.y, transform.position.z);
+        }
     }
     private void FixedUpdate()
     {
