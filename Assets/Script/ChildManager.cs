@@ -590,7 +590,7 @@ public class ChildManager : MonoBehaviour
                 velocity.y = 5.0f;
                 isCrawHit = true;
             }
-            else if (moveType == MoveType.STACKATTACK)
+            else if (moveType == MoveType.STACKATTACK || moveType == MoveType.DASH)
             {
                 if (enemyStatus)
                 {
@@ -640,7 +640,7 @@ public class ChildManager : MonoBehaviour
                 velocity.y = 5.0f;
                 isCrawHit = true;
             }
-            else if (moveType == MoveType.STACKATTACK)
+            else if (moveType == MoveType.STACKATTACK || moveType == MoveType.DASH)
             {
                 if (enemyStatus)
                 {
