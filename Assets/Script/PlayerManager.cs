@@ -301,15 +301,21 @@ public class PlayerManager : MonoBehaviour
         float deltaMoveSpeed = moveSpeed * Time.deltaTime;
         transform.position = new Vector3(transform.position.x + inputMove.x * deltaMoveSpeed, transform.position.y, transform.position.z);
 
-        if (inputMove.x != 0f)
+        if (tutorialManager && tutorialManager.GetComponent<TutorialManager>().GetTutorialType() == TutorialManager.TutorialType.PRACTICEMOVE)
         {
-            tutorialManager.MoveAddValue(5f);
+            if (inputMove.x != 0f)
+            {
+                tutorialManager.MoveAddValue(10f);
+            }
+            if (inputJump != 0 && preInputJump == 0)
+            {
+                tutorialManager.MoveAddValue(2000f);
+            }
         }
 
         //ジャンプ処理（Y軸イドウ）
         if (inputJump != 0 && preInputJump == 0)
         {
-            tutorialManager.MoveAddValue(1000f);
             velocity.y = 13f;
             isJump = true;
         }

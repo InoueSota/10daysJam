@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class TutorialManager : MonoBehaviour
 {
     // チュートリアルの種類
-    private enum TutorialType
+    public enum TutorialType
     {
         MOVE1,
         MOVE2,
@@ -442,4 +442,8 @@ public class TutorialManager : MonoBehaviour
         isClearTutorial = true;
     }
 
+    public TutorialType GetTutorialType()
+    {
+        return tutorialType;
+    }
 }
