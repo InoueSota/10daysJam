@@ -1,13 +1,15 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class CatScript : MonoBehaviour
 {
     public float pushForce = 10.0f; // 吹っ飛ばす力の大きさ
-    enum Mode
+    public enum Mode
     {
         Scan,
         Chase,
@@ -15,7 +17,7 @@ public class CatScript : MonoBehaviour
         Kuwaeru,
 
     }
-    [SerializeField] Mode mode = Mode.Scan;
+    public Mode mode = Mode.Scan;
     [SerializeField] float distance;
     [SerializeField] Vector2 childPos;
     [SerializeField] GameObject target;
@@ -32,7 +34,7 @@ public class CatScript : MonoBehaviour
     const float kBakuBakuTime = 5.0f;
     float chaseCoolTime;
     const float kchaseCoolTime = 3.0f;
-
+    bool onDanbol;
 
     Animator anim;
 
@@ -121,6 +123,8 @@ public class CatScript : MonoBehaviour
 
                 case Mode.Chase:
                     chaseCoolTime = kchaseCoolTime;
+                    Debug.Log("chase");
+
                     if (target != null) // targetがnullでないことを確認
                     {
                         direction_ = target.transform.position - transform.position;
@@ -145,15 +149,12 @@ public class CatScript : MonoBehaviour
 
                 case Mode.Hikkaku:
                     Debug.Log("hikkaku");
-
                     FindClosestChild();
-
-
                     if (closestChild != null)
                     {
                         //lockOn = true;
-                        mode = Mode.Kuwaeru;
-                        Debug.Log("tabetyaunyaaaaaaaaaaaaaaaaa");
+                        //Debug.Log("tabetyaunyaaaaa");
+                        //mode = Mode.Kuwaeru;
                     }
                     //else
                     //{
@@ -175,7 +176,7 @@ public class CatScript : MonoBehaviour
                 case Mode.Kuwaeru:
                     FindClosestChild();
                     if (kuwaeru)
-                    {                        
+                    {
                         closestChild.position = transform.position;
                         ChildManager childManager = closestChild.GetComponent<ChildManager>();
                         if (!childManager.isTakedAway)
@@ -192,7 +193,10 @@ public class CatScript : MonoBehaviour
                             }
                         }
                         BakuBakuTime -= Time.deltaTime;
-                        transform.position += new Vector3(direction_.x * -4.0f, 0, 0) * Time.deltaTime;
+                        if (!onDanbol)
+                        {
+                            transform.position += new Vector3(direction_.x * -4.0f, 0, 0) * Time.deltaTime;
+                        }
 
                     }
                     else
@@ -272,7 +276,7 @@ public class CatScript : MonoBehaviour
             // Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
             // isAttack = true;
             collision.GetComponent<PlayerManager>().SetSpeedDown();
-
+            isAttack = true;
         }
         if (collision.CompareTag("Child") && mode == Mode.Kuwaeru)
         {
@@ -285,6 +289,17 @@ public class CatScript : MonoBehaviour
                 kuwaeru = false;
                 BakuBakuTime = kBakuBakuTime;
             }
+        }
+        if (collision.CompareTag("Obstacle"))
+        {
+            //mode = Mode.Scan;
+            onDanbol = true;
+            Debug.Log("danbo-ru");
+        }
+        if (collision.CompareTag("Player") && mode == Mode.Hikkaku)
+        {
+            Debug.Log("tabetyaunyaaaaa");
+            mode = Mode.Kuwaeru;
         }
     }
     private void OnTriggerStay2D(Collider2D collision)
@@ -301,13 +316,24 @@ public class CatScript : MonoBehaviour
                 BakuBakuTime = kBakuBakuTime;
             }
         }
+        if (collision.CompareTag("Player") && mode == Mode.Hikkaku)
+        {
+            Debug.Log("tabetyaunyaaaaa");
+            mode = Mode.Kuwaeru;
+        }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player")) // プレイヤーオブジェクトとの衝突を検出
         {
             // Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
-            // isAttack = false;
+            isAttack = false;
+        }
+        if (collision.CompareTag("Obstacle"))
+        {
+            //mode = Mode.Scan;
+            onDanbol = false;
+           // Debug.Log("danbo-ru");
         }
     }
 
