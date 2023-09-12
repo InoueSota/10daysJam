@@ -1500,6 +1500,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerObj: {fileID: 498490234}
+  tutorialDuckObj: {fileID: 65142277}
   speechBubbleObj: {fileID: 1894032077}
   tutorialText1: {fileID: 1696831365}
   tutorialText2: {fileID: 2041461382}
@@ -1526,6 +1527,7 @@ MonoBehaviour:
   tutorialText14: {fileID: 1930832769}
   practiceAttack: {fileID: 705303896}
   practiceAttackClear: {fileID: 13727997}
+  dummyObj: {fileID: 815227096}
   tutorialText15: {fileID: 391451472}
   tutorialText16: {fileID: 470761176}
   isClearTutorial: 0

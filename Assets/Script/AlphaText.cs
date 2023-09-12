@@ -48,7 +48,7 @@ public class AlphaText : MonoBehaviour
             text.color = new(red, green, blue, alpha);
             if (alphaLeftTime <= 0f) { isFadeInClear = true; }
         }
-        else if (isFadeOutStart)
+        if (isFadeOutStart)
         {
             alphaLeftTime -= Time.deltaTime;
             if (alphaLeftTime < 0f) { alphaLeftTime = 0f; }
