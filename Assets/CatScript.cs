@@ -177,6 +177,20 @@ public class CatScript : MonoBehaviour
                     if (kuwaeru)
                     {
                         closestChild.position = transform.position;
+                        ChildManager childManager = closestChild.GetComponent<ChildManager>();
+                        if (!childManager.isTakedAway)
+                        {
+                            childManager.takeAwayCrowObj = gameObject;
+                            childManager.isTakedAway = true;
+                            if (childManager.GetMoveType() == ChildManager.MoveType.STACK)
+                            {
+                                GameObject.FindGameObjectWithTag("ChildManager").GetComponent<AllChildScript>().StackTakeOffUpdate();
+                            }
+                            else
+                            {
+                                GameObject.FindGameObjectWithTag("ChildManager").GetComponent<AllChildScript>().TakeOffDiffUpdate();
+                            }
+                        }
                         BakuBakuTime -= Time.deltaTime;
                         transform.position += new Vector3(direction_.x * -4.0f, 0, 0) * Time.deltaTime;
 
