@@ -29,7 +29,7 @@ public class StageObjectManager : MonoBehaviour
 
         scaleTime = 0.8f;
         scaleLeftTime = scaleTime;
-        startScale = Vector3.zero;
+        startScale = new(transform.localScale.x, 0f, 0f);
         endScale = transform.localScale;
         transform.localScale = startScale;
 
@@ -49,8 +49,8 @@ public class StageObjectManager : MonoBehaviour
             if (scaleLeftTime <= 0f && !isToBigClear)
             {
                 scaleLeftTime = scaleTime;
-                startScale = endScale;
-                endScale = Vector3.zero;
+                endScale = startScale;
+                startScale = transform.localScale;
                 isToBigClear = true;
             }
         }

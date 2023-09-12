@@ -203,7 +203,7 @@ public class PlayerManager : MonoBehaviour
                     StackInitialize();
                 }
                 // 指示 - 集合,待機
-                else if (orderStack && inputDirection == INPUTDIRECTION.DOWN)
+                else if (inputDirection == INPUTDIRECTION.DOWN)
                 {
                     OrderInitialize();
                     allChild.DiffInitialize();
