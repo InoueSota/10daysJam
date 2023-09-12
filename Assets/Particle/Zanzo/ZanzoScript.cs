@@ -5,7 +5,7 @@ using UnityEngine;
 public class ZanzoScript : MonoBehaviour
 {
 
-    [SerializeField] private float destroyTime = 1.0f;
+    private float destroyTime = 1.0f;
     private float eTime = 0.0f;
     private SpriteRenderer spriteRenderer;
 
@@ -19,6 +19,11 @@ public class ZanzoScript : MonoBehaviour
     void Update()
     {
 
+        float Alpha = 1.0f - (eTime / destroyTime);
+
+        spriteRenderer.color = new Color(1.0f,1.0f,1.0f,Alpha);
+
+
         if(eTime >= destroyTime)
         {
             Destroy(this.gameObject);
@@ -28,9 +33,11 @@ public class ZanzoScript : MonoBehaviour
 
     }
 
-    public void SetSprite(Sprite s)
+    public void SetSprite(Sprite s,float destroytime,bool isFlipX)
     {
         spriteRenderer = this.GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = s;
+        spriteRenderer.flipX = isFlipX;
+        destroyTime = destroytime;
     }
 }

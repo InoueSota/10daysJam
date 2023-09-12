@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zanzo: {fileID: -1961868729197594936, guid: 32327e999c9716e4d860b55dc24d657f, type: 3}
-  sprite: {fileID: 21300000, guid: 5ad0bc65d6e5457479db6014498ee8de, type: 3}
+  destroyTime: 0.1
 --- !u!61 &-3911588650271747608
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2723226a75ab74448b3fe75881e48c81
+guid: ed199affad9c52d478c3045b23b68868
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -70,7 +70,7 @@ TextureImporter:
     maxTextureSize: 16384
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -105,85 +105,85 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: CatSleep_0
+      name: Water_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
+        width: 128
         height: 64
-      alignment: 9
-      pivot: {x: 0.5, y: 0.25}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 20d24eacdbf69e84292108a03d372063
-      internalID: 1457467910
+      spriteID: 2a9b1a811e51a6e48a90f47ff7f69911
+      internalID: -229453516
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: CatSleep_1
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 0
-        width: 64
-        height: 64
-      alignment: 9
-      pivot: {x: 0.5, y: 0.25}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b3ae5dad13195a54d9552b80e7baeb45
-      internalID: -684738159
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: CatSleep_2
+      name: Water_1
       rect:
         serializedVersion: 2
         x: 128
         y: 0
-        width: 64
+        width: 128
         height: 64
-      alignment: 9
-      pivot: {x: 0.5, y: 0.25}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7340201449447444092e3d80dea815bc
-      internalID: -1210315510
+      spriteID: 7eb87a681b4ed4046bf6154e0e738caa
+      internalID: -956828476
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: CatSleep_3
+      name: Water_2
       rect:
         serializedVersion: 2
-        x: 192
+        x: 256
         y: 0
-        width: 64
+        width: 128
         height: 64
-      alignment: 9
-      pivot: {x: 0.5, y: 0.25}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d99fb4fba9c88fb47ab019ec91d507a4
-      internalID: 63489593
+      spriteID: 051e55530b9f905458b8dd9ed37f1d21
+      internalID: 992776668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Water_3
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 128
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 75bd016cb24c2ed409efa25428429a74
+      internalID: -94412654
       vertices: []
       indices: 
       edges: []
@@ -199,10 +199,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      CatSleep_0: 1457467910
-      CatSleep_1: -684738159
-      CatSleep_2: -1210315510
-      CatSleep_3: 63489593
+      Water_0: -229453516
+      Water_1: -956828476
+      Water_2: 992776668
+      Water_3: -94412654
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

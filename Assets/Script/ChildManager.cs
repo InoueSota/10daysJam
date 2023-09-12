@@ -10,6 +10,7 @@ public class ChildManager : MonoBehaviour
     private float halfSize = 0f;
     private bool isFlipX = false;
     private Animator anim;
+    private ZanzoesManager zanzo;
 
     // 親ガモを追いかける
     public GameObject player;
@@ -111,6 +112,8 @@ public class ChildManager : MonoBehaviour
         powerUpParticle = GetComponent<PowerUpParticlesManager>();
         anim = GetComponent<Animator>();
         prePos = this.transform.position;
+
+        zanzo = GetComponent<ZanzoesManager>();
     }
 
     private void FixedUpdate()
@@ -428,6 +431,7 @@ public class ChildManager : MonoBehaviour
         isFinishAttackCrow = false;
         isThrow = true;
         ChangeMoveType(MoveType.ATTACKCROW);
+        zanzo.SetRunning(true);
     }
     void MoveAttackCrow()
     {
@@ -440,7 +444,7 @@ public class ChildManager : MonoBehaviour
         {
             velocity.x = 0;
             velocity.y -= 8.0f * Time.deltaTime * 9.81f;
-
+            zanzo.SetRunning(false);
             if (judgeGround)
             {
                 isCrawHit = false;
