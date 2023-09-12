@@ -16,7 +16,7 @@ public class CatScript : MonoBehaviour
 
     }
     [SerializeField] Mode mode = Mode.Scan;
-    private float distance;
+    [SerializeField] float distance;
     [SerializeField] Vector2 childPos;
     [SerializeField] GameObject target;
     public string TargetTag = "Player";
@@ -25,13 +25,13 @@ public class CatScript : MonoBehaviour
     bool isEase;
     public Vector2 direction_;
     GameObject player;
-   public bool isAttack;
+    public bool isAttack;
     bool kuwaeru;
-   public Transform closestChild;
-    float BakuBakuTime;
-   const float kBakuBakuTime=3.0f;
+    public Transform closestChild;
+    float BakuBakuTime = kBakuBakuTime;
+    const float kBakuBakuTime = 5.0f;
     float chaseCoolTime;
-    const float kchaseCoolTime=3.0f;
+    const float kchaseCoolTime = 3.0f;
 
 
     Animator anim;
@@ -47,6 +47,7 @@ public class CatScript : MonoBehaviour
     [SerializeField] private GameObject gameFlagObj;
     private GameFlagManager gameFlagManager;
 
+    //[SerializeField] float distance;
     // Start is called before the first frame update
     void Start()
     {
@@ -63,6 +64,38 @@ public class CatScript : MonoBehaviour
     {
         if (isEnterCamera && gameFlagManager.GetIsStart())
         {
+            if (direction_.x > 0)
+            {
+                if (kuwaeru)
+                {
+                    spriteRenderer.flipX = false;
+                }
+                else
+                {
+                    spriteRenderer.flipX = true;
+
+                }
+                direction_.x = 1.0f;
+            }
+            else
+            {
+                if (kuwaeru)
+                {
+                    spriteRenderer.flipX = true;
+                }
+                else
+                {
+                    spriteRenderer.flipX = false;
+
+                }
+                direction_.x = -1.0f;
+            }
+            if (target != null)
+            {
+                distance = Vector2.Distance(transform.position, target.transform.position);
+
+            }
+
             switch (mode)
             {
                 case Mode.Scan:
@@ -93,70 +126,51 @@ public class CatScript : MonoBehaviour
                     {
                         direction_ = target.transform.position - transform.position;
                         direction_.Normalize();
-                        transform.position += new Vector3(direction_.x * 5, 0, 0) * Time.deltaTime;
-                        if (direction_.x > 0)
+                        // transform.position += new Vector3(direction_.x * 5, 0, 0) * Time.deltaTime;
+
+                        if (distance <= 24.0f)
                         {
-                            spriteRenderer.flipX = true;
-                            direction_.x = 1.0f;
+                            transform.position += new Vector3(direction_.x * 4.0f, 0, 0) * Time.deltaTime;
+                            if (distance <= 3.0f)
+                            {
+                                mode = Mode.Hikkaku;
+                            }
                         }
                         else
                         {
-                            direction_.x = -1.0f;
-                            spriteRenderer.flipX = false;
+                            mode = Mode.Scan;
                         }
-                        float distance = Vector2.Distance(transform.position, target.transform.position);
-                        if (distance <= 7.0f && !isEase)
-                        {
-                            isEase = true;
-                            easePos = target.transform.position;
-                            transform.DOMoveX(easePos.x, 1.0f).SetEase(Ease.InBack).OnComplete(EaseEndFanction);
-                            isAttack = true;
-                            mode = Mode.Hikkaku;
-                        }
+
                     }
                     break;
 
                 case Mode.Hikkaku:
-                    isEase = false;
-                    if (target && target.GetComponent<PlayerManager>().isCatAttack)
+                    Debug.Log("hikkaku");
+
+                    FindClosestChild();
+
+
+                    if (closestChild != null)
                     {
-                        GameObject[] children = GameObject.FindGameObjectsWithTag("Child");
-
-                        float closestDistance = float.MaxValue;
-
-                        foreach (GameObject child in children)
-                        {
-                            float distanceToChild = Vector3.Distance(transform.position, child.transform.position);
-
-                            if (distanceToChild < closestDistance)
-                            {
-                                closestDistance = distanceToChild;
-                                closestChild = child.transform;
-                            }
-                        }
-
-
-                        if (closestChild != null)
-                        {
-                            //lockOn = true;
-                            mode = Mode.Kuwaeru;
-
-                        }
-                        else
-                        {
-                            //lockOn = false;
-                            //targetPos = player.transform.position;
-                            // targetPos = Vector3.zero;
-                            mode = Mode.Scan;
-
-                        }
+                        //lockOn = true;
+                        mode = Mode.Kuwaeru;
+                        Debug.Log("tabetyaunyaaaaaaaaaaaaaaaaa");
                     }
-                    else
-                    {
-                        mode = Mode.Scan;
+                    //else
+                    //{
+                    //    //lockOn = false;
+                    //    //targetPos = player.transform.position;
+                    //    // targetPos = Vector3.zero;
+                    //    mode = Mode.Scan;
 
-                    }
-                    target = null;
+                    //}
+
+                    //else
+                    //{
+                    //    mode = Mode.Scan;
+
+                    //}
+                    // target = null;
                     break;
 
                 case Mode.Kuwaeru:
@@ -164,15 +178,22 @@ public class CatScript : MonoBehaviour
                     {
                         closestChild.position = transform.position;
                         BakuBakuTime -= Time.deltaTime;
+                        transform.position += new Vector3(direction_.x * -4.0f, 0, 0) * Time.deltaTime;
+
                     }
                     else
                     {
-                        mode = Mode.Scan;
+                        transform.position += new Vector3(direction_.x * 2.0f, 0, 0) * Time.deltaTime;
                     }
+                    //else
+                    //{
+                    //    mode = Mode.Scan;
+                    //}
                     if (BakuBakuTime < 0)
                     {
-                        Destroy(closestChild.gameObject);
                         mode = Mode.Scan;
+                        kuwaeru = false;
+                        //Destroy(closestChild.gameObject);
                     }
                     break;
 
@@ -229,10 +250,32 @@ public class CatScript : MonoBehaviour
             collision.GetComponent<PlayerManager>().SetSpeedDown();
 
         }
-        if (collision.CompareTag("Child")&&mode==Mode.Kuwaeru)
+        if (collision.CompareTag("Child") && mode == Mode.Kuwaeru)
         {
-          //collision.transform.position = transform.position;
-          kuwaeru=true;
+            //collision.transform.position = transform.position;
+            kuwaeru = true;
+            if (BakuBakuTime <= 0.2f)
+            {
+                Destroy(collision.gameObject);
+                mode = Mode.Scan;
+                kuwaeru = false;
+                BakuBakuTime = kBakuBakuTime;
+            }
+        }
+    }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Child") && mode == Mode.Kuwaeru)
+        {
+            //collision.transform.position = transform.position;
+            kuwaeru = true;
+            if (BakuBakuTime <= 0.2f)
+            {
+                Destroy(collision.gameObject);
+                mode = Mode.Scan;
+                kuwaeru = false;
+                BakuBakuTime = kBakuBakuTime;
+            }
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
@@ -240,7 +283,7 @@ public class CatScript : MonoBehaviour
         if (collision.gameObject.CompareTag("Player")) // プレイヤーオブジェクトとの衝突を検出
         {
             // Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
-           // isAttack = false;
+            // isAttack = false;
         }
     }
 
@@ -266,5 +309,25 @@ public class CatScript : MonoBehaviour
 
 
         }
+    }
+    void FindClosestChild()
+    {
+        GameObject[] children = GameObject.FindGameObjectsWithTag("Child");
+
+        float closestDistance = float.MaxValue;
+
+        foreach (GameObject child in children)
+        {
+            float distanceToChild = Vector3.Distance(transform.position, child.transform.position);
+
+            if (distanceToChild < closestDistance)
+            {
+                closestDistance = distanceToChild;
+                closestChild = child.transform;
+            }
+        }
+
+
+
     }
 }

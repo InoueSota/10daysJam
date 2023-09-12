@@ -9,6 +9,7 @@ public class ChildManager : MonoBehaviour
     private Rigidbody2D rb;
     private float halfSize = 0f;
     private bool isFlipX = false;
+    private Animator anim;
 
     // 親ガモを追いかける
     public GameObject player;
@@ -85,6 +86,8 @@ public class ChildManager : MonoBehaviour
     private Vector3 kAddScale = new Vector3(0.15f, 0.15f, 0.15f);
     // 草を格納して食事後に消す
     private GameObject grassObj = null;
+    //パワーアップパーティクル
+    private PowerUpParticlesManager powerUpParticle = null;
 
     // 迷っている時間
     [SerializeField] private float lostTime = 0f;
@@ -94,6 +97,9 @@ public class ChildManager : MonoBehaviour
     private bool isPanic = false;
     private float changeOfDirectionIntervalLeftTime = 0f;
 
+    //1F前のpos
+    private Vector3 prePos;
+
     void Start()
     {
         halfSize = transform.localScale.x * 0.5f;
@@ -101,6 +107,10 @@ public class ChildManager : MonoBehaviour
 
         transform.position = new Vector3(transform.position.x, halfSize, transform.position.z);
         playerManager = player.GetComponent<PlayerManager>();
+
+        powerUpParticle = GetComponent<PowerUpParticlesManager>();
+        anim = GetComponent<Animator>();
+        prePos = this.transform.position;
     }
 
     private void FixedUpdate()
@@ -137,6 +147,8 @@ public class ChildManager : MonoBehaviour
                 isTakedAway = false;
             }
         }
+
+        Animation();
     }
 
     void Move()
@@ -447,6 +459,7 @@ public class ChildManager : MonoBehaviour
         if (eatGrassLeftTime < 0f) 
         {
             transform.localScale += kAddScale;
+            powerUpParticle.SetParticle();
             ChangeMoveType(MoveType.FOLLOW);
 
             if (grassObj)
@@ -774,5 +787,21 @@ public class ChildManager : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    private void Animation()
+    {
+        bool isWalk = false;
+
+        if (Mathf.Abs(Mathf.Abs(this.transform.position.x ) - Mathf.Abs(prePos.x)) > 0.01f)
+        {
+            isWalk = true;
+        }
+
+
+
+        anim.SetBool("isWalk", isWalk);
+
+        prePos = this.transform.position;
     }
 }
