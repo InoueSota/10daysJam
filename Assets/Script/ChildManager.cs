@@ -159,7 +159,7 @@ public class ChildManager : MonoBehaviour
     void Move()
     {
         playerDirection = (int)playerManager.GetDirection();
-
+        Hop.SetRunnning(false);
         switch (moveType)
         {
             case MoveType.FOLLOW:
@@ -461,12 +461,13 @@ public class ChildManager : MonoBehaviour
     // 草食事関係
     void MoveEatGrass()
     {
+
         eatGrassLeftTime -= Time.deltaTime;
+        Hop.SetRunnning(true);
         if (eatGrassLeftTime < 0f) 
         {
             transform.localScale += kAddScale;
             powerUpParticle.SetParticle();
-            Hop.SetRunnning(false);
             ChangeMoveType(MoveType.FOLLOW);
 
             if (grassObj)
@@ -665,7 +666,6 @@ public class ChildManager : MonoBehaviour
         // 草に当たったら時間をかけたのちに食べる
         if (isDash && collision.CompareTag("Grass"))
         {
-            Hop.SetRunnning(true);
             ChangeMoveType(MoveType.EATGRASS);
             velocity = Vector3.zero;
             eatGrassLeftTime = eatGrassTime;

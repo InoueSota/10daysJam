@@ -37,6 +37,8 @@ public class CatScript : MonoBehaviour
     bool onDanbol;
 
     Animator anim;
+    private Vector3 prePos;
+    private bool canFlip = true;
 
     // ÉJÉÅÉâ
     private GameObject cameraObj;
@@ -134,7 +136,7 @@ public class CatScript : MonoBehaviour
                         if (distance <= 24.0f)
                         {
                             transform.position += new Vector3(direction_.x * 4.0f, 0, 0) * Time.deltaTime;
-                            if (distance <= 3.0f)
+                            if (distance <= 7.0f)
                             {
                                 mode = Mode.Hikkaku;
                             }
@@ -229,7 +231,7 @@ public class CatScript : MonoBehaviour
 
             }
 
-            Animation();
+            
             Debug.Log(mode);
 
             // âÊñ ì‡Ç…é˚ÇﬂÇ≥ÇπÇÈ
@@ -255,6 +257,8 @@ public class CatScript : MonoBehaviour
                 isEnterCamera = true;
             }
         }
+
+        Animation();
     }
     private void FixedUpdate()
     {
@@ -300,6 +304,7 @@ public class CatScript : MonoBehaviour
         {
             Debug.Log("tabetyaunyaaaaa");
             mode = Mode.Kuwaeru;
+            anim.SetTrigger("Attack");
         }
     }
     private void OnTriggerStay2D(Collider2D collision)
@@ -320,6 +325,7 @@ public class CatScript : MonoBehaviour
         {
             Debug.Log("tabetyaunyaaaaa");
             mode = Mode.Kuwaeru;
+            anim.SetTrigger("Attack");
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
@@ -337,28 +343,58 @@ public class CatScript : MonoBehaviour
         }
     }
 
+    public void rockFlipTrue()
+    {
+
+        canFlip = true;
+    }
+
+    public void rockFlipFalse()
+    {
+
+        canFlip = false;
+    }
+
     void Animation()
     {
+
+        bool isScan = false;
+        bool isAttack = false;
+
         switch (mode)
         {
             case Mode.Scan:
-                //anim.SetBool("isAttack", false);
+                isScan = true;
                 break;
             case Mode.Chase:
-                //anim.SetBool("isAttack", false);
+                
                 break;
 
             case Mode.Hikkaku:
-                //anim.SetBool("isAttack", true);
+                isAttack = true;
                 break;
 
             case Mode.Kuwaeru:
-                //anim.SetBool("isAttack", true);
+                
                 break;
-
-
-
         }
+
+        anim.SetBool("isScan", isScan);
+        anim.SetBool("isAttack", isAttack);
+
+        if (canFlip == true)
+        {
+            if (this.transform.position.x < prePos.x)
+            {
+                spriteRenderer.flipX = false;
+            }
+            else if (this.transform.position.x > prePos.x)
+            {
+                spriteRenderer.flipX = true;
+            }
+        }
+
+        prePos = this.transform.position;
     }
     void FindClosestChild()
     {
