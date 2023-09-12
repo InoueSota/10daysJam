@@ -584,26 +584,22 @@ public class ChildManager : MonoBehaviour
             }
             else if (moveType == MoveType.STACKATTACK)
             {
-                CrowScript crowScript = collision.GetComponent<CrowScript>();
-                if (crowScript && crowScript.IsStan())
+                if (enemyStatus)
                 {
-                    if (enemyStatus)
+                    enemyStatus.Damage(2);
+                    // ダメージを与えHPがなくなったら死亡
+                    if (enemyStatus.GetHP() <= 0)
                     {
-                        enemyStatus.Damage(2);
-                        // ダメージを与えHPがなくなったら死亡
-                        if (enemyStatus.GetHP() <= 0)
-                        {
-                            attackScore = 2000;
-                            // スコアを加算する
-                            AttackScoreIngame(48, 0.5f, collision);
-                            Destroy(collision.gameObject);
-                        }
-                        else
-                        {
-                            attackScore = 200;
-                            // スコアを加算する
-                            AttackScoreIngame(32, 0.5f, collision);
-                        }
+                        attackScore = 2000;
+                        // スコアを加算する
+                        AttackScoreIngame(48, 0.5f, collision);
+                        Destroy(collision.gameObject);
+                    }
+                    else
+                    {
+                        attackScore = 200;
+                        // スコアを加算する
+                        AttackScoreIngame(32, 0.5f, collision);
                     }
                 }
             }

@@ -33,7 +33,7 @@ public class TitleManagerScript : MonoBehaviour
     void Start()
     {
 
-        changer = GameObject.FindWithTag("SceneChanger").GetComponent<SceneChanger>();
+        changer = GameObject.FindGameObjectWithTag("SceneChanger").GetComponent<SceneChanger>();
 
         float width = Background0.GetComponent<SpriteRenderer>().bounds.size.x;
 
