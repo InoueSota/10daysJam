@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -93,6 +92,11 @@ public class TutorialManager : MonoBehaviour
     // チュートリアル完了フラグ
     private bool isClearTutorial;
 
+    // チュートリアルスキップ
+    [SerializeField] private GameObject tutorialSkipBackGroundObj;
+    [SerializeField] private GameObject tutorialSkipGaugeObj;
+    [SerializeField] private GameObject tutorialSkipObj;
+    private Image tutorialSkipImage;
     private float pushDecideTime = 0f;
 
     void Start()
@@ -110,6 +114,8 @@ public class TutorialManager : MonoBehaviour
         isClearTutorial = false;
 
         pushDecideTime = 0f;
+
+        tutorialSkipImage = tutorialSkipGaugeObj.GetComponent<Image>();
     }
 
     void Update()
@@ -125,6 +131,12 @@ public class TutorialManager : MonoBehaviour
                         {
                             speechBubbleObj.SetActive(true);
                             tutorialText1.SetActive(true);
+                            if (tutorialSkipObj && !tutorialSkipObj.activeSelf && tutorialSkipGaugeObj && !tutorialSkipGaugeObj.activeSelf && tutorialSkipBackGroundObj && !tutorialSkipBackGroundObj.activeSelf)
+                            {
+                                tutorialSkipObj.SetActive(true);
+                                tutorialSkipGaugeObj.SetActive(true);
+                                tutorialSkipBackGroundObj.SetActive(true);
+                            }
                         }
                         TextUpdate(tutorialText1, tutorialText2);
                     }
@@ -262,6 +274,12 @@ public class TutorialManager : MonoBehaviour
                             tutorialText16.GetComponent<AlphaText>().FadeOutInitialize();
                             speechBubbleObj.GetComponent<AlphaImage>().FadeOutInitialize();
                             tutorialDuckObj.GetComponent<TutorialDuckManager>().SetDuckMoveStart();
+                            if (tutorialSkipObj && tutorialSkipGaugeObj && tutorialSkipBackGroundObj)
+                            {
+                                tutorialSkipObj.GetComponent<AlphaText>().FadeOutInitialize();
+                                tutorialSkipGaugeObj.GetComponent<AlphaImage>().FadeOutInitialize();
+                                tutorialSkipBackGroundObj.GetComponent<AlphaImage>().FadeOutInitialize();
+                            }
                         }
                     }
                     if (tutorialText16 && !tutorialText16.activeSelf)
@@ -275,6 +293,9 @@ public class TutorialManager : MonoBehaviour
         if ((int)Input.GetAxisRaw("Abutton") != 0)
         {
             pushDecideTime += Time.deltaTime;
+
+            tutorialSkipImage.fillAmount = pushDecideTime / 3f;
+
             if (pushDecideTime >= 3f)
             {
                 switch (tutorialType)
@@ -347,6 +368,17 @@ public class TutorialManager : MonoBehaviour
                 Destroy(speechBubbleObj);
                 Destroy(tutorialDuckObj);
                 Destroy(dummyObj);
+                Destroy(tutorialSkipObj);
+                Destroy(tutorialSkipGaugeObj);
+                Destroy(tutorialSkipBackGroundObj);
+                if (obstacleObj && !obstacleObj.activeSelf)
+                {
+                    obstacleObj.SetActive(true);
+                }
+                if (grassObj && !grassObj.activeSelf)
+                {
+                    grassObj.SetActive(true);
+                }
                 FlagAllClear();
             }
         }
