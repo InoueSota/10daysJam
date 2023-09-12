@@ -12,6 +12,9 @@ public class CrowScript : MonoBehaviour
 {
     private FeatherAParticlesManager featherA;
     private StanParticlesManager stan;
+    private ZanzoesManager zanzo;
+    private Animator anim;
+
     private float halfWidth;
     private float halfHeight;
 
@@ -41,7 +44,7 @@ public class CrowScript : MonoBehaviour
     // ゲーム開始管理オブジェクト
     [SerializeField] private GameObject gameFlagObj;
     private GameFlagManager gameFlagManager;
-    [SerializeField] float kYPos=0;
+    [SerializeField] float kYPos = 0;
     public enum Mode
     {
         stay,
@@ -66,8 +69,9 @@ public class CrowScript : MonoBehaviour
         scrollManager = cameraObj.GetComponent<ScrollManager>();
         isEnterCamera = false;
         gameFlagManager = gameFlagObj.GetComponent<GameFlagManager>();
+        anim = GetComponent<Animator>();
+        zanzo = GetComponent<ZanzoesManager>();
 
-        
     }
 
     // Update is called once per frame
@@ -81,7 +85,7 @@ public class CrowScript : MonoBehaviour
                     angleX += Time.deltaTime;
                     angleY += Time.deltaTime * 10;
                     FindClosestChild();
-                    transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x, kYPos), Time.deltaTime * moveSpeed*3);
+                    transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x, kYPos), Time.deltaTime * moveSpeed * 3);
                     coolTime -= Time.deltaTime;
                     if ((int)angleX % 3 == 0)
                     {
@@ -127,7 +131,7 @@ public class CrowScript : MonoBehaviour
 
                     // Attak();
                     float distance = Vector2.Distance(transform.position, targetPos);
-                    transform.position = Vector2.MoveTowards(transform.position, new Vector2(targetPos.x, transform.position.y), Time.deltaTime * moveSpeed );
+                    transform.position = Vector2.MoveTowards(transform.position, new Vector2(targetPos.x, transform.position.y), Time.deltaTime * moveSpeed);
 
                     if (distance <= 0.1f)
                     {
@@ -205,13 +209,14 @@ public class CrowScript : MonoBehaviour
                 isEnterCamera = true;
             }
         }
+        Animation();
     }
 
     private void Attak()
     {
         //transform.DOMoveX(targetPos.x, 2f).SetEase(Ease.InBack);
         transform.DOMoveY(targetPos.y, 2.5f).SetEase(Ease.OutQuad);
-       // transform.DOMove(targetPos, 0.5f).SetEase(Ease.OutBounce);
+        // transform.DOMove(targetPos, 0.5f).SetEase(Ease.OutBounce);
         //Vector3 direction = targetPos - transform.position;
 
         //// �E��E��E��E��E�x�E�N�E�g�E��E��E�𐳋K�E��E��E�i�E��E��E��E��E��E�1�E�ɂ��E��E�j
@@ -293,7 +298,7 @@ public class CrowScript : MonoBehaviour
           ? (Mathf.Pow(2 * t, 2) * ((c2 + 1) * 2 * t - c2)) / 2
           : (Mathf.Pow(2 * t - 2, 2) * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2;
     }
-    
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag(targetTag))
@@ -311,7 +316,7 @@ public class CrowScript : MonoBehaviour
             //closestChild.transform.parent = transform;
 
         }
-        if (collision.CompareTag("Obstacle")&& mode == Mode.attak)
+        if (collision.CompareTag("Obstacle") && mode == Mode.attak)
         {
             mode = Mode.stan;
             stan.SetRun(kStanTime); //スタースタン
@@ -334,6 +339,24 @@ public class CrowScript : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    private void Animation()
+    {
+        bool isAttak = false;
+        zanzo.SetRunning(false);
+        switch (mode)
+        {
+            case Mode.attak:
+                zanzo.SetRunning(true);
+                isAttak = true;
+                break;
+            case Mode.takeaway:
+                //isAttak = true;
+                break;
+        }
+
+        anim.SetBool("isAttak", isAttak);
     }
 }
 

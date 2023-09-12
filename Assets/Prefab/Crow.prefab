@@ -396,6 +396,7 @@ GameObject:
   - component: {fileID: 1565551657187820618}
   - component: {fileID: 3906877290160037469}
   - component: {fileID: 1724675788463761029}
+  - component: {fileID: 6469924357536698499}
   m_Layer: 0
   m_Name: Crow
   m_TagString: Crow
@@ -516,6 +517,8 @@ MonoBehaviour:
   kMaxcoolTime: 5
   lockOn: 0
   isTakeAway: 0
+  gameFlagObj: {fileID: 0}
+  kYPos: 0
   mode: 0
   Distance_: 0
 --- !u!114 &6700715944245316401
@@ -594,3 +597,17 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6469924357536698499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7514164298105999574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a38599dd92c348b40b1369ce58091d1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zanzo: {fileID: -1961868729197594936, guid: 02a194f8ddfd2684fb1096783fa1d1bc, type: 3}
+  destroyTime: 0.2

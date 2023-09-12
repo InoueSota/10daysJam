@@ -33,11 +33,12 @@ public class ZanzoScript : MonoBehaviour
 
     }
 
-    public void SetSprite(Sprite s,float destroytime,bool isFlipX)
+    public void SetSprite(Sprite s,float destroytime,bool isFlipX,Vector3 scale_)
     {
         spriteRenderer = this.GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = s;
         spriteRenderer.flipX = isFlipX;
         destroyTime = destroytime;
+        this.transform.localScale = scale_;
     }
 }

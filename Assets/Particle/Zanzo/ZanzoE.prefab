@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 329212094777446474}
   - component: {fileID: -1961868729197594936}
   m_Layer: 0
-  m_Name: Zanzo
+  m_Name: ZanzoE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -71,8 +71,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1549049961
-  m_SortingLayer: 2
+  m_SortingLayerID: -1357339157
+  m_SortingLayer: 1
   m_SortingOrder: -1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

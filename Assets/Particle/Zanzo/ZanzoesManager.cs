@@ -8,6 +8,7 @@ public class ZanzoesManager : MonoBehaviour
 
     private GameObject Particles;
     [SerializeField] private ZanzoScript zanzo;
+    private Vector3 scale;
     private Sprite sprite;
     private SpriteRenderer spriteRenderer;
 
@@ -19,7 +20,7 @@ public class ZanzoesManager : MonoBehaviour
     {
         Particles = GameObject.FindGameObjectWithTag("Particles");
         spriteRenderer = this.GetComponent<SpriteRenderer>();
-
+        scale = this.transform.localScale;
     }
 
     // Update is called once per frame
@@ -29,7 +30,7 @@ public class ZanzoesManager : MonoBehaviour
         {
             sprite = GetComponent<SpriteRenderer>().sprite;
             ZanzoScript z = Instantiate(zanzo, this.transform.position, this.transform.rotation);
-            z.SetSprite(sprite,destroyTime, spriteRenderer.flipX);
+            z.SetSprite(sprite,destroyTime, spriteRenderer.flipX, scale);
             z.transform.parent = Particles.transform;
         }
     }

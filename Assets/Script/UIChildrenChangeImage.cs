@@ -14,10 +14,13 @@ public class UIChildrenChangeImage : MonoBehaviour
     // •Ï‚¦‚é‚©ƒtƒ‰ƒO
     private bool isChange;
 
+    XParticleManager xParticle;
+
     void Start()
     {
         image = GetComponent<Image>();
         isChange = false;
+        xParticle = GetComponent<XParticleManager>();
     }
 
     void Update()
@@ -25,6 +28,7 @@ public class UIChildrenChangeImage : MonoBehaviour
         if (!isChange && ResultManager.childCount < childLowLimit)
         {
             isChange = true;
+            xParticle.Set();
         }
         if (image != null)
         {
