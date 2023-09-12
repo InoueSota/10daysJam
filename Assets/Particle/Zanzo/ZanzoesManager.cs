@@ -6,7 +6,7 @@ public class ZanzoesManager : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    private GameObject Zanzoes;
+    private GameObject Particles;
     [SerializeField] private ZanzoScript zanzo;
     private Sprite sprite;
     private SpriteRenderer spriteRenderer;
@@ -17,7 +17,7 @@ public class ZanzoesManager : MonoBehaviour
 
     void Start()
     {
-        Zanzoes = GameObject.FindGameObjectWithTag("Zanzoes");
+        Particles = GameObject.FindGameObjectWithTag("Particles");
         spriteRenderer = this.GetComponent<SpriteRenderer>();
 
     }
@@ -30,7 +30,7 @@ public class ZanzoesManager : MonoBehaviour
             sprite = GetComponent<SpriteRenderer>().sprite;
             ZanzoScript z = Instantiate(zanzo, this.transform.position, this.transform.rotation);
             z.SetSprite(sprite,destroyTime, spriteRenderer.flipX);
-            z.transform.parent = Zanzoes.transform;
+            z.transform.parent = Particles.transform;
         }
     }
 
