@@ -611,17 +611,18 @@ public class PlayerManager : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Cat")&&!isCatAttack)
+        if (collision.CompareTag("Cat"))
         {
             //Debug.Log("nyannyan");
             //rb.velocity = new Vector2(collision.GetComponent<CatScript>().direction_.x, 5f);
-            if (collision.GetComponent<CatScript>().isAttack)
+            if (collision.GetComponent<CatScript>().mode==CatScript.Mode.Hikkaku)
             {
                 isCatAttack = true;
 
                 velocity.y = 13f;
                 velocity.x = collision.GetComponent<CatScript>().direction_.x*13f;
                 judgeGround = false;
+                Debug.Log("huttobi");
             }
         }
     }

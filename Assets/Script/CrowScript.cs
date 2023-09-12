@@ -41,7 +41,7 @@ public class CrowScript : MonoBehaviour
     // ゲーム開始管理オブジェクト
     [SerializeField] private GameObject gameFlagObj;
     private GameFlagManager gameFlagManager;
-
+    [SerializeField] float kYPos=0;
     public enum Mode
     {
         stay,
@@ -66,6 +66,8 @@ public class CrowScript : MonoBehaviour
         scrollManager = cameraObj.GetComponent<ScrollManager>();
         isEnterCamera = false;
         gameFlagManager = gameFlagObj.GetComponent<GameFlagManager>();
+
+        
     }
 
     // Update is called once per frame
@@ -79,14 +81,15 @@ public class CrowScript : MonoBehaviour
                     angleX += Time.deltaTime;
                     angleY += Time.deltaTime * 10;
                     FindClosestChild();
-                    transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x, 14.0f), Time.deltaTime * moveSpeed);
+                    transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x, kYPos), Time.deltaTime * moveSpeed*3);
                     coolTime -= Time.deltaTime;
                     if ((int)angleX % 3 == 0)
                     {
-                        direction_ = UnityEngine.Random.Range(-1, 2);
+                        direction_ = UnityEngine.Random.Range(0, 3);
                     }
                     transform.position += new Vector3(direction_ * moveSpeed, 0, 0) * Time.deltaTime;
                     Distance_ = Vector2.Distance(transform.position, targetPos);
+
                     //if (Distance_ < 15)
                     //{
                     //    DistanceChangeTimeX=1f;
@@ -124,6 +127,8 @@ public class CrowScript : MonoBehaviour
 
                     // Attak();
                     float distance = Vector2.Distance(transform.position, targetPos);
+                    transform.position = Vector2.MoveTowards(transform.position, new Vector2(targetPos.x, transform.position.y), Time.deltaTime * moveSpeed );
+
                     if (distance <= 0.1f)
                     {
                         mode = Mode.stay;
@@ -204,7 +209,7 @@ public class CrowScript : MonoBehaviour
 
     private void Attak()
     {
-        transform.DOMoveX(targetPos.x, 2f).SetEase(Ease.InBack);
+        //transform.DOMoveX(targetPos.x, 2f).SetEase(Ease.InBack);
         transform.DOMoveY(targetPos.y, 2.5f).SetEase(Ease.OutQuad);
        // transform.DOMove(targetPos, 0.5f).SetEase(Ease.OutBounce);
         //Vector3 direction = targetPos - transform.position;
@@ -306,7 +311,7 @@ public class CrowScript : MonoBehaviour
             //closestChild.transform.parent = transform;
 
         }
-        if (collision.CompareTag("Ground")&& mode == Mode.attak)
+        if (collision.CompareTag("Obstacle")&& mode == Mode.attak)
         {
             mode = Mode.stan;
             stan.SetRun(kStanTime); //スタースタン
@@ -330,8 +335,6 @@ public class CrowScript : MonoBehaviour
         }
         return false;
     }
-
-
 }
 
 
