@@ -11,6 +11,7 @@ public class ChildManager : MonoBehaviour
     private bool isFlipX = false;
     private Animator anim;
     private ZanzoesManager zanzo;
+    private HopParticlesManager Hop;
 
     // 親ガモを追いかける
     public GameObject player;
@@ -114,6 +115,7 @@ public class ChildManager : MonoBehaviour
         prePos = this.transform.position;
 
         zanzo = GetComponent<ZanzoesManager>();
+        Hop = GetComponent<HopParticlesManager>();
     }
 
     private void FixedUpdate()
@@ -464,6 +466,7 @@ public class ChildManager : MonoBehaviour
         {
             transform.localScale += kAddScale;
             powerUpParticle.SetParticle();
+            Hop.SetRunnning(false);
             ChangeMoveType(MoveType.FOLLOW);
 
             if (grassObj)
@@ -662,6 +665,7 @@ public class ChildManager : MonoBehaviour
         // 草に当たったら時間をかけたのちに食べる
         if (isDash && collision.CompareTag("Grass"))
         {
+            Hop.SetRunnning(true);
             ChangeMoveType(MoveType.EATGRASS);
             velocity = Vector3.zero;
             eatGrassLeftTime = eatGrassTime;

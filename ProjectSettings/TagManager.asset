@@ -14,7 +14,7 @@ TagManager:
   - Wall
   - Cat
   - ChildManager
-  - Zanzoes
+  - Particles
   layers:
   - Default
   - TransparentFX
