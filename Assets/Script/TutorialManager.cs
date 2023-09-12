@@ -40,6 +40,10 @@ public class TutorialManager : MonoBehaviour
     // 吹き出し
     [SerializeField] private GameObject speechBubbleObj;
 
+    // テキストを自動更新させる
+    [SerializeField] private float textActiveTime;
+    private float textActiveLeftTime;
+
     // チュートリアル - 基本移動
     [SerializeField] private GameObject tutorialText1;
     [SerializeField] private GameObject tutorialText2;
@@ -49,7 +53,6 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private GameObject practiceBubble;
     [SerializeField] private GameObject practiceSliderBack;
     [SerializeField] private GameObject practiceSliderFill;
-    private bool isPossibleMove;
     private float moveAddValue;
     // スライダー
     private Slider moveSlider;
@@ -64,7 +67,6 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private GameObject practiceOrderRight;
     [SerializeField] private GameObject practiceOrderUp;
     [SerializeField] private GameObject practiceOrderDown;
-    private bool isPossibleOrder;
     private bool isClearLeft;
     private bool isClearRight;
     private bool isClearUp;
@@ -80,68 +82,58 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private GameObject practiceAttack;
     [SerializeField] private GameObject practiceAttackClear;
     [SerializeField] private GameObject dummyObj;
-    private bool isPossibleAttack;
     private bool isClearAttack;
 
     // チュートリアル - 祈り
     [SerializeField] private GameObject tutorialText15;
     [SerializeField] private GameObject tutorialText16;
 
-    [SerializeField]private bool isClearTutorial;
-
-    private int inputDecide = 0;
-    private int preInputDecide = 0;
+    // チュートリアル完了フラグ
+    private bool isClearTutorial;
 
     private float pushDecideTime = 0f;
 
     void Start()
     {
+        textActiveLeftTime = textActiveTime;
+
         moveSlider = practiceMoves.transform.Find("PracticeMoveSlider").GetComponent<Slider>();
         moveSlider.value = 0f;
 
         playerManager = playerObj.GetComponent<PlayerManager>();
 
-        isPossibleMove = false;
         moveAddValue = 0f;
-        isPossibleMove = false;
-        isPossibleAttack = false;
 
         isClearAttack = false;
         isClearTutorial = false;
-
-        inputDecide = 0;
-        preInputDecide = 0;
 
         pushDecideTime = 0f;
     }
 
     void Update()
     {
-        bool isPushDecide = GetInputDecide();
-
         if (!isClearTutorial)
         {
             switch (tutorialType)
             {
                 case TutorialType.MOVE1:
-                    TextUpdate(isPushDecide, tutorialText1, tutorialText2);
+                    TextUpdate(tutorialText1, tutorialText2);
                     break;
                 case TutorialType.MOVE2:
-                    TextUpdate(isPushDecide, tutorialText2, tutorialText3);
+                    TextUpdate(tutorialText2, tutorialText3);
                     break;
                 case TutorialType.MOVE3:
-                    TextUpdate(isPushDecide, tutorialText3, tutorialText4);
+                    TextUpdate(tutorialText3, tutorialText4);
                     break;
                 case TutorialType.MOVE4:
-                    TextUpdate(isPushDecide, tutorialText4, practiceMoves);
-                    if (isPushDecide && speechBubbleObj && tutorialText4 && tutorialText4.GetComponent<AlphaText>().GetIsFadeInClear())
+                    TextUpdate(tutorialText4, practiceMoves);
+                    if (speechBubbleObj && tutorialText4 && tutorialText4.GetComponent<AlphaText>().GetIsFadeInClear())
                     {
-                        speechBubbleObj.GetComponent<AlphaImage>().FadeOutInitialize();
+                        if (textActiveLeftTime <= 0f) { speechBubbleObj.GetComponent<AlphaImage>().FadeOutInitialize(); }
                     }
                     break;
                 // 基本移動の練習
                 case TutorialType.PRACTICEMOVE:
-                    isPossibleMove = true;
                     if (moveSlider)
                     {
                         moveSlider.value = moveAddValue / 100.0f;
@@ -165,23 +157,22 @@ public class TutorialManager : MonoBehaviour
                     }
                     break;
                 case TutorialType.ORDER1:
-                    TextUpdate(isPushDecide, tutorialText5, tutorialText6);
+                    TextUpdate(tutorialText5, tutorialText6);
                     break;
                 case TutorialType.ORDER2:
-                    TextUpdate(isPushDecide, tutorialText6, tutorialText7);
+                    TextUpdate(tutorialText6, tutorialText7);
                     break;
                 case TutorialType.ORDER3:
-                    TextUpdate(isPushDecide, tutorialText7, tutorialText8);
+                    TextUpdate(tutorialText7, tutorialText8);
                     break;
                 case TutorialType.ORDER4:
-                    TextUpdate(isPushDecide, tutorialText8, practiceOrder);
-                    if (isPushDecide && speechBubbleObj && tutorialText8 && tutorialText8.GetComponent<AlphaText>().GetIsFadeInClear())
+                    TextUpdate(tutorialText8, practiceOrder);
+                    if (speechBubbleObj && tutorialText8 && tutorialText8.GetComponent<AlphaText>().GetIsFadeInClear())
                     {
-                        speechBubbleObj.GetComponent<AlphaImage>().FadeOutInitialize();
+                        if (textActiveLeftTime <= 0f) { speechBubbleObj.GetComponent<AlphaImage>().FadeOutInitialize(); }
                     }
                     break;
                 case TutorialType.PRACTICEORDER:
-                    isPossibleOrder = true;
                     CheckPracticeOrder();
                     if (isClearLeft && isClearRight && isClearUp && isClearDown)
                     {
@@ -203,29 +194,28 @@ public class TutorialManager : MonoBehaviour
                     }
                     break;
                 case TutorialType.ATTACK1:
-                    TextUpdate(isPushDecide, tutorialText9, tutorialText10);
+                    TextUpdate(tutorialText9, tutorialText10);
                     break;
                 case TutorialType.ATTACK2:
-                    TextUpdate(isPushDecide, tutorialText10, tutorialText11);
+                    TextUpdate(tutorialText10, tutorialText11);
                     break;
                 case TutorialType.ATTACK3:
-                    TextUpdate(isPushDecide, tutorialText11, tutorialText12);
+                    TextUpdate(tutorialText11, tutorialText12);
                     break;
                 case TutorialType.ATTACK4:
-                    TextUpdate(isPushDecide, tutorialText12, tutorialText13);
+                    TextUpdate(tutorialText12, tutorialText13);
                     break;
                 case TutorialType.ATTACK5:
-                    TextUpdate(isPushDecide, tutorialText13, tutorialText14);
+                    TextUpdate(tutorialText13, tutorialText14);
                     break;
                 case TutorialType.ATTACK6:
-                    TextUpdate(isPushDecide, tutorialText14, practiceAttack);
-                    if (isPushDecide && speechBubbleObj && tutorialText14 && tutorialText14.GetComponent<AlphaText>().GetIsFadeInClear())
+                    TextUpdate(tutorialText14, practiceAttack);
+                    if (speechBubbleObj && tutorialText14 && tutorialText14.GetComponent<AlphaText>().GetIsFadeInClear())
                     {
-                        speechBubbleObj.GetComponent<AlphaImage>().FadeOutInitialize();
+                        if (textActiveLeftTime <= 0f) { speechBubbleObj.GetComponent<AlphaImage>().FadeOutInitialize(); }
                     }
                     break;
                 case TutorialType.PRACTICEATTACK:
-                    isPossibleAttack = true;
                     if (isClearAttack)
                     {
                         if (practiceAttackClear)
@@ -247,14 +237,18 @@ public class TutorialManager : MonoBehaviour
                     }
                     break;
                 case TutorialType.PRAY1:
-                    TextUpdate(isPushDecide, tutorialText15, tutorialText16);
+                    TextUpdate(tutorialText15, tutorialText16);
                     break;
                 case TutorialType.PRAY2:
 
-                    if (isPushDecide && tutorialText16 && tutorialText16.activeSelf && tutorialText16.GetComponent<AlphaText>().GetIsFadeInClear() && speechBubbleObj)
+                    if (tutorialText16 && tutorialText16.activeSelf && tutorialText16.GetComponent<AlphaText>().GetIsFadeInClear() && speechBubbleObj)
                     {
-                        tutorialText16.GetComponent<AlphaText>().FadeOutInitialize();
-                        speechBubbleObj.GetComponent<AlphaImage>().FadeOutInitialize();
+                        textActiveLeftTime -= Time.deltaTime;
+                        if (textActiveLeftTime <= 0f)
+                        {
+                            tutorialText16.GetComponent<AlphaText>().FadeOutInitialize();
+                            speechBubbleObj.GetComponent<AlphaImage>().FadeOutInitialize();
+                        }
                     }
                     if (tutorialText16 && !tutorialText16.activeSelf)
                     {
@@ -264,7 +258,7 @@ public class TutorialManager : MonoBehaviour
             }
         }
 
-        if (inputDecide != 0)
+        if ((int)Input.GetAxisRaw("Abutton") != 0)
         {
             pushDecideTime += Time.deltaTime;
             if (pushDecideTime >= 3f)
@@ -348,15 +342,17 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    private void TextUpdate(bool isPushDecide_, GameObject nowObj, GameObject nextObj)
+    private void TextUpdate(GameObject nowObj, GameObject nextObj)
     {
-        if (isPushDecide_ && nowObj && nowObj.activeSelf && nowObj.GetComponent<AlphaText>().GetIsFadeInClear())
+        if (nowObj && nowObj.activeSelf && nowObj.GetComponent<AlphaText>().GetIsFadeInClear())
         {
-            nowObj.GetComponent<AlphaText>().FadeOutInitialize();
+            textActiveLeftTime -= Time.deltaTime;
+            if (textActiveLeftTime <= 0f) { nowObj.GetComponent<AlphaText>().FadeOutInitialize(); }
         }
 
         else if (!nowObj.activeSelf && !nextObj.activeSelf)
         {
+            textActiveLeftTime = textActiveTime;
             nextObj.SetActive(true);
             tutorialType++;
         }
@@ -370,37 +366,10 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    private bool GetInputDecide()
-    {
-        preInputDecide = inputDecide;
-        inputDecide = (int)Input.GetAxisRaw("Abutton");
-
-        if (inputDecide != 0 && preInputDecide == 0)
-        {
-            return true;
-        }
-        return false;
-    }
-
-    public bool GetIsPossibleMove()
-    {
-        return isPossibleMove;
-    }
-
     public void MoveAddValue(float addValue)
     {
         float deltaAddValue = addValue * Time.deltaTime;
         moveAddValue += deltaAddValue;
-    }
-
-    public bool GetIsPossibleOrder()
-    {
-        return isPossibleOrder;
-    }
-
-    public bool GetIsPossibleAttack()
-    {
-        return isPossibleAttack;
     }
 
     public void CheckPracticeOrder()
@@ -451,9 +420,6 @@ public class TutorialManager : MonoBehaviour
 
     private void FlagAllClear()
     {
-        isPossibleMove = true;
-        isPossibleOrder = true;
-        isPossibleAttack = true;
         isClearLeft = true;
         isClearRight = true;
         isClearUp = true;

@@ -107,16 +107,9 @@ public class PlayerManager : MonoBehaviour
 
     void Update()
     {
-        if (tutorialManager.GetIsPossibleMove())
-        {
-            InputMove();
-            Move();
-        }
-
-        if (tutorialManager.GetIsPossibleOrder())
-        {
-            OrderChildren();
-        }
+        InputMove();
+        Move();
+        OrderChildren();
 
         if (speedDownTime > 0) {
             moveSpeed = 5.0f;
@@ -217,7 +210,7 @@ public class PlayerManager : MonoBehaviour
                     orderDown = true;
                 }
                 // 指示 - 敵に攻撃
-                else if (tutorialManager.GetIsPossibleAttack() && judgeGround && !orderStack)
+                else if (judgeGround && !orderStack)
                 {
                     CheckDiffChild(false);
                     orderAttack = true;
