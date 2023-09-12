@@ -73,7 +73,6 @@ public class CatScript : MonoBehaviour
                 else
                 {
                     spriteRenderer.flipX = true;
-
                 }
                 direction_.x = 1.0f;
             }
@@ -174,8 +173,9 @@ public class CatScript : MonoBehaviour
                     break;
 
                 case Mode.Kuwaeru:
+                    FindClosestChild();
                     if (kuwaeru)
-                    {
+                    {                        
                         closestChild.position = transform.position;
                         BakuBakuTime -= Time.deltaTime;
                         transform.position += new Vector3(direction_.x * -4.0f, 0, 0) * Time.deltaTime;
@@ -183,7 +183,17 @@ public class CatScript : MonoBehaviour
                     }
                     else
                     {
-                        transform.position += new Vector3(direction_.x * 2.0f, 0, 0) * Time.deltaTime;
+                        Vector2 direction = target.transform.position - transform.position;
+                        direction.Normalize();
+                        if (direction.x > 0)
+                        {
+                            direction.x = 1.0f;
+                        }
+                        else
+                        {
+                            direction.x = -1.0f;
+                        }
+                        transform.position += new Vector3(direction.x * 2.0f, 0, 0) * Time.deltaTime;
                     }
                     //else
                     //{

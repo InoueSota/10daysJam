@@ -598,6 +598,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 180856171}
     m_Modifications:
     - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: Distance_
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: gameFlagObj
       value: 
       objectReference: {fileID: 245415732}
@@ -2024,6 +2028,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 180856171}
     m_Modifications:
+    - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: kYPos
+      value: 14
+      objectReference: {fileID: 0}
     - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: gameFlagObj
       value: 
@@ -4890,6 +4898,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 180856171}
     m_Modifications:
     - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: Distance_
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: gameFlagObj
       value: 
       objectReference: {fileID: 245415732}
@@ -5548,6 +5560,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 180856171}
     m_Modifications:
     - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: Distance_
+      value: 19
+      objectReference: {fileID: 0}
+    - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: gameFlagObj
       value: 
       objectReference: {fileID: 245415732}
@@ -6069,6 +6085,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 180856171}
     m_Modifications:
     - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: Distance_
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: gameFlagObj
       value: 
       objectReference: {fileID: 245415732}
@@ -6078,11 +6098,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7514164298105999568, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 39.9
+      value: 23.2
       objectReference: {fileID: 0}
     - target: {fileID: 7514164298105999568, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 30.8
+      value: 29.1
       objectReference: {fileID: 0}
     - target: {fileID: 7514164298105999568, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_LocalPosition.z
@@ -6473,6 +6493,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 180856171}
     m_Modifications:
+    - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: Distance_
+      value: 18
+      objectReference: {fileID: 0}
     - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: gameFlagObj
       value: 
@@ -7010,6 +7034,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 180856171}
     m_Modifications:
+    - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: Distance_
+      value: 14
+      objectReference: {fileID: 0}
     - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: gameFlagObj
       value: 
