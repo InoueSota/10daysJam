@@ -114,7 +114,7 @@ public class GameFlowManager : MonoBehaviour
 
     private void UpdateMiniProgress()
     {
-        float t = scrollManager.GetScrollValue() / (goalPositionX - halfWidth);
+        float t = scrollManager.GetScrollValue() / (goalPositionX + halfWidth);
         miniDuckUI.transform.position = Vector3.Lerp(miniStartUI.transform.position, miniGoalUI.transform.position, t);
     }
 

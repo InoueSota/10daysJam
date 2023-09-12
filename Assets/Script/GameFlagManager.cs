@@ -1,25 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class GameFlagManager : MonoBehaviour
 {
+    // チュートリアルの管理をするオブジェクト
+    [SerializeField] private GameObject tutorialManagerObj;
+    private TutorialManager tutorialManager;
     // チュートリアルクリアフラグ
     private bool clearTutorial;
     // かかしの親オブジェクト
     [SerializeField] private GameObject dummyParentObj;
-    // かかしを倒す指示を書いたオブジェクト
-    [SerializeField] private GameObject orderKillDummyObj;
 
     // ↓ チュートリアルクリア後
     // ゲーム開始するフラグ
     private bool isStart;
     // 子ガモを守り切る指示を書いたオブジェクト
     [SerializeField] private GameObject orderSaveChildrenObj;
-    // カラスの発生を制御するオブジェクト
-    [SerializeField] private GameObject crowSpawnManagerObj;
-    // ネコの発生を制御するオブジェクト
-    [SerializeField] private GameObject catSpawnManagerObj;
+    // スタート地点からゴール地点までのオブジェクト
+    [SerializeField] private GameObject miniProgressObj;
 
     // ゲーム終了フラグ
     private bool isFinish;
@@ -28,27 +28,26 @@ public class GameFlagManager : MonoBehaviour
 
     void Start()
     {
+        tutorialManager = tutorialManagerObj.GetComponent<TutorialManager>();
         clearTutorial = false;
         isStart = false;
 
         isFinish = false;
         sceneChanger = GameObject.FindGameObjectWithTag("SceneChanger").GetComponent<SceneChanger>();
     }
-        
+
     void Update()
     {
-        if (!clearTutorial && dummyParentObj && CountChildObjects(dummyParentObj) == 1)
+        if (!clearTutorial && dummyParentObj && CountChildObjects(dummyParentObj) == 1 && tutorialManager)
         {
+            tutorialManager.SetClearAttack();
             Destroy(dummyParentObj);
-            Destroy(orderKillDummyObj);
-            orderSaveChildrenObj.SetActive(true);
-            clearTutorial = true;
         }
-
-        if (isStart && crowSpawnManagerObj && !crowSpawnManagerObj.activeSelf && !catSpawnManagerObj.activeSelf)
+        if (tutorialManager && tutorialManager.GetIsClearTutorial())
         {
-            crowSpawnManagerObj.SetActive(true);
-            catSpawnManagerObj.SetActive(true);
+            orderSaveChildrenObj.SetActive(true);
+            miniProgressObj.SetActive(true);
+            clearTutorial = true;
         }
 
         if (isFinish)

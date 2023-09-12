@@ -85,6 +85,9 @@ public class PlayerManager : MonoBehaviour
     // ゲームのフラグを管理するオブジェクト
     [SerializeField] private GameObject gameFlowManagerObj;
     private GameFlowManager gameFlowManager;
+    // チュートリアルを管理するオブジェクト
+    [SerializeField] private GameObject tutorialObj;
+    private TutorialManager tutorialManager;
 
     void Start()
     {
@@ -99,11 +102,23 @@ public class PlayerManager : MonoBehaviour
         children = new GameObject[30];
 
         gameFlowManager = gameFlowManagerObj.GetComponent<GameFlowManager>();
+        tutorialManager = tutorialObj.GetComponent<TutorialManager>();
     }
 
     void Update()
     {
-        if(speedDownTime > 0) {
+        if (tutorialManager.GetIsPossibleMove())
+        {
+            InputMove();
+            Move();
+        }
+
+        if (tutorialManager.GetIsPossibleOrder())
+        {
+            OrderChildren();
+        }
+
+        if (speedDownTime > 0) {
             moveSpeed = 5.0f;
             speedDownTime -= Time.deltaTime;
         }
@@ -111,10 +126,7 @@ public class PlayerManager : MonoBehaviour
         {
             moveSpeed = 10.0f;
         }
-        InputMove();
-        Move();
         Gravity();
-        OrderChildren();
         Animation();
     }
     private void FixedUpdate()
@@ -205,7 +217,7 @@ public class PlayerManager : MonoBehaviour
                     orderDown = true;
                 }
                 // 指示 - 敵に攻撃
-                else if (judgeGround && !orderStack)
+                else if (tutorialManager.GetIsPossibleAttack() && judgeGround && !orderStack)
                 {
                     CheckDiffChild(false);
                     orderAttack = true;
@@ -295,10 +307,16 @@ public class PlayerManager : MonoBehaviour
     {
         float deltaMoveSpeed = moveSpeed * Time.deltaTime;
         transform.position = new Vector3(transform.position.x + inputMove.x * deltaMoveSpeed, transform.position.y, transform.position.z);
-        
+
+        if (inputMove.x != 0f)
+        {
+            tutorialManager.MoveAddValue(5f);
+        }
+
         //ジャンプ処理（Y軸イドウ）
         if (inputJump != 0 && preInputJump == 0)
         {
+            tutorialManager.MoveAddValue(1000f);
             velocity.y = 13f;
             isJump = true;
         }
@@ -535,7 +553,7 @@ public class PlayerManager : MonoBehaviour
     // 重力処理
     void Gravity()
     {
-        if (!judgeGround)
+        if (!judgeGround || isCatAttack)
         {
             velocity.y -= 5.0f * Time.deltaTime * 9.81f;
         }
