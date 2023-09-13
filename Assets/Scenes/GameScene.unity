@@ -1380,6 +1380,10 @@ PrefabInstance:
       value: Crow (7)
       objectReference: {fileID: 0}
     - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: m_FlipX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_SortingOrder
       value: 1
       objectReference: {fileID: 0}
@@ -2048,6 +2052,10 @@ PrefabInstance:
     - target: {fileID: 7514164298105999574, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_Name
       value: Crow (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: m_FlipX
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_SortingOrder
@@ -4252,6 +4260,10 @@ PrefabInstance:
     - target: {fileID: 7514164298105999574, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_Name
       value: Crow (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: m_FlipX
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_SortingOrder
@@ -9006,6 +9018,10 @@ PrefabInstance:
       value: Crow (6)
       objectReference: {fileID: 0}
     - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: m_FlipX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_SortingOrder
       value: 1
       objectReference: {fileID: 0}
@@ -9868,6 +9884,10 @@ PrefabInstance:
       value: Crow (11)
       objectReference: {fileID: 0}
     - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: m_FlipX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_SortingOrder
       value: 1
       objectReference: {fileID: 0}
@@ -10472,6 +10492,10 @@ PrefabInstance:
     - target: {fileID: 7514164298105999574, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_Name
       value: Crow (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: m_FlipX
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_SortingOrder
@@ -11189,6 +11213,10 @@ PrefabInstance:
       value: Crow (2)
       objectReference: {fileID: 0}
     - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: m_FlipX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_SortingOrder
       value: 1
       objectReference: {fileID: 0}
@@ -11533,6 +11561,10 @@ PrefabInstance:
     - target: {fileID: 7514164298105999574, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_Name
       value: Crow (10)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: m_FlipX
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_SortingOrder
@@ -12108,6 +12140,10 @@ PrefabInstance:
     - target: {fileID: 7514164298105999574, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_Name
       value: Crow (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: m_FlipX
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_SortingOrder
@@ -13035,6 +13071,10 @@ PrefabInstance:
     - target: {fileID: 7514164298105999574, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_Name
       value: Crow (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: m_FlipX
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_SortingOrder
@@ -16095,6 +16135,10 @@ PrefabInstance:
     - target: {fileID: 7514164298105999574, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_Name
       value: Crow (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
+      propertyPath: m_FlipX
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7514164298105999575, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: m_SortingOrder

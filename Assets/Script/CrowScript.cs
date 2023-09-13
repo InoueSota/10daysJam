@@ -14,6 +14,7 @@ public class CrowScript : MonoBehaviour
     private StanParticlesManager stan;
     private ZanzoesManager zanzo;
     private Animator anim;
+    private SpriteRenderer spriteRenderer;
 
     private float halfWidth;
     private float halfHeight;
@@ -62,7 +63,7 @@ public class CrowScript : MonoBehaviour
     {
         featherA = GetComponent<FeatherAParticlesManager>();
         stan = GetComponent<StanParticlesManager>();
-        player = GameObject.Find("Player");
+        player = GameObject.FindGameObjectWithTag("Player");
         halfWidth = Camera.main.ScreenToWorldPoint(new(Screen.width, 0f, 0f)).x;
         halfHeight = Camera.main.ScreenToWorldPoint(new(0f, Screen.height, 0f)).y;
         cameraObj = GameObject.FindGameObjectWithTag("MainCamera");
@@ -71,7 +72,7 @@ public class CrowScript : MonoBehaviour
         gameFlagManager = gameFlagObj.GetComponent<GameFlagManager>();
         anim = GetComponent<Animator>();
         zanzo = GetComponent<ZanzoesManager>();
-
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -210,6 +211,14 @@ public class CrowScript : MonoBehaviour
             {
                 isEnterCamera = true;
             }
+        }
+        if (!spriteRenderer.flipX && player.transform.position.x > transform.position.x)
+        {
+            spriteRenderer.flipX = true;
+        }
+        if (spriteRenderer.flipX && player.transform.position.x < transform.position.x)
+        {
+            spriteRenderer.flipX = false;
         }
         Animation();
     }
