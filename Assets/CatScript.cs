@@ -193,34 +193,17 @@ public class CatScript : MonoBehaviour
                     }
                     if (kuwaeru && closestChild != null)
                     {
-
-                        ChildManager childManager = closestChild.GetComponent<ChildManager>();
-                        if (!childManager.isTakedAway)
+                        if (distance >= 7.0f)
                         {
-                            childManager.takeAwayCrowObj = gameObject;
-                            childManager.isTakedAway = true;
-                            if (childManager.GetMoveType() == ChildManager.MoveType.STACK)
-                            {
-                                GameObject.FindGameObjectWithTag("ChildManager").GetComponent<AllChildScript>().StackTakeOffUpdate();
-                            }
-                            else
-                            {
-                                GameObject.FindGameObjectWithTag("ChildManager").GetComponent<AllChildScript>().TakeOffDiffUpdate();
-                            }
-                            if (distance >= 7.0f)
-                            {
-                                mode = Mode.Scan;
-                                kuwaeru = false;
-                            }
-                            if (!onDanbol)
-                            {
-                                transform.position += new Vector3(direction_.x * -4.0f, 0, 0) * Time.deltaTime;
-                                closestChild.position = transform.position;
-                            }
+                            mode = Mode.Scan;
+                            kuwaeru = false;
+                        }
+                        if (!onDanbol)
+                        {
+                            transform.position += new Vector3(direction_.x * -4.0f, 0, 0) * Time.deltaTime;
+                            closestChild.position = transform.position;
                         }
                         BakuBakuTime -= Time.deltaTime;
-
-
                     }
                     else
                     {
