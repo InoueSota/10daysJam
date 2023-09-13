@@ -53,7 +53,7 @@ public class HopParticle : MonoBehaviour
             }
 
 
-            if (Mathf.Abs(vel.x) <= ras* Time.deltaTime)
+            if (Mathf.Abs(vel.x) <= ras * Time.deltaTime)
             {
                 vel.x = 0;
             }
@@ -69,16 +69,16 @@ public class HopParticle : MonoBehaviour
                 }
             }
 
-            vel.y -= gravity * Time.deltaTime;
+            vel.y -= gravity ;
 
-            this.transform.position += vel ;
+            this.transform.position += vel * Time.deltaTime;
 
 
-            Vector3 rot = Vector3.zero;
+            Vector3 rot = this.transform.localEulerAngles;
 
-            rot.z += rotSpeed * Time.deltaTime;
+            rot.z += rotSpeed;
 
-            if(rot.z >= 360.0f)
+            if (rot.z >= 360.0f)
             {
                 rot.z -= 360.0f;
             }
@@ -99,10 +99,10 @@ public class HopParticle : MonoBehaviour
 
         float radian = Mathf.Deg2Rad * popAngle;
 
-        vel.x = popSpeed * Mathf.Cos(radian) * Time.deltaTime;
-        vel.y = popSpeed * Mathf.Sin(radian) * Time.deltaTime;
+        vel.x = popSpeed * Mathf.Cos(radian) ;
+        vel.y = popSpeed * Mathf.Sin(radian) ;
 
-        rotSpeed = rotSpeed_;
+        rotSpeed = -rotSpeed_;
         ras = ras_;
         gravity = gravity_;
         startConTime = startConTime_;

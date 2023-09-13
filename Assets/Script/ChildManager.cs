@@ -535,6 +535,7 @@ public class ChildManager : MonoBehaviour
     void MovePanic()
     {
         // 向かう方向を再設定するまでの時間
+        SweatHop.SetRunnning(true);
         changeOfDirectionIntervalLeftTime -= Time.deltaTime;
         if (changeOfDirectionIntervalLeftTime < 0f && judgeGround)
         {
@@ -561,6 +562,7 @@ public class ChildManager : MonoBehaviour
                 ChangeMoveType(MoveType.FOLLOW);
             }
             isPanic = false;
+            SweatHop.SetRunnning(false);
         }
     }
     public bool GetIsPanic()
