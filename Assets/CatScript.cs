@@ -211,9 +211,17 @@ public class CatScript : MonoBehaviour
                                 kuwaeru = false;
                             }
                            
-                             closestChild.position = transform.position;
+                            
                         }
                         BakuBakuTime -= Time.deltaTime;
+                        if (direction_.x < 0)
+                        {
+                            closestChild.position =new Vector3( transform.position.x+1.5f,transform.position.y-1.0f,0);
+                        }
+                        if (direction_.x >= 0)
+                        {
+                            closestChild.position = new Vector3(transform.position.x - 1.5f, transform.position.y - 1.0f, 0);
+                        }
                         if (!onDanbol)
                         {
                             transform.position += new Vector3(direction_.x * -4.0f, 0, 0) * Time.deltaTime;
