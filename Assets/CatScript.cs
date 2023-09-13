@@ -188,12 +188,10 @@ public class CatScript : MonoBehaviour
                 case Mode.Kuwaeru:
                     if (closestChild != null)
                     {
-
                         FindClosestChild();
                     }
-                    if (kuwaeru)
+                    if (kuwaeru && closestChild != null)
                     {
-
                         ChildManager childManager = closestChild.GetComponent<ChildManager>();
                         if (!childManager.isTakedAway)
                         {
@@ -212,15 +210,14 @@ public class CatScript : MonoBehaviour
                                 mode = Mode.Scan;
                                 kuwaeru = false;
                             }
-                            if (!onDanbol)
-                            {
-                                transform.position += new Vector3(direction_.x * -4.0f, 0, 0) * Time.deltaTime;
-                                closestChild.position = transform.position;
-                            }
+                           
+                             closestChild.position = transform.position;
                         }
                         BakuBakuTime -= Time.deltaTime;
-
-
+                        if (!onDanbol)
+                        {
+                            transform.position += new Vector3(direction_.x * -4.0f, 0, 0) * Time.deltaTime;
+                        }
                     }
                     else
                     {
