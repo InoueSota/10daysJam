@@ -397,6 +397,7 @@ GameObject:
   - component: {fileID: 3906877290160037469}
   - component: {fileID: 1724675788463761029}
   - component: {fileID: 6469924357536698499}
+  - component: {fileID: 7344540251270398762}
   m_Layer: 0
   m_Name: Crow
   m_TagString: Crow
@@ -611,3 +612,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   zanzo: {fileID: -1961868729197594936, guid: 02a194f8ddfd2684fb1096783fa1d1bc, type: 3}
   destroyTime: 0.2
+--- !u!114 &7344540251270398762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7514164298105999574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69d54de5dfa1a1545ab4f6bef1c8be7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  smoke: {fileID: -468435083357310543, guid: 8d87af1aac136474394235999bc77fdb, type: 3}
+  popSpeed:
+    value: 1
+    valueRand: 2
+  popAngle:
+    value: 90
+    valueRand: 45
+  popRadius:
+    value: 1
+    valueRand: 0.5
+  ras: 0.01
+  gravity: -0.01
+  startConTime: 0
+  progressConTime: 2
+  isRunning: 0
+  smokeCount: 20

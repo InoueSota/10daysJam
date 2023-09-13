@@ -15,6 +15,10 @@ public class ChildManager : MonoBehaviour
     private HopParticlesManager GrassHop;
     private HopParticlesManager SweatHop;
 
+    private SmokeAPaticlesManager deathSmoke;
+
+    PlaySound playSound;
+
     // 親ガモを追いかける
     public GameObject player;
     private PlayerManager playerManager;
@@ -121,9 +125,11 @@ public class ChildManager : MonoBehaviour
         zanzo = GetComponent<ZanzoesManager>();
 
         Hoppers = this.GetComponents<HopParticlesManager>();
-
+        deathSmoke = this.GetComponent<SmokeAPaticlesManager>();
         GrassHop = Hoppers[0];
         SweatHop = Hoppers[1];
+
+        playSound = this.GetComponent<PlaySound>();
     }
 
     private void FixedUpdate()
@@ -168,6 +174,7 @@ public class ChildManager : MonoBehaviour
     {
         playerDirection = (int)playerManager.GetDirection();
         GrassHop.SetRunnning(false);
+        SweatHop.SetRunnning(false);
         switch (moveType)
         {
             case MoveType.FOLLOW:
@@ -421,9 +428,10 @@ public class ChildManager : MonoBehaviour
         {
             orderDirection = kRight;
         }
-        velocity.x = 8f * orderDirection;
+        velocity.x = 10f * orderDirection;
         velocity.y = 8f;
         transform.parent.gameObject.GetComponent<AllChildScript>().stackCount = 0;
+
         ChangeMoveType(MoveType.STACKATTACK);
     }
 
@@ -440,6 +448,7 @@ public class ChildManager : MonoBehaviour
         attackCrowLeftTime = attackCrowTime;
         isFinishAttackCrow = false;
         isThrow = true;
+        playSound.PlaySound0();
         ChangeMoveType(MoveType.ATTACKCROW);
         zanzo.SetRunning(true);
     }
@@ -471,6 +480,12 @@ public class ChildManager : MonoBehaviour
     {
         eatGrassLeftTime -= Time.deltaTime;
         GrassHop.SetRunnning(true);
+
+        if(eatGrassLeftTime % 1.0f <= Time.deltaTime)
+        {
+            playSound.PlaySound1();
+        }
+
         if (eatGrassLeftTime < 0f) 
         {
             transform.localScale = kAddScale;
@@ -535,6 +550,7 @@ public class ChildManager : MonoBehaviour
     void MovePanic()
     {
         // 向かう方向を再設定するまでの時間
+        SweatHop.SetRunnning(true);
         changeOfDirectionIntervalLeftTime -= Time.deltaTime;
         if (changeOfDirectionIntervalLeftTime < 0f && judgeGround)
         {
@@ -586,7 +602,9 @@ public class ChildManager : MonoBehaviour
                         attackScore = 1000 * addDamage;
                         // スコアを加算する
                         AttackScoreIngame(48, 0.5f, collision);
+                        playSound.PlaySound3();
                         Destroy(collision.gameObject);
+                        deathSmoke.Set(collision.gameObject.transform.position);
                     }
                     else
                     {
@@ -595,6 +613,7 @@ public class ChildManager : MonoBehaviour
                         AttackScoreIngame(32, 0.5f, collision);
                     }
                 }
+                playSound.PlaySound2();
                 velocity.y = 5.0f;
                 isCrawHit = true;
             }
@@ -609,7 +628,9 @@ public class ChildManager : MonoBehaviour
                         attackScore = 2000 * addDamage;
                         // スコアを加算する
                         AttackScoreIngame(48, 0.5f, collision);
+                        playSound.PlaySound3();
                         Destroy(collision.gameObject);
+                        deathSmoke.Set(collision.gameObject.transform.position);
                     }
                     else
                     {
@@ -618,6 +639,7 @@ public class ChildManager : MonoBehaviour
                         AttackScoreIngame(32, 0.5f, collision);
                     }
                 }
+                playSound.PlaySound2();
             }
         }
 
@@ -636,7 +658,9 @@ public class ChildManager : MonoBehaviour
                         attackScore = 1000 * addDamage;
                         // スコアを加算する
                         AttackScoreIngame(48, 0.5f, collision);
+                        playSound.PlaySound3();
                         Destroy(collision.gameObject);
+                        deathSmoke.Set(collision.gameObject.transform.position);
                     }
                     else
                     {
@@ -645,6 +669,7 @@ public class ChildManager : MonoBehaviour
                         AttackScoreIngame(32, 0.5f, collision);
                     }
                 }
+                playSound.PlaySound2();
                 velocity.y = 5.0f;
                 isCrawHit = true;
             }
@@ -658,8 +683,10 @@ public class ChildManager : MonoBehaviour
                     {
                         attackScore = 2000 * addDamage;
                         // スコアを加算する
+                        playSound.PlaySound3();
                         AttackScoreIngame(48, 0.5f, collision);
                         Destroy(collision.gameObject);
+                        deathSmoke.Set(collision.gameObject.transform.position);
                     }
                     else
                     {
@@ -668,6 +695,7 @@ public class ChildManager : MonoBehaviour
                         AttackScoreIngame(32, 0.5f, collision);
                     }
                 }
+                playSound.PlaySound2();
             }
         }
 
@@ -689,6 +717,7 @@ public class ChildManager : MonoBehaviour
     private void AttackScoreIngame(int size, float deathTime, Collider2D collision)
     {
         playerManager.GetGameFlowManager().AddScore(attackScore);
+        playerManager.GetGameFlowManager().AddCombo();
         GameObject scoreText = Instantiate(playerManager.GetGameFlowManager().GetComponent<GameFlowManager>().scoreIngamePrefab);
         scoreText.transform.SetParent(playerManager.GetGameFlowManager().GetComponent<GameFlowManager>().canvas.transform, false);
         scoreText.GetComponent<ScoreIngameManager>().Initialized(attackScore, size, deathTime);

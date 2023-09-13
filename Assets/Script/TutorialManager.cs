@@ -42,6 +42,11 @@ public class TutorialManager : MonoBehaviour
     // テキストを自動更新させる
     [SerializeField] private float textActiveTime;
     private float textActiveLeftTime;
+    [SerializeField] private GameObject textActive;
+    [SerializeField] private GameObject textActiveSliderBack;
+    [SerializeField] private GameObject textActiveSliderFill;
+    // スライダー
+    private Slider textActiveSlider;
 
     // チュートリアル - 基本移動
     [SerializeField] private GameObject tutorialText1;
@@ -103,6 +108,9 @@ public class TutorialManager : MonoBehaviour
     {
         textActiveLeftTime = textActiveTime;
 
+        textActiveSlider = textActive.transform.Find("TextTimeSlider").GetComponent<Slider>();
+        textActiveSlider.value = 0f;
+
         moveSlider = practiceMoves.transform.Find("PracticeMoveSlider").GetComponent<Slider>();
         moveSlider.value = 0f;
 
@@ -131,6 +139,7 @@ public class TutorialManager : MonoBehaviour
                         {
                             speechBubbleObj.SetActive(true);
                             tutorialText1.SetActive(true);
+                            textActive.SetActive(true);
                             if (tutorialSkipObj && !tutorialSkipObj.activeSelf && tutorialSkipGaugeObj && !tutorialSkipGaugeObj.activeSelf && tutorialSkipBackGroundObj && !tutorialSkipBackGroundObj.activeSelf)
                             {
                                 tutorialSkipObj.SetActive(true);
@@ -151,7 +160,12 @@ public class TutorialManager : MonoBehaviour
                     TextUpdate(tutorialText4, practiceMoves);
                     if (speechBubbleObj && tutorialText4 && tutorialText4.GetComponent<AlphaText>().GetIsFadeInClear())
                     {
-                        if (textActiveLeftTime <= 0f) { speechBubbleObj.GetComponent<AlphaImage>().FadeOutInitialize(); }
+                        if (textActiveLeftTime <= 0f)
+                        { 
+                            speechBubbleObj.GetComponent<AlphaImage>().FadeOutInitialize();
+                            FadeOutImageInitialize(textActiveSliderBack);
+                            FadeOutImageInitialize(textActiveSliderFill);
+                        }
                     }
                     break;
                 // 基本移動の練習
@@ -170,6 +184,10 @@ public class TutorialManager : MonoBehaviour
                                 {
                                     practiceMoves.SetActive(false);
                                     tutorialText5.SetActive(true);
+                                    textActiveSliderBack.SetActive(true);
+                                    textActiveSliderFill.SetActive(true);
+                                    textActiveSliderBack.GetComponent<AlphaImage>().Initialize();
+                                    textActiveSliderFill.GetComponent<AlphaImage>().Initialize();
                                     speechBubbleObj.SetActive(true);
                                     speechBubbleObj.GetComponent<AlphaImage>().Initialize();
                                     tutorialType = TutorialType.ORDER1;
@@ -191,7 +209,12 @@ public class TutorialManager : MonoBehaviour
                     TextUpdate(tutorialText8, practiceOrder);
                     if (speechBubbleObj && tutorialText8 && tutorialText8.GetComponent<AlphaText>().GetIsFadeInClear())
                     {
-                        if (textActiveLeftTime <= 0f) { speechBubbleObj.GetComponent<AlphaImage>().FadeOutInitialize(); }
+                        if (textActiveLeftTime <= 0f) 
+                        { 
+                            speechBubbleObj.GetComponent<AlphaImage>().FadeOutInitialize();
+                            FadeOutImageInitialize(textActiveSliderBack);
+                            FadeOutImageInitialize(textActiveSliderFill);
+                        }
                     }
                     break;
                 case TutorialType.PRACTICEORDER:
@@ -210,6 +233,10 @@ public class TutorialManager : MonoBehaviour
                                 obstacleObj.SetActive(true);
                                 grassObj.SetActive(true);
                                 tutorialText9.SetActive(true);
+                                textActiveSliderBack.SetActive(true);
+                                textActiveSliderFill.SetActive(true);
+                                textActiveSliderBack.GetComponent<AlphaImage>().Initialize();
+                                textActiveSliderFill.GetComponent<AlphaImage>().Initialize();
                                 speechBubbleObj.SetActive(true);
                                 speechBubbleObj.GetComponent<AlphaImage>().Initialize();
                                 tutorialType = TutorialType.ATTACK1;
@@ -237,7 +264,12 @@ public class TutorialManager : MonoBehaviour
                     if (speechBubbleObj && tutorialText14 && tutorialText14.GetComponent<AlphaText>().GetIsFadeInClear())
                     {
                         dummyObj.SetActive(true);
-                        if (textActiveLeftTime <= 0f) { speechBubbleObj.GetComponent<AlphaImage>().FadeOutInitialize(); }
+                        if (textActiveLeftTime <= 0f) 
+                        { 
+                            speechBubbleObj.GetComponent<AlphaImage>().FadeOutInitialize();
+                            FadeOutImageInitialize(textActiveSliderBack);
+                            FadeOutImageInitialize(textActiveSliderFill);
+                        }
                     }
                     break;
                 case TutorialType.PRACTICEATTACK:
@@ -254,6 +286,10 @@ public class TutorialManager : MonoBehaviour
                             if (tutorialText15 && speechBubbleObj)
                             {
                                 tutorialText15.SetActive(true);
+                                textActiveSliderBack.SetActive(true);
+                                textActiveSliderFill.SetActive(true);
+                                textActiveSliderBack.GetComponent<AlphaImage>().Initialize();
+                                textActiveSliderFill.GetComponent<AlphaImage>().Initialize();
                                 speechBubbleObj.SetActive(true);
                                 speechBubbleObj.GetComponent<AlphaImage>().Initialize();
                                 tutorialType = TutorialType.PRAY1;
@@ -273,6 +309,8 @@ public class TutorialManager : MonoBehaviour
                         {
                             tutorialText16.GetComponent<AlphaText>().FadeOutInitialize();
                             speechBubbleObj.GetComponent<AlphaImage>().FadeOutInitialize();
+                            FadeOutImageInitialize(textActiveSliderBack);
+                            FadeOutImageInitialize(textActiveSliderFill);
                             tutorialDuckObj.GetComponent<TutorialDuckManager>().SetDuckMoveStart();
                             if (tutorialSkipObj && tutorialSkipGaugeObj && tutorialSkipBackGroundObj)
                             {
@@ -369,6 +407,7 @@ public class TutorialManager : MonoBehaviour
                 Destroy(tutorialSkipObj);
                 Destroy(tutorialSkipGaugeObj);
                 Destroy(tutorialSkipBackGroundObj);
+                Destroy(textActive);
                 if (obstacleObj && !obstacleObj.activeSelf)
                 {
                     obstacleObj.SetActive(true);
@@ -396,6 +435,7 @@ public class TutorialManager : MonoBehaviour
         if (nowObj && nowObj.activeSelf && nowObj.GetComponent<AlphaText>().GetIsFadeInClear())
         {
             textActiveLeftTime -= Time.deltaTime;
+            textActiveSlider.value = (textActiveTime - textActiveLeftTime) / textActiveTime;
             if (textActiveLeftTime <= 0f) { nowObj.GetComponent<AlphaText>().FadeOutInitialize(); }
         }
 
@@ -404,6 +444,7 @@ public class TutorialManager : MonoBehaviour
             textActiveLeftTime = textActiveTime;
             nextObj.SetActive(true);
             tutorialType++;
+            textActiveSlider.value = (textActiveTime - textActiveLeftTime) / textActiveTime;
         }
     }
 

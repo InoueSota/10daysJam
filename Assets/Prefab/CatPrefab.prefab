@@ -289,6 +289,7 @@ MonoBehaviour:
   direction_: {x: 0, y: 0}
   isAttack: 0
   closestChild: {fileID: 0}
+  onDanbol: 0
   gameFlagObj: {fileID: 0}
 --- !u!50 &-1852601203952167037
 Rigidbody2D:
@@ -350,7 +351,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HP: 0
-  maxHP: 5
+  maxHP: 16
   HPUI: {fileID: 585027225194831128}
 --- !u!95 &4124247163523862905
 Animator:
