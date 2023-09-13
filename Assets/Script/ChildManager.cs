@@ -87,11 +87,15 @@ public class ChildManager : MonoBehaviour
     [SerializeField] private float eatGrassTime = 0f;
     private float eatGrassLeftTime = 0f;
     // 食べたら大きさを変える
-    private Vector3 kAddScale = new Vector3(0.15f, 0.15f, 0.15f);
+    private Vector3 kAddScale = new Vector3(0.5f, 0.5f, 0.5f);
+    // 食べたらダメージをあげる
+    private int addDamage = 1;
     // 草を格納して食事後に消す
     private GameObject grassObj = null;
-    //パワーアップパーティクル
+    // パワーアップパーティクル
     private PowerUpParticlesManager powerUpParticle = null;
+    // 草を食べたことがあるか
+    private bool ateGrass;
 
     // 迷っている時間
     [SerializeField] private float lostTime = 0f;
@@ -122,6 +126,8 @@ public class ChildManager : MonoBehaviour
 
         GrassHop = Hoppers[0];
         SweatHop = Hoppers[1];
+
+        ateGrass = false;
     }
 
     private void FixedUpdate()
@@ -467,12 +473,12 @@ public class ChildManager : MonoBehaviour
     // 草食事関係
     void MoveEatGrass()
     {
-
         eatGrassLeftTime -= Time.deltaTime;
         GrassHop.SetRunnning(true);
         if (eatGrassLeftTime < 0f) 
         {
             transform.localScale += kAddScale;
+            addDamage = 2;
             powerUpParticle.SetParticle();
             ChangeMoveType(MoveType.FOLLOW);
 
@@ -577,18 +583,18 @@ public class ChildManager : MonoBehaviour
             {
                 if (enemyStatus)
                 {
-                    enemyStatus.Damage(1);
+                    enemyStatus.Damage(1 * addDamage);
                     // ダメージを与えHPがなくなったら死亡
                     if (enemyStatus.GetHP() <= 0)
                     {
-                        attackScore = 1000;
+                        attackScore = 1000 * addDamage;
                         // スコアを加算する
                         AttackScoreIngame(48, 0.5f, collision);
                         Destroy(collision.gameObject);
                     }
                     else
                     {
-                        attackScore = 100;
+                        attackScore = 100 * addDamage;
                         // スコアを加算する
                         AttackScoreIngame(32, 0.5f, collision);
                     }
@@ -600,18 +606,18 @@ public class ChildManager : MonoBehaviour
             {
                 if (enemyStatus)
                 {
-                    enemyStatus.Damage(2);
+                    enemyStatus.Damage(2 * addDamage);
                     // ダメージを与えHPがなくなったら死亡
                     if (enemyStatus.GetHP() <= 0)
                     {
-                        attackScore = 2000;
+                        attackScore = 2000 * addDamage;
                         // スコアを加算する
                         AttackScoreIngame(48, 0.5f, collision);
                         Destroy(collision.gameObject);
                     }
                     else
                     {
-                        attackScore = 200;
+                        attackScore = 200 * addDamage;
                         // スコアを加算する
                         AttackScoreIngame(32, 0.5f, collision);
                     }
@@ -627,18 +633,18 @@ public class ChildManager : MonoBehaviour
             {
                 if (enemyStatus)
                 {
-                    enemyStatus.Damage(1);
+                    enemyStatus.Damage(1 * addDamage);
                     // ダメージを与えHPがなくなったら死亡
                     if (enemyStatus.GetHP() <= 0)
                     {
-                        attackScore = 1000;
+                        attackScore = 1000 * addDamage;
                         // スコアを加算する
                         AttackScoreIngame(48, 0.5f, collision);
                         Destroy(collision.gameObject);
                     }
                     else
                     {
-                        attackScore = 100;
+                        attackScore = 100 * addDamage;
                         // スコアを加算する
                         AttackScoreIngame(32, 0.5f, collision);
                     }
@@ -650,18 +656,18 @@ public class ChildManager : MonoBehaviour
             {
                 if (enemyStatus)
                 {
-                    enemyStatus.Damage(2);
+                    enemyStatus.Damage(2 * addDamage);
                     // ダメージを与えHPがなくなったら死亡
                     if (enemyStatus.GetHP() <= 0)
                     {
-                        attackScore = 2000;
+                        attackScore = 2000 * addDamage;
                         // スコアを加算する
                         AttackScoreIngame(48, 0.5f, collision);
                         Destroy(collision.gameObject);
                     }
                     else
                     {
-                        attackScore = 200;
+                        attackScore = 200 * addDamage;
                         // スコアを加算する
                         AttackScoreIngame(32, 0.5f, collision);
                     }
@@ -670,7 +676,7 @@ public class ChildManager : MonoBehaviour
         }
 
         // 草に当たったら時間をかけたのちに食べる
-        if (isDash && collision.CompareTag("Grass"))
+        if (!ateGrass && isDash && collision.CompareTag("Grass"))
         {
             if (collision && !collision.GetComponent<GrassManager>().GetIsEaten())
             {
@@ -679,6 +685,7 @@ public class ChildManager : MonoBehaviour
                 eatGrassLeftTime = eatGrassTime;
                 isDash = false;
                 grassObj = collision.gameObject;
+                ateGrass = true;
                 collision.GetComponent<GrassManager>().SetIsEaten();
             }
         }
