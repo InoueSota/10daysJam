@@ -697,6 +697,7 @@ public class ChildManager : MonoBehaviour
     private void AttackScoreIngame(int size, float deathTime, Collider2D collision)
     {
         playerManager.GetGameFlowManager().AddScore(attackScore);
+        playerManager.GetGameFlowManager().AddCombo();
         GameObject scoreText = Instantiate(playerManager.GetGameFlowManager().GetComponent<GameFlowManager>().scoreIngamePrefab);
         scoreText.transform.SetParent(playerManager.GetGameFlowManager().GetComponent<GameFlowManager>().canvas.transform, false);
         scoreText.GetComponent<ScoreIngameManager>().Initialized(attackScore, size, deathTime);

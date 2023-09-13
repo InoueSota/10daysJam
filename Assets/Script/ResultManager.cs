@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using TMPro;
 using UnityEngine;
 
 public class ResultManager : MonoBehaviour
 {
     private SceneChanger sceneChanger;
+
+    // 引っ越しの行方テキスト
+    [SerializeField] private GameObject movingEndObj;
+    private TextMeshProUGUI movingEndText;
 
     // 子ガモの数のテキスト
     [SerializeField] private TextMeshProUGUI childCountText;
@@ -23,6 +28,8 @@ public class ResultManager : MonoBehaviour
     void Start()
     {
         sceneChanger = GameObject.FindGameObjectWithTag("SceneChanger").GetComponent<SceneChanger>();
+
+        movingEndText = movingEndObj.GetComponent<TextMeshProUGUI>();
 
         childCountTextManager = childCountText.GetComponent<NumberChangeManager>();
         scoreTextManager = scoreText.GetComponent<NumberChangeManager>();
@@ -43,6 +50,25 @@ public class ResultManager : MonoBehaviour
         if (scoreTextManager) 
         { 
             scoreTextManager.SetNumber(score);
+        }
+
+        if (movingEndText)
+        {
+            if (childCount >= 10)
+            {
+                movingEndText.text = string.Format("完全引っ越し成功");
+                movingEndText.color = Color.yellow;
+            }
+            else if (childCount > 0)
+            {
+                movingEndText.text = string.Format("引っ越し成功");
+                movingEndText.color = Color.white;
+            }
+            else
+            {
+                movingEndText.text = string.Format("引っ越し失敗");
+                movingEndText.color = Color.red;
+            }
         }
 
         if (Input.GetAxisRaw("Abutton") != 0 || Input.GetAxisRaw("Start") != 0)

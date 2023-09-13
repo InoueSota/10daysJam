@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameFlowManager : MonoBehaviour
@@ -43,10 +44,22 @@ public class GameFlowManager : MonoBehaviour
     public GameObject canvas;
     public GameObject scoreIngamePrefab;
 
+    // コンボ
+    private int combo;
+    // コンボのテキスト
+    [SerializeField] private TextMeshProUGUI comboLetterText;
+    [SerializeField] private TextMeshProUGUI comboText;
+    private NumberChangeManager comboTextManager;
+    // 時間経過でコンボを初期化する
+    private float comboTime;
+    private float comboLeftTime;
+    // スライダー
+    [SerializeField] private GameObject comboParentObj;
+    private Slider comboSlider;
+
     // プレイヤー
     [SerializeField] private GameObject playerObj;
     private PlayerManager playerManager;
-
 
     void Start()
     {
@@ -61,6 +74,12 @@ public class GameFlowManager : MonoBehaviour
 
         scoreTextManager = scoreText.GetComponent<NumberChangeManager>();
 
+        comboTextManager = comboText.GetComponent<NumberChangeManager>();
+        comboTime = 6f;
+        comboLeftTime = 0f;
+        comboSlider = comboParentObj.transform.Find("ComboSlider").GetComponent<Slider>();
+        comboSlider.value = 0f;
+
         playerManager = playerObj.GetComponent<PlayerManager>();
     }
 
@@ -74,6 +93,7 @@ public class GameFlowManager : MonoBehaviour
             if (countDownTextManager)
             {
                 score = 0;
+                combo = 0;
                 countDownTextManager.SetNumber((int)Mathf.Ceil(countDownTime));
             }
         }
@@ -89,6 +109,23 @@ public class GameFlowManager : MonoBehaviour
             // スコアを描画する
             if (scoreTextManager) { scoreTextManager.SetNumber(score); }
             ResultManager.score = score;
+
+            // コンボを描画する
+            if (comboTextManager) { comboTextManager.SetNumber(combo); }
+
+            // コンボの時間経過処理
+            if (comboLeftTime > 0f)
+            {
+                comboLeftTime -= Time.deltaTime;
+            }
+            else
+            {
+                combo = 0;
+            }
+            if (comboSlider)
+            {
+                comboSlider.value = comboLeftTime / comboTime;
+            }
         }
     }
 
@@ -100,7 +137,11 @@ public class GameFlowManager : MonoBehaviour
             countDownText.gameObject.SetActive(false);
             scoreLetterText.gameObject.SetActive(true);
             scoreText.gameObject.SetActive(true);
+            comboLetterText.gameObject.SetActive(true);
+            comboText.gameObject.SetActive(true);
+            comboSlider.gameObject.SetActive(true);
             score = 0;
+            combo = 0;
             GameObject.FindGameObjectWithTag("MainCamera").GetComponent<ScrollManager>().SetAutoScrollStart();
             gameFlagManager.SetStart(); 
         }
@@ -128,7 +169,13 @@ public class GameFlowManager : MonoBehaviour
 
     public void AddScore(int addValue)
     {
-        score += addValue;
+        score += addValue + (int)(addValue * combo * 0.1f);
+    }
+
+    public void AddCombo()
+    {
+        combo++;
+        comboLeftTime = comboTime;
     }
 
 }
