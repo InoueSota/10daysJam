@@ -185,7 +185,7 @@ public class PlayerManager : MonoBehaviour
                     allChild.stackCount = 0;
                     allChild.DiffInitialize();
                     orderStack = true;
-                    ChangeOrderText("＼ 乗れ! ／");
+                    ChangeOrderText("＼ のれ! ／");
                 }
                 // 指示 - 積み上げ攻撃
                 else if (orderStack && (inputDirection == INPUTDIRECTION.LEFT || inputDirection == INPUTDIRECTION.RIGHT))
@@ -207,7 +207,7 @@ public class PlayerManager : MonoBehaviour
                     OrderInitialize();
                     allChild.DiffInitialize();
                     orderDown = true;
-                    ChangeOrderText("＼ 戻れ! ／");
+                    ChangeOrderText("＼ もどれ! ／");
                 }
                 else if (inputDirection == INPUTDIRECTION.DOWN)
                 {
@@ -227,7 +227,7 @@ public class PlayerManager : MonoBehaviour
                     allChild.stackCount = 0;
                     allChild.DiffInitialize();
                     orderStack = true;
-                    ChangeOrderText("＼ 乗れ! ／");
+                    ChangeOrderText("＼ のれ! ／");
                 }
                 else if (orderStack && (inputDirection == INPUTDIRECTION.LEFT || inputDirection == INPUTDIRECTION.RIGHT))
                 {
@@ -247,7 +247,7 @@ public class PlayerManager : MonoBehaviour
                     OrderInitialize();
                     allChild.DiffInitialize();
                     orderDown = true;
-                    ChangeOrderText("＼ 戻れ! ／");
+                    ChangeOrderText("＼ もどれ! ／");
                 }
                 else if (inputDirection == INPUTDIRECTION.DOWN)
                 {
