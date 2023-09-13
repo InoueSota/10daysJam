@@ -3771,7 +3771,7 @@ MonoBehaviour:
   scoreIngamePrefab: {fileID: 4536668759927101766, guid: 59d1318437ee4d14cb50419db87e8b03, type: 3}
   comboLetterText: {fileID: 891339172}
   comboText: {fileID: 510502199}
-  comboSlider: {fileID: 101477597}
+  comboParentObj: {fileID: 1208880587}
   playerObj: {fileID: 498490234}
 --- !u!1 &575850143
 GameObject:

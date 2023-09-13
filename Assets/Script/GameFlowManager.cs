@@ -50,6 +50,11 @@ public class GameFlowManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI comboLetterText;
     [SerializeField] private TextMeshProUGUI comboText;
     private NumberChangeManager comboTextManager;
+    // コンボのスケーリング
+    private float scaleTime;
+    private float scaleLeftTime;
+    private float startSize;
+    private float endSize;
     // 時間経過でコンボを初期化する
     private float comboTime;
     private float comboLeftTime;
@@ -77,6 +82,12 @@ public class GameFlowManager : MonoBehaviour
         comboTextManager = comboText.GetComponent<NumberChangeManager>();
         comboTime = 6f;
         comboLeftTime = 0f;
+
+        scaleTime = 0.2f;
+        scaleLeftTime = 0f;
+        startSize = comboText.fontSize * 1.2f;
+        endSize = comboText.fontSize;
+
         comboSlider = comboParentObj.transform.Find("ComboSlider").GetComponent<Slider>();
         comboSlider.value = 0f;
 
@@ -125,6 +136,14 @@ public class GameFlowManager : MonoBehaviour
             if (comboSlider)
             {
                 comboSlider.value = comboLeftTime / comboTime;
+            }
+
+            // スケール処理
+            if (scaleLeftTime > 0f)
+            {
+                scaleLeftTime -= Time.deltaTime;
+                float t = scaleLeftTime / scaleTime;
+                comboText.fontSize = Mathf.Lerp(endSize, startSize, t * t);
             }
         }
     }
@@ -176,6 +195,7 @@ public class GameFlowManager : MonoBehaviour
     {
         combo++;
         comboLeftTime = comboTime;
+        scaleLeftTime = scaleTime;
     }
 
 }
