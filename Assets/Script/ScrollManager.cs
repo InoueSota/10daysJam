@@ -25,9 +25,17 @@ public class ScrollManager : MonoBehaviour
     // オールスクロールフラグ
     bool isAutoScroll = false;
     // スクロール値
-    float scrollValue = 0f;
+    [SerializeField] float scrollValue = 0f;
     // スクロールの強さ
     [SerializeField] float scrollPower;
+
+    //背景ズ
+    [SerializeField] BackGroundScript[] backGroundScript;
+    private int backGroundCont = 0;
+    private BackGroundScript[] backGrounds;
+    private float[] backGroundSize;
+    [SerializeField] private float[] backGroundposY;
+    [SerializeField] private float[] backGroundScrollPower;
 
     void Start()
     {
@@ -38,12 +46,15 @@ public class ScrollManager : MonoBehaviour
 
         scrollLeftTime = scrollTime;
         scrollStartPosition = transform.position;
+
+        BackGroundInit();
     }
 
     private void LateUpdate()
     {
         //CheckPlayerPosition();
         MoveCamera();
+        BackGround();
     }
 
     void CheckPlayerPosition()
@@ -82,7 +93,7 @@ public class ScrollManager : MonoBehaviour
 
             transform.position = Vector3.Lerp(scrollEndPosition, scrollStartPosition, t * t * t);
             if (scrollLeftTime < 0f) { isScroll = false; }
-        } 
+        }
         else if (!isScroll && isAutoScroll)
         {
             float deltaScrollPower = scrollPower * Time.deltaTime;
@@ -101,4 +112,66 @@ public class ScrollManager : MonoBehaviour
     {
         return scrollValue;
     }
+
+    void BackGroundInit()
+    {
+
+        backGroundCont = backGroundScript.Length;
+        backGrounds = new BackGroundScript[backGroundCont * 2];
+        backGroundSize = new float[backGroundCont];
+        Debug.Log(backGroundCont);
+
+        Vector3 pos = Vector3.zero;
+
+
+        for (int i = 0; i < backGroundCont; i++)
+        {
+            pos = this.transform.position;
+            pos.y = 8.05f;
+            pos.z = 0;
+
+            backGrounds[i] = Instantiate(backGroundScript[i], pos, Quaternion.identity);
+            backGroundSize[i] = backGroundScript[i].gameObject.GetComponent<SpriteRenderer>().bounds.size.x;
+        }
+
+        for (int i = backGroundCont; i < backGroundCont * 2; i++)
+        {
+            pos = this.transform.position;
+            pos.y = backGroundposY[i - backGroundCont];
+            pos.z = 0;
+            pos.x += backGroundSize[i - backGroundCont];
+
+            backGrounds[i] = Instantiate(backGroundScript[i - backGroundCont], pos, Quaternion.identity);
+        }
+
+
+    }
+
+    void BackGround()
+    {
+        for (int i = 0; i < backGroundCont; i++)
+        {
+            Vector3 pos = Vector3.zero;
+            pos.y = backGroundposY[i];
+            pos.z = 0;
+            
+
+            float x = -((scrollValue * backGroundScrollPower[i]) % (backGroundSize[i] * 2)) ;
+            if(x < -backGroundSize[i])
+            {
+                x += backGroundSize[i] * 2.0f;
+            }
+            pos.x = x + scrollValue;
+            backGrounds[i].transform.position = pos;
+
+            x = -((scrollValue * backGroundScrollPower[i]) + backGroundSize[i]) % (backGroundSize[i] * 2);
+            if (x < -backGroundSize[i])
+            {
+                x += backGroundSize[i] * 2.0f;
+            }
+            pos.x = x + scrollValue;
+            backGrounds[i + backGroundCont].transform.position = pos;
+        }
+    }
 }
+
