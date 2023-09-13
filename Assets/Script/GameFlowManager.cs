@@ -44,6 +44,10 @@ public class GameFlowManager : MonoBehaviour
     public GameObject canvas;
     public GameObject scoreIngamePrefab;
 
+    // ÉvÉåÉCÉÑÅ[
+    [SerializeField] private GameObject playerObj;
+    private PlayerManager playerManager;
+
 
     void Start()
     {
@@ -58,6 +62,8 @@ public class GameFlowManager : MonoBehaviour
 
         scoreLetterTextManager = scoreLetterText.GetComponent<NumberChangeManager>();
         scoreTextManager = scoreText.GetComponent<NumberChangeManager>();
+
+        playerManager = playerObj.GetComponent<PlayerManager>();
     }
 
     void Update()
@@ -109,7 +115,7 @@ public class GameFlowManager : MonoBehaviour
     private bool IsGoal()
     {
         float cameraLeft = scrollManager.GetScrollValue() - halfWidth;
-        if (cameraLeft > goalPositionX)
+        if (playerManager.transform.position.x > goalPositionX)
         {
             return true;
         }

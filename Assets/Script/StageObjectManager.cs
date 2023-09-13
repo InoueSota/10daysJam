@@ -64,7 +64,7 @@ public class StageObjectManager : MonoBehaviour
             if (!isToBigClear)
             {
                 float objectPosition = transform.position.x;
-                float cameraRight = cameraObj.transform.position.x + halfWidth - endScale.x * 2f;
+                float cameraRight = cameraObj.transform.position.x + halfWidth - endScale.x * 2.2f;
 
                 if (objectPosition < cameraRight)
                 {
@@ -74,7 +74,7 @@ public class StageObjectManager : MonoBehaviour
             else
             {
                 float objectPosition = transform.position.x;
-                float cameraLeft = cameraObj.transform.position.x - halfWidth + startScale.x * 2f;
+                float cameraLeft = cameraObj.transform.position.x - halfWidth + startScale.x * 2.2f;
 
                 if (objectPosition < cameraLeft)
                 {

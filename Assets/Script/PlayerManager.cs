@@ -365,6 +365,7 @@ public class PlayerManager : MonoBehaviour
         {
             velocity.y = 13f;
             isJump = true;
+            judgeGround = false;
         }
     }
 
