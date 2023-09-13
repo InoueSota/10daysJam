@@ -294,8 +294,6 @@ public class TutorialManager : MonoBehaviour
         {
             pushDecideTime += Time.deltaTime;
 
-            tutorialSkipImage.fillAmount = pushDecideTime / 3f;
-
             if (pushDecideTime >= 3f)
             {
                 switch (tutorialType)
@@ -385,6 +383,11 @@ public class TutorialManager : MonoBehaviour
         else
         {
             pushDecideTime = 0;
+        }
+
+        if (!isClearTutorial)
+        {
+            tutorialSkipImage.fillAmount = pushDecideTime / 3f;
         }
     }
 
