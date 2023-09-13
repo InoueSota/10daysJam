@@ -5654,7 +5654,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8012233048616124005, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: isRunnning
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8012233048616124005, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
       propertyPath: popCoolTimeMax
