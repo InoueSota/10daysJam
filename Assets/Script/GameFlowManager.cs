@@ -67,7 +67,11 @@ public class GameFlowManager : MonoBehaviour
             // カウントダウンを行う
             CountDown();
             // 残り時間を描画する
-            if (countDownTextManager) { countDownTextManager.SetNumber((int)Mathf.Ceil(countDownTime)); }
+            if (countDownTextManager)
+            {
+                score = 0;
+                countDownTextManager.SetNumber((int)Mathf.Ceil(countDownTime));
+            }
         }
 
         if (gameFlagManager && gameFlagManager.GetClearTutorial() && gameFlagManager.GetIsStart())

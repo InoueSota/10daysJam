@@ -5,7 +5,7 @@ using UnityEngine;
 public class FeatherAParticlesManager : MonoBehaviour
 {
     // Start is called before the first frame update
-
+    private GameObject Particles;
     private bool isRunning = false;
     private Vector3 hitPos = Vector3.zero;
 
@@ -24,6 +24,7 @@ public class FeatherAParticlesManager : MonoBehaviour
     [SerializeField] private float RunTimeMaxRand = 0.2f;
 
     // Update is called once per frame
+
     void Update()
     {
 
@@ -35,7 +36,7 @@ public class FeatherAParticlesManager : MonoBehaviour
                 {
 
                     FeatherAParticle particleI = Instantiate(particle, this.transform.position, Quaternion.identity);
-
+                    particleI.transform.parent = Particles.transform;
                     Vector3 shotVec = Vector3.Normalize(hitPos - this.transform.position);
 
                     shotRadian = Mathf.Atan2(shotVec.y, shotVec.x);
@@ -75,6 +76,7 @@ public class FeatherAParticlesManager : MonoBehaviour
 
     public void SetRunning(Vector3 hitpos)
     {
+        Particles = GameObject.FindGameObjectWithTag("Particles");
         hitPos = hitpos;
         isRunning = true;
     }

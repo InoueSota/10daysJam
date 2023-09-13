@@ -103,6 +103,7 @@ GameObject:
   - component: {fileID: 4781214951182849475}
   - component: {fileID: 748832727439344222}
   - component: {fileID: -7046138009289808700}
+  - component: {fileID: -5639890940187000091}
   m_Layer: 0
   m_Name: DummyPrefab
   m_TagString: Crow
@@ -240,6 +241,18 @@ MonoBehaviour:
   HP: 0
   maxHP: 10
   HPUI: {fileID: 5983687998899590375}
+--- !u!114 &-5639890940187000091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841080203579405858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dba7fda0f859564a8a2b43d9f719813, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5983687998899590375
 GameObject:
   m_ObjectHideFlags: 0

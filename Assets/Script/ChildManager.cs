@@ -11,7 +11,9 @@ public class ChildManager : MonoBehaviour
     private bool isFlipX = false;
     private Animator anim;
     private ZanzoesManager zanzo;
-    private HopParticlesManager Hop;
+    private HopParticlesManager[] Hoppers;
+    private HopParticlesManager GrassHop;
+    private HopParticlesManager SweatHop;
 
     // 親ガモを追いかける
     public GameObject player;
@@ -115,7 +117,11 @@ public class ChildManager : MonoBehaviour
         prePos = this.transform.position;
 
         zanzo = GetComponent<ZanzoesManager>();
-        Hop = GetComponent<HopParticlesManager>();
+
+        Hoppers = this.GetComponents<HopParticlesManager>();
+
+        GrassHop = Hoppers[0];
+        SweatHop = Hoppers[1];
     }
 
     private void FixedUpdate()
@@ -159,7 +165,7 @@ public class ChildManager : MonoBehaviour
     void Move()
     {
         playerDirection = (int)playerManager.GetDirection();
-        Hop.SetRunnning(false);
+        GrassHop.SetRunnning(false);
         switch (moveType)
         {
             case MoveType.FOLLOW:
@@ -463,7 +469,7 @@ public class ChildManager : MonoBehaviour
     {
 
         eatGrassLeftTime -= Time.deltaTime;
-        Hop.SetRunnning(true);
+        GrassHop.SetRunnning(true);
         if (eatGrassLeftTime < 0f) 
         {
             transform.localScale += kAddScale;
@@ -590,7 +596,7 @@ public class ChildManager : MonoBehaviour
                 velocity.y = 5.0f;
                 isCrawHit = true;
             }
-            else if (moveType == MoveType.STACKATTACK)
+            else if (moveType == MoveType.STACKATTACK || moveType == MoveType.DASH)
             {
                 if (enemyStatus)
                 {
@@ -640,7 +646,7 @@ public class ChildManager : MonoBehaviour
                 velocity.y = 5.0f;
                 isCrawHit = true;
             }
-            else if (moveType == MoveType.STACKATTACK)
+            else if (moveType == MoveType.STACKATTACK || moveType == MoveType.DASH)
             {
                 if (enemyStatus)
                 {
@@ -666,11 +672,15 @@ public class ChildManager : MonoBehaviour
         // 草に当たったら時間をかけたのちに食べる
         if (isDash && collision.CompareTag("Grass"))
         {
-            ChangeMoveType(MoveType.EATGRASS);
-            velocity = Vector3.zero;
-            eatGrassLeftTime = eatGrassTime;
-            isDash = false;
-            grassObj = collision.gameObject;
+            if (collision && !collision.GetComponent<GrassManager>().GetIsEaten())
+            {
+                ChangeMoveType(MoveType.EATGRASS);
+                velocity = Vector3.zero;
+                eatGrassLeftTime = eatGrassTime;
+                isDash = false;
+                grassObj = collision.gameObject;
+                collision.GetComponent<GrassManager>().SetIsEaten();
+            }
         }
     }
 

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class XParticleManager : MonoBehaviour
 {
-
+    private CameraShake cameraShake;
     [SerializeField] private float finishTime = 1.0f;
     private float eTime = 0.0f;
 
@@ -14,17 +14,10 @@ public class XParticleManager : MonoBehaviour
 
     [SerializeField] private float sizeBig = 10.0f;
 
-    //private GameObject camera;
-    //private float shakeRadius = 0.0f;
-    //[SerializeField] private float shakeRadiusMax = 1.0f;
-
-    //[SerializeField] private float shakeTime = 1.0f;
-    //private float shakeETime = 0;
-    //camera = Camera.main.gameObject;
-    // Start is called before the first frame update
+    
     void Start()
     {
-        
+        cameraShake = Camera.main.gameObject.GetComponent<CameraShake>();
     }
 
     // Update is called once per frame
@@ -47,6 +40,10 @@ public class XParticleManager : MonoBehaviour
 
                 x.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, ta);
 
+                if(ta >= 1.0f)
+                {
+                    cameraShake.Set();
+                }
             }
 
             

@@ -19,6 +19,11 @@ public class AlphaText : MonoBehaviour
     private bool isFadeInClear;
     private bool isFadeOutStart;
 
+    // 少し時間を開けてからフェードアウトするだけパターンか
+    private bool isOnlyFadeOutStart;
+    private float intervalTime;
+    private float intervalLeftTime;
+
     void Start()
     {
         text = GetComponent<TextMeshProUGUI>();
@@ -34,6 +39,7 @@ public class AlphaText : MonoBehaviour
 
         isFadeInClear = false;
         isFadeOutStart = false;
+        isOnlyFadeOutStart = false;
     }
 
     void Update()
@@ -58,6 +64,23 @@ public class AlphaText : MonoBehaviour
             text.color = new(red, green, blue, alpha);
             if (alphaLeftTime <= 0f) { gameObject.SetActive(false); }
         }
+        if (isOnlyFadeOutStart)
+        {
+            if (intervalLeftTime > 0f)
+            {
+                intervalLeftTime -= Time.deltaTime;
+            }
+            else
+            {
+                alphaLeftTime -= Time.deltaTime;
+                if (alphaLeftTime < 0f) { alphaLeftTime = 0f; }
+
+                float t = alphaLeftTime / alphaTime;
+                alpha = Mathf.Lerp(0f, 1f, t * t);
+                text.color = new(red, green, blue, alpha);
+                if (alphaLeftTime <= 0f) { gameObject.SetActive(false); }
+            }
+        }
     }
 
     public bool GetIsFadeInClear()
@@ -72,5 +95,23 @@ public class AlphaText : MonoBehaviour
             alphaLeftTime = alphaTime;
             isFadeOutStart = true;
         }
+    }
+
+    public void OnlyFadeOut()
+    {
+        red = 1f;
+        green = 1f;
+        blue = 1f;
+        alpha = 1f;
+        text.color = new(red, green, blue, alpha);
+
+        alphaTime = 0.3f;
+        alphaLeftTime = alphaTime;
+        intervalTime = 0.9f;
+        intervalLeftTime = intervalTime;
+
+        isFadeInClear = true;
+        isFadeOutStart = false;
+        isOnlyFadeOutStart = true;
     }
 }

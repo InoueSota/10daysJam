@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
+using TMPro;
 using UnityEngine;
 using static ChildManager;
 
@@ -55,6 +57,7 @@ public class PlayerManager : MonoBehaviour
     public bool orderStack;     // 指示 - 積み上げ
     public bool orderDown;      // 指示 - 集合,待機
     public bool orderAttack;    // 指示 - カラスに攻撃
+    private bool isLastOrderDown;
 
     // 敵関係
     // 最近敵を格納する
@@ -89,6 +92,10 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private GameObject tutorialObj;
     private TutorialManager tutorialManager;
 
+    // 指示を出したときに表示させる
+    [SerializeField] private GameObject orderTextObj;
+    [SerializeField] private TextMeshProUGUI orderText;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -107,16 +114,9 @@ public class PlayerManager : MonoBehaviour
 
     void Update()
     {
-        if (tutorialManager.GetIsPossibleMove())
-        {
-            InputMove();
-            Move();
-        }
-
-        if (tutorialManager.GetIsPossibleOrder())
-        {
-            OrderChildren();
-        }
+        InputMove();
+        Move();
+        OrderChildren();
 
         if (speedDownTime > 0) {
             moveSpeed = 5.0f;
@@ -166,6 +166,7 @@ public class PlayerManager : MonoBehaviour
                     OrderInitialize();
                     orderLeft = true;
                     CheckDiffChild(true);
+                    ChangeOrderText("＼ 進め! ／");
                 }
                 // 指示 - 右猛進
                 else if (!orderStack && inputDirection == INPUTDIRECTION.RIGHT)
@@ -173,6 +174,7 @@ public class PlayerManager : MonoBehaviour
                     OrderInitialize();
                     orderRight = true;
                     CheckDiffChild(true);
+                    ChangeOrderText("＼ 進め! ／");
                 }
                 // 指示 - 積み上げ
                 else if (!orderStack && inputDirection == INPUTDIRECTION.UP)
@@ -181,18 +183,36 @@ public class PlayerManager : MonoBehaviour
                     allChild.stackCount = 0;
                     allChild.DiffInitialize();
                     orderStack = true;
+                    ChangeOrderText("＼ 乗れ! ／");
                 }
                 // 指示 - 積み上げ攻撃
                 else if (orderStack && (inputDirection == INPUTDIRECTION.LEFT || inputDirection == INPUTDIRECTION.RIGHT))
                 {
                     StackInitialize();
+                    ChangeOrderText("＼ 攻撃! ／");
                 }
                 // 指示 - 集合,待機
+                else if (orderStack && inputDirection == INPUTDIRECTION.DOWN)
+                {
+                    OrderInitialize();
+                    allChild.DiffInitialize();
+                    orderDown = true;
+                    ChangeOrderText("＼ やめ! ／");
+                }
+                else if (isLastOrderDown && inputDirection == INPUTDIRECTION.DOWN)
+                {
+                    OrderInitialize();
+                    allChild.DiffInitialize();
+                    orderDown = true;
+                    ChangeOrderText("＼ 戻れ! ／");
+                }
                 else if (inputDirection == INPUTDIRECTION.DOWN)
                 {
                     OrderInitialize();
                     allChild.DiffInitialize();
                     orderDown = true;
+                    isLastOrderDown = true;
+                    ChangeOrderText("＼ 集まれ! ／");
                 }
             }
             else
@@ -204,10 +224,12 @@ public class PlayerManager : MonoBehaviour
                     allChild.stackCount = 0;
                     allChild.DiffInitialize();
                     orderStack = true;
+                    ChangeOrderText("＼ 乗れ! ／");
                 }
                 else if (orderStack && (inputDirection == INPUTDIRECTION.LEFT || inputDirection == INPUTDIRECTION.RIGHT))
                 {
                     StackInitialize();
+                    ChangeOrderText("＼ 攻撃! ／");
                 }
                 // 指示 - 集合,待機
                 else if (orderStack && inputDirection == INPUTDIRECTION.DOWN)
@@ -215,12 +237,29 @@ public class PlayerManager : MonoBehaviour
                     OrderInitialize();
                     allChild.DiffInitialize();
                     orderDown = true;
+                    ChangeOrderText("＼ やめ! ／");
+                }
+                else if (isLastOrderDown && inputDirection == INPUTDIRECTION.DOWN)
+                {
+                    OrderInitialize();
+                    allChild.DiffInitialize();
+                    orderDown = true;
+                    ChangeOrderText("＼ 戻れ! ／");
+                }
+                else if (inputDirection == INPUTDIRECTION.DOWN)
+                {
+                    OrderInitialize();
+                    allChild.DiffInitialize();
+                    orderDown = true;
+                    isLastOrderDown = true;
+                    ChangeOrderText("＼ 集まれ! ／");
                 }
                 // 指示 - 敵に攻撃
-                else if (tutorialManager.GetIsPossibleAttack() && judgeGround && !orderStack)
+                else if (judgeGround && !orderStack)
                 {
                     CheckDiffChild(false);
                     orderAttack = true;
+                    ChangeOrderText("＼ 攻撃! ／");
                 }
             }
         }
@@ -233,6 +272,7 @@ public class PlayerManager : MonoBehaviour
         orderStack = false;
         orderDown = false;
         orderAttack = false;
+        isLastOrderDown = false;
     }
 
     void InputMove()
@@ -308,15 +348,21 @@ public class PlayerManager : MonoBehaviour
         float deltaMoveSpeed = moveSpeed * Time.deltaTime;
         transform.position = new Vector3(transform.position.x + inputMove.x * deltaMoveSpeed, transform.position.y, transform.position.z);
 
-        if (inputMove.x != 0f)
+        if (tutorialManager && tutorialManager.GetComponent<TutorialManager>().GetTutorialType() == TutorialManager.TutorialType.PRACTICEMOVE)
         {
-            tutorialManager.MoveAddValue(5f);
+            if (inputMove.x != 0f)
+            {
+                tutorialManager.MoveAddValue(10f);
+            }
+            if (inputJump != 0 && preInputJump == 0)
+            {
+                tutorialManager.MoveAddValue(2000f);
+            }
         }
 
         //ジャンプ処理（Y軸イドウ）
         if (inputJump != 0 && preInputJump == 0)
         {
-            tutorialManager.MoveAddValue(1000f);
             velocity.y = 13f;
             isJump = true;
         }
@@ -659,5 +705,18 @@ public class PlayerManager : MonoBehaviour
     public GameFlowManager GetGameFlowManager()
     {
         return gameFlowManager;
+    }
+
+    private void ChangeOrderText(string OrderContent)
+    {
+        if (orderText)
+        {
+            if (orderTextObj && !orderTextObj.activeSelf)
+            {
+                orderTextObj.SetActive(true);
+            }
+            orderTextObj.GetComponent<AlphaText>().OnlyFadeOut();
+            orderText.text = string.Format(OrderContent);
+        }
     }
 }
