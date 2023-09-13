@@ -197,6 +197,14 @@ public class CatScript : MonoBehaviour
                             mode = Mode.Scan;
                             kuwaeru = false;
                         }
+                        if (direction_.x < 0)
+                        {
+                            closestChild.position = new Vector3(transform.position.x + 1.5f, transform.position.y - 1.0f, 0);
+                        }
+                        if (direction_.x >= 0)
+                        {
+                            closestChild.position = new Vector3(transform.position.x - 1.5f, transform.position.y - 1.0f, 0);
+                        }
                         if (!onDanbol)
                         {
                             transform.position += new Vector3(direction_.x * -4.0f, 0, 0) * Time.deltaTime;
