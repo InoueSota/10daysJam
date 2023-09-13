@@ -193,14 +193,12 @@ public class CrowScript : MonoBehaviour
             float cameraRight = scrollManager.GetScrollValue() + halfWidth;
             if (thisLeft < cameraLeft)
             {
-                mode=mode|Mode.stay;
-                coolTime = 0;
+                FindClosestChild();
                 transform.position = new(cameraLeft + transform.localScale.x * 0.5f, transform.position.y, transform.position.z);
             }
             if (thisRight > cameraRight)
             {
-                mode = mode | Mode.stay;
-                coolTime = 0;
+                FindClosestChild();
                 transform.position = new(cameraRight - transform.localScale.x * 0.5f, transform.position.y, transform.position.z);
             }
         }
