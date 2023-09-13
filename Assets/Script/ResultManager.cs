@@ -16,7 +16,6 @@ public class ResultManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     private NumberChangeManager scoreTextManager;
     public static int score;
-    private bool isScoreDisplay;
     
     // Žq‚Ç‚à‚½‚¿
     [SerializeField] private GameObject[] childPrefab;
