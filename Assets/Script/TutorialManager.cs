@@ -290,7 +290,7 @@ public class TutorialManager : MonoBehaviour
             }
         }
 
-        if ((int)Input.GetAxisRaw("Abutton") != 0)
+        if (!isClearTutorial && (int)Input.GetAxisRaw("Abutton") != 0)
         {
             pushDecideTime += Time.deltaTime;
 

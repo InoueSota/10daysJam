@@ -666,11 +666,15 @@ public class ChildManager : MonoBehaviour
         // 草に当たったら時間をかけたのちに食べる
         if (isDash && collision.CompareTag("Grass"))
         {
-            ChangeMoveType(MoveType.EATGRASS);
-            velocity = Vector3.zero;
-            eatGrassLeftTime = eatGrassTime;
-            isDash = false;
-            grassObj = collision.gameObject;
+            if (collision && !collision.GetComponent<GrassManager>().GetIsEaten())
+            {
+                ChangeMoveType(MoveType.EATGRASS);
+                velocity = Vector3.zero;
+                eatGrassLeftTime = eatGrassTime;
+                isDash = false;
+                grassObj = collision.gameObject;
+                collision.GetComponent<GrassManager>().SetIsEaten();
+            }
         }
     }
 
