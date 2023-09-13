@@ -305,6 +305,7 @@ public class TutorialManager : MonoBehaviour
                     if (tutorialText16 && tutorialText16.activeSelf && tutorialText16.GetComponent<AlphaText>().GetIsFadeInClear() && speechBubbleObj)
                     {
                         textActiveLeftTime -= Time.deltaTime;
+                        textActiveSlider.value = (textActiveTime - textActiveLeftTime) / textActiveTime;
                         if (textActiveLeftTime <= 0f)
                         {
                             tutorialText16.GetComponent<AlphaText>().FadeOutInitialize();
