@@ -34,7 +34,7 @@ public class CatScript : MonoBehaviour
     const float kBakuBakuTime = 5.0f;
     float chaseCoolTime;
     const float kchaseCoolTime = 3.0f;
-    bool onDanbol;
+    [SerializeField] bool onDanbol;
 
     Animator anim;
     private Vector3 prePos;
@@ -135,7 +135,10 @@ public class CatScript : MonoBehaviour
 
                         if (distance <= 24.0f)
                         {
-                            transform.position += new Vector3(direction_.x * 4.0f, 0, 0) * Time.deltaTime;
+                            if (!onDanbol)
+                            {
+                                transform.position += new Vector3(direction_.x * 4.0f, 0, 0) * Time.deltaTime;
+                            }
                             if (distance <= 7.0f)
                             {
                                 mode = Mode.Hikkaku;
@@ -213,7 +216,11 @@ public class CatScript : MonoBehaviour
                         {
                             direction.x = -1.0f;
                         }
-                        transform.position += new Vector3(direction.x * 2.0f, 0, 0) * Time.deltaTime;
+                        if (!onDanbol)
+                        {
+                            transform.position += new Vector3(direction.x * 2.0f, 0, 0) * Time.deltaTime;
+
+                        }
                     }
                     //else
                     //{
@@ -231,7 +238,7 @@ public class CatScript : MonoBehaviour
 
             }
 
-            
+
             Debug.Log(mode);
 
             // ‰æ–Ê“à‚ÉŽû‚ß‚³‚¹‚é
@@ -296,9 +303,20 @@ public class CatScript : MonoBehaviour
         }
         if (collision.CompareTag("Obstacle"))
         {
-            //mode = Mode.Scan;
-            onDanbol = true;
-            Debug.Log("danbo-ru");
+            float x = collision.transform.position.x - transform.position.x;
+            if (direction_.x > 0 && x > 0)
+            {
+                onDanbol = true;
+            }
+            else
+            if (direction_.x < 0 && x < 0)
+            {
+                onDanbol = true;
+            }
+            else
+            {
+                onDanbol = false;
+            }
         }
         if (collision.CompareTag("Player") && mode == Mode.Hikkaku)
         {
@@ -327,6 +345,23 @@ public class CatScript : MonoBehaviour
             mode = Mode.Kuwaeru;
             anim.SetTrigger("Attack");
         }
+        if (collision.CompareTag("Obstacle"))
+        {
+            float x = collision.transform.position.x - transform.position.x;
+            if (direction_.x > 0 && x > 0)
+            {
+                onDanbol = true;
+            }
+            else
+            if (direction_.x < 0 && x < 0)
+            {
+                onDanbol = true;
+            }
+            else
+            {
+                onDanbol = false;
+            }
+        }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
@@ -339,7 +374,7 @@ public class CatScript : MonoBehaviour
         {
             //mode = Mode.Scan;
             onDanbol = false;
-           // Debug.Log("danbo-ru");
+            // Debug.Log("danbo-ru");
         }
     }
 
@@ -367,7 +402,7 @@ public class CatScript : MonoBehaviour
                 isScan = true;
                 break;
             case Mode.Chase:
-                
+
                 break;
 
             case Mode.Hikkaku:
@@ -375,7 +410,7 @@ public class CatScript : MonoBehaviour
                 break;
 
             case Mode.Kuwaeru:
-                
+
                 break;
         }
 
