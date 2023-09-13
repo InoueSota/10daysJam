@@ -37,7 +37,6 @@ public class GameFlowManager : MonoBehaviour
     private int score;
     // スコアのテキスト
     [SerializeField] private TextMeshProUGUI scoreLetterText;
-    private NumberChangeManager scoreLetterTextManager;
     [SerializeField] private TextMeshProUGUI scoreText;
     private NumberChangeManager scoreTextManager;
     // スコアをゲーム内で描画するため
@@ -60,7 +59,6 @@ public class GameFlowManager : MonoBehaviour
         halfWidth = Camera.main.ScreenToWorldPoint(new(Screen.width, 0f, 0f)).x;
         scrollManager = scrollManagerObj.GetComponent<ScrollManager>();
 
-        scoreLetterTextManager = scoreLetterText.GetComponent<NumberChangeManager>();
         scoreTextManager = scoreText.GetComponent<NumberChangeManager>();
 
         playerManager = playerObj.GetComponent<PlayerManager>();

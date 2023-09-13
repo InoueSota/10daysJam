@@ -421,7 +421,7 @@ public class ChildManager : MonoBehaviour
         {
             orderDirection = kRight;
         }
-        velocity.x = 8f * orderDirection;
+        velocity.x = 10f * orderDirection;
         velocity.y = 8f;
         transform.parent.gameObject.GetComponent<AllChildScript>().stackCount = 0;
         ChangeMoveType(MoveType.STACKATTACK);
