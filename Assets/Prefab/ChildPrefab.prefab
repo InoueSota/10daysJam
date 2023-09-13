@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 3271553135827626658}
   - component: {fileID: 1620102233314949598}
   - component: {fileID: 6082996168410646302}
+  - component: {fileID: 8012233048616124005}
   m_Layer: 3
   m_Name: ChildPrefab
   m_TagString: Child
@@ -226,6 +227,36 @@ MonoBehaviour:
   popCoolTimeMax: 0.2
   isRunnning: 0
   hop: {fileID: 251038813524993300, guid: 195e5ec990fb37f459ddced72e6fd7ac, type: 3}
+  ras: 0
+  gravity: 0.1
+  startConTime: 0.5
+  progressConTime: 1
+  popSpeed:
+    value: 12
+    valueRand: 2
+  popAngle:
+    value: 90
+    valueRand: 45
+  rotSpeed:
+    value: 0
+    valueRand: 0
+  popRadius: 0.5
+--- !u!114 &8012233048616124005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4062459521392159587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e33a7073096e2cc4eb054f62a29b6f65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  popCount: 1
+  popCoolTimeMax: 0.2
+  isRunnning: 0
+  hop: {fileID: 251038813524993300, guid: cab9de11b6c71784c91b730f9dd3ebcf, type: 3}
   ras: 0
   gravity: 0.1
   startConTime: 0.5
