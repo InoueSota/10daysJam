@@ -5301,6 +5301,46 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChildPrefab (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 6082996168410646302, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: rotSpeed.value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8012233048616124005, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: ras
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8012233048616124005, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: gravity
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8012233048616124005, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: isRunnning
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8012233048616124005, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: popCoolTimeMax
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8012233048616124005, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: popSpeed.value
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8012233048616124005, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: rotSpeed.value
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8012233048616124005, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: popAngle.valueRand
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 8012233048616124005, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: popSpeed.valueRand
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8012233048616124005, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
+      propertyPath: rotSpeed.valueRand
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 66e23e6d8a70dcb428a90b9ccb928ead, type: 3}
 --- !u!1001 &924252151

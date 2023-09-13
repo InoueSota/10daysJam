@@ -238,8 +238,8 @@ MonoBehaviour:
     value: 90
     valueRand: 45
   rotSpeed:
-    value: 0
-    valueRand: 0
+    value: 10
+    valueRand: 5
   popRadius: 0.5
 --- !u!114 &8012233048616124005
 MonoBehaviour:
@@ -253,21 +253,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e33a7073096e2cc4eb054f62a29b6f65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  popCount: 1
-  popCoolTimeMax: 0.2
+  popCount: 2
+  popCoolTimeMax: 0.5
   isRunnning: 0
   hop: {fileID: 251038813524993300, guid: cab9de11b6c71784c91b730f9dd3ebcf, type: 3}
-  ras: 0
-  gravity: 0.1
+  ras: 0.1
+  gravity: 0.2
   startConTime: 0.5
   progressConTime: 1
   popSpeed:
-    value: 12
-    valueRand: 2
+    value: 10
+    valueRand: 1
   popAngle:
     value: 90
     valueRand: 45
   rotSpeed:
-    value: 0
-    valueRand: 0
+    value: 10
+    valueRand: 5
   popRadius: 0.5
