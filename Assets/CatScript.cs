@@ -28,7 +28,7 @@ public class CatScript : MonoBehaviour
     public Vector2 direction_;
     GameObject player;
     public bool isAttack;
-    bool kuwaeru;
+    [SerializeField] bool kuwaeru;
     public Transform closestChild;
     float BakuBakuTime = kBakuBakuTime;
     const float kBakuBakuTime = 5.0f;
@@ -178,13 +178,22 @@ public class CatScript : MonoBehaviour
 
                     //}
                     // target = null;
+                    if (distance > 4.0f)
+                    {
+                        mode = Mode.Chase;
+                    }
+
                     break;
 
                 case Mode.Kuwaeru:
-                    FindClosestChild();
+                    if (closestChild != null)
+                    {
+
+                        FindClosestChild();
+                    }
                     if (kuwaeru)
                     {
-                        closestChild.position = transform.position;
+
                         ChildManager childManager = closestChild.GetComponent<ChildManager>();
                         if (!childManager.isTakedAway)
                         {
@@ -203,12 +212,14 @@ public class CatScript : MonoBehaviour
                                 mode = Mode.Scan;
                                 kuwaeru = false;
                             }
+                            if (!onDanbol)
+                            {
+                                transform.position += new Vector3(direction_.x * -4.0f, 0, 0) * Time.deltaTime;
+                                closestChild.position = transform.position;
+                            }
                         }
                         BakuBakuTime -= Time.deltaTime;
-                        if (!onDanbol)
-                        {
-                            transform.position += new Vector3(direction_.x * -4.0f, 0, 0) * Time.deltaTime;
-                        }
+
 
                     }
                     else
@@ -226,7 +237,6 @@ public class CatScript : MonoBehaviour
                         if (!onDanbol)
                         {
                             transform.position += new Vector3(direction.x * 2.0f, 0, 0) * Time.deltaTime;
-
                         }
                     }
                     //else

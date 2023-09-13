@@ -11,6 +11,7 @@ public class PlayerManager : MonoBehaviour
     Rigidbody2D rb;
     SpriteRenderer sP;
     Animator anim;
+    PlaySound playSound;
 
     public float halfSize = 0f;
     
@@ -110,6 +111,7 @@ public class PlayerManager : MonoBehaviour
 
         gameFlowManager = gameFlowManagerObj.GetComponent<GameFlowManager>();
         tutorialManager = tutorialObj.GetComponent<TutorialManager>();
+        playSound = this.GetComponent<PlaySound>();
     }
 
     void Update()
@@ -189,6 +191,7 @@ public class PlayerManager : MonoBehaviour
                 else if (orderStack && (inputDirection == INPUTDIRECTION.LEFT || inputDirection == INPUTDIRECTION.RIGHT))
                 {
                     StackInitialize();
+                    
                     ChangeOrderText("＼ 攻撃! ／");
                 }
                 // 指示 - 集合,待機
@@ -364,6 +367,7 @@ public class PlayerManager : MonoBehaviour
         if (inputJump != 0 && preInputJump == 0)
         {
             velocity.y = 13f;
+            playSound.PlaySound1();
             isJump = true;
         }
     }
@@ -431,6 +435,7 @@ public class PlayerManager : MonoBehaviour
     {
         OrderInitialize();
         allChild.DiffInitialize();
+        playSound.PlaySound0();
         // 左積み上げ攻撃
         if (inputDirection == INPUTDIRECTION.LEFT)
         {
