@@ -175,6 +175,8 @@ public class ChildManager : MonoBehaviour
         playerDirection = (int)playerManager.GetDirection();
         GrassHop.SetRunnning(false);
         SweatHop.SetRunnning(false);
+
+        zanzo.SetRunning(false);
         switch (moveType)
         {
             case MoveType.FOLLOW:
@@ -450,12 +452,12 @@ public class ChildManager : MonoBehaviour
         isThrow = true;
         playSound.PlaySound0();
         ChangeMoveType(MoveType.ATTACKCROW);
-        zanzo.SetRunning(true);
     }
     void MoveAttackCrow()
     {
         if (isThrow)
         {
+            zanzo.SetRunning(true);
             attackCrowLeftTime -= Time.deltaTime;
             if (attackCrowLeftTime < 0f) { isFinishAttackCrow = true; }
         }
