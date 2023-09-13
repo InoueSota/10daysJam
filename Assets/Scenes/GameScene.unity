@@ -1167,7 +1167,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3906877290160037469, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: maxHP
-      value: 8
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: kYPos
@@ -1608,8 +1608,9 @@ MonoBehaviour:
   tutorialDuckObj: {fileID: 65142277}
   speechBubbleObj: {fileID: 1894032077}
   textActiveTime: 4
-  textActiveSliderBack: {fileID: 0}
-  textActiveSliderFill: {fileID: 0}
+  textActive: {fileID: 1566442107}
+  textActiveSliderBack: {fileID: 575850143}
+  textActiveSliderFill: {fileID: 2077010687}
   tutorialText1: {fileID: 1696831365}
   tutorialText2: {fileID: 2041461382}
   tutorialText3: {fileID: 1551847554}
@@ -1836,7 +1837,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3906877290160037469, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: maxHP
-      value: 8
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: kYPos
@@ -3892,7 +3893,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3906877290160037469, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: maxHP
-      value: 8
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: kYPos
@@ -8468,7 +8469,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3906877290160037469, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: maxHP
-      value: 8
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: kYPos
@@ -9313,7 +9314,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3906877290160037469, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: maxHP
-      value: 8
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: kYPos
@@ -9919,7 +9920,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3906877290160037469, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: maxHP
-      value: 8
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: kYPos
@@ -10634,7 +10635,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3906877290160037469, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: maxHP
-      value: 8
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: kYPos
@@ -10980,7 +10981,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3906877290160037469, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: maxHP
-      value: 8
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: kYPos
@@ -11081,7 +11082,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1566442108
 Transform:
   m_ObjectHideFlags: 0
@@ -11555,7 +11556,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3906877290160037469, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: maxHP
-      value: 8
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: kYPos
@@ -12481,7 +12482,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3906877290160037469, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: maxHP
-      value: 8
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: kYPos
@@ -12909,7 +12910,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1894032078
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14937,7 +14938,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -15363,7 +15364,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3906877290160037469, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: maxHP
-      value: 8
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5098290474370891436, guid: 99516dd13493acb4a958a75dbc2c1661, type: 3}
       propertyPath: kYPos
