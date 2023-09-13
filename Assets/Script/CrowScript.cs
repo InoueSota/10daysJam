@@ -89,7 +89,7 @@ public class CrowScript : MonoBehaviour
                     coolTime -= Time.deltaTime;
                     if ((int)angleX % 3 == 0)
                     {
-                        direction_ = UnityEngine.Random.Range(0, 3);
+                        direction_ = UnityEngine.Random.Range(-1, 2);
                     }
                     transform.position += new Vector3(direction_ * moveSpeed, 0, 0) * Time.deltaTime;
                     Distance_ = Vector2.Distance(transform.position, targetPos);
