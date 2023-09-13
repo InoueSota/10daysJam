@@ -71,7 +71,6 @@ public class CrowScript : MonoBehaviour
         gameFlagManager = gameFlagObj.GetComponent<GameFlagManager>();
         anim = GetComponent<Animator>();
         zanzo = GetComponent<ZanzoesManager>();
-
     }
 
     // Update is called once per frame
