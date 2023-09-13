@@ -191,7 +191,7 @@ public class CatScript : MonoBehaviour
 
                         FindClosestChild();
                     }
-                    if (kuwaeru)
+                    if (kuwaeru && closestChild != null)
                     {
 
                         ChildManager childManager = closestChild.GetComponent<ChildManager>();
