@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 
 public class CatScript : MonoBehaviour
 {
-    public float pushForce = 10.0f; // ‚Á”ò‚Î‚·—Í‚Ì‘å‚«‚³
+    public float pushForce = 10.0f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î‚ï¿½ï¿½Í‚Ì‘å‚«ï¿½ï¿½
     public enum Mode
     {
         Scan,
@@ -40,14 +40,14 @@ public class CatScript : MonoBehaviour
     private Vector3 prePos;
     private bool canFlip = true;
 
-    // ƒJƒƒ‰
+    // ï¿½Jï¿½ï¿½ï¿½ï¿½
     private GameObject cameraObj;
     private ScrollManager scrollManager;
     private float halfWidth;
-    // ƒJƒƒ‰‚Ì’†‚É“ü‚Á‚½‚©ƒtƒ‰ƒO
+    // ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Ì’ï¿½ï¿½É“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½O
     private bool isEnterCamera;
 
-    // ƒQ[ƒ€ŠJnŠÇ—ƒIƒuƒWƒFƒNƒg
+    // ï¿½Qï¿½[ï¿½ï¿½ï¿½Jï¿½nï¿½Ç—ï¿½ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½g
     [SerializeField] private GameObject gameFlagObj;
     private GameFlagManager gameFlagManager;
 
@@ -108,7 +108,7 @@ public class CatScript : MonoBehaviour
                     {
                         chaseCoolTime -= Time.deltaTime;
                     }
-                    // ƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚ÌˆÊ’u‚ğ’†S‚ÉA”¼Œa5‚Ì”ÍˆÍ“à‚ÌƒIƒuƒWƒFƒNƒg‚ğ’T‚·
+                    // ï¿½Qï¿½[ï¿½ï¿½ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ÌˆÊ’uï¿½ğ’†Sï¿½ÉAï¿½ï¿½ï¿½a5ï¿½Ì”ÍˆÍ“ï¿½ï¿½ÌƒIï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½Tï¿½ï¿½
                     Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 10f);
 
                     foreach (Collider2D col in colliders)
@@ -116,10 +116,10 @@ public class CatScript : MonoBehaviour
                         //Debug.Log("Detected Object: " + col.gameObject.name);
                         if (col.gameObject.tag == TargetTag)
                         {
-                            // ”ÍˆÍ“à‚ÌƒIƒuƒWƒFƒNƒg‚Ö‚ÌQÆ‚ğæ“¾
+                            // ï¿½ÍˆÍ“ï¿½ï¿½ÌƒIï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½Ö‚ÌQï¿½Æ‚ï¿½ï¿½æ“¾
                             target = col.gameObject;
                             mode = Mode.Chase;
-                            // ‚±‚±‚ÅtargetObject‚ğ‘€ì‚Å‚«‚Ü‚·
+                            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½targetObjectï¿½ğ‘€ï¿½Å‚ï¿½ï¿½Ü‚ï¿½
                         }
                     }
 
@@ -129,7 +129,7 @@ public class CatScript : MonoBehaviour
                     chaseCoolTime = kchaseCoolTime;
                     Debug.Log("chase");
 
-                    if (target != null) // target‚ªnull‚Å‚È‚¢‚±‚Æ‚ğŠm”F
+                    if (target != null) // targetï¿½ï¿½nullï¿½Å‚È‚ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½mï¿½F
                     {
                         direction_ = target.transform.position - transform.position;
                         direction_.Normalize();
@@ -192,40 +192,17 @@ public class CatScript : MonoBehaviour
                     }
                     if (kuwaeru && closestChild != null)
                     {
-                        ChildManager childManager = closestChild.GetComponent<ChildManager>();
-                        if (!childManager.isTakedAway)
+                        if (distance >= 7.0f)
                         {
-                            childManager.takeAwayCrowObj = gameObject;
-                            childManager.isTakedAway = true;
-                            if (childManager.GetMoveType() == ChildManager.MoveType.STACK)
-                            {
-                                GameObject.FindGameObjectWithTag("ChildManager").GetComponent<AllChildScript>().StackTakeOffUpdate();
-                            }
-                            else
-                            {
-                                GameObject.FindGameObjectWithTag("ChildManager").GetComponent<AllChildScript>().TakeOffDiffUpdate();
-                            }
-                            if (distance >= 7.0f)
-                            {
-                                mode = Mode.Scan;
-                                kuwaeru = false;
-                            }
-                           
-                            
-                        }
-                        BakuBakuTime -= Time.deltaTime;
-                        if (direction_.x < 0)
-                        {
-                            closestChild.position =new Vector3( transform.position.x+1.5f,transform.position.y-1.0f,0);
-                        }
-                        if (direction_.x >= 0)
-                        {
-                            closestChild.position = new Vector3(transform.position.x - 1.5f, transform.position.y - 1.0f, 0);
+                            mode = Mode.Scan;
+                            kuwaeru = false;
                         }
                         if (!onDanbol)
                         {
                             transform.position += new Vector3(direction_.x * -4.0f, 0, 0) * Time.deltaTime;
+                            closestChild.position = transform.position;
                         }
+                        BakuBakuTime -= Time.deltaTime;
                     }
                     else
                     {
@@ -263,7 +240,7 @@ public class CatScript : MonoBehaviour
 
             Debug.Log(mode);
 
-            // ‰æ–Ê“à‚Éû‚ß‚³‚¹‚é
+            // ï¿½ï¿½Ê“ï¿½ï¿½Éï¿½ï¿½ß‚ï¿½ï¿½ï¿½ï¿½ï¿½
             float thisLeft = transform.position.x - transform.localScale.x * 0.5f;
             float thisRight = transform.position.x + transform.localScale.x * 0.5f;
             float cameraLeft = scrollManager.GetScrollValue() - halfWidth;
@@ -304,7 +281,7 @@ public class CatScript : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player")) // ƒvƒŒƒCƒ„[ƒIƒuƒWƒFƒNƒg‚Æ‚ÌÕ“Ë‚ğŒŸo
+        if (collision.gameObject.CompareTag("Player")) // ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½Æ‚ÌÕ“Ë‚ï¿½ï¿½ï¿½ï¿½o
         {
             // Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
             // isAttack = true;
@@ -387,7 +364,7 @@ public class CatScript : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player")) // ƒvƒŒƒCƒ„[ƒIƒuƒWƒFƒNƒg‚Æ‚ÌÕ“Ë‚ğŒŸo
+        if (collision.gameObject.CompareTag("Player")) // ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½Æ‚ÌÕ“Ë‚ï¿½ï¿½ï¿½ï¿½o
         {
             // Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
             isAttack = false;
