@@ -15,6 +15,8 @@ public class ChildManager : MonoBehaviour
     private HopParticlesManager GrassHop;
     private HopParticlesManager SweatHop;
 
+    private SmokeAPaticlesManager deathSmoke;
+
     // 親ガモを追いかける
     public GameObject player;
     private PlayerManager playerManager;
@@ -121,7 +123,7 @@ public class ChildManager : MonoBehaviour
         zanzo = GetComponent<ZanzoesManager>();
 
         Hoppers = this.GetComponents<HopParticlesManager>();
-
+        deathSmoke = this.GetComponent<SmokeAPaticlesManager>();
         GrassHop = Hoppers[0];
         SweatHop = Hoppers[1];
     }
@@ -168,6 +170,7 @@ public class ChildManager : MonoBehaviour
     {
         playerDirection = (int)playerManager.GetDirection();
         GrassHop.SetRunnning(false);
+        SweatHop.SetRunnning(false);
         switch (moveType)
         {
             case MoveType.FOLLOW:
@@ -562,7 +565,6 @@ public class ChildManager : MonoBehaviour
                 ChangeMoveType(MoveType.FOLLOW);
             }
             isPanic = false;
-            SweatHop.SetRunnning(false);
         }
     }
     public bool GetIsPanic()
@@ -589,6 +591,7 @@ public class ChildManager : MonoBehaviour
                         // スコアを加算する
                         AttackScoreIngame(48, 0.5f, collision);
                         Destroy(collision.gameObject);
+                        deathSmoke.Set(collision.gameObject.transform.position);
                     }
                     else
                     {
@@ -612,6 +615,7 @@ public class ChildManager : MonoBehaviour
                         // スコアを加算する
                         AttackScoreIngame(48, 0.5f, collision);
                         Destroy(collision.gameObject);
+                        deathSmoke.Set(collision.gameObject.transform.position);
                     }
                     else
                     {
@@ -639,6 +643,7 @@ public class ChildManager : MonoBehaviour
                         // スコアを加算する
                         AttackScoreIngame(48, 0.5f, collision);
                         Destroy(collision.gameObject);
+                        deathSmoke.Set(collision.gameObject.transform.position);
                     }
                     else
                     {
@@ -662,6 +667,7 @@ public class ChildManager : MonoBehaviour
                         // スコアを加算する
                         AttackScoreIngame(48, 0.5f, collision);
                         Destroy(collision.gameObject);
+                        deathSmoke.Set(collision.gameObject.transform.position);
                     }
                     else
                     {

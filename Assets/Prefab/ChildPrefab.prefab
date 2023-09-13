@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 1620102233314949598}
   - component: {fileID: 6082996168410646302}
   - component: {fileID: 8012233048616124005}
+  - component: {fileID: 5719822648017905540}
   m_Layer: 3
   m_Name: ChildPrefab
   m_TagString: Child
@@ -271,3 +272,31 @@ MonoBehaviour:
     value: 10
     valueRand: 5
   popRadius: 0.5
+--- !u!114 &5719822648017905540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4062459521392159587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69d54de5dfa1a1545ab4f6bef1c8be7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  smoke: {fileID: -468435083357310543, guid: 8d87af1aac136474394235999bc77fdb, type: 3}
+  popSpeed:
+    value: 1
+    valueRand: 2
+  popAngle:
+    value: 90
+    valueRand: 45
+  popRadius:
+    value: 1
+    valueRand: 0.5
+  ras: 0.01
+  gravity: -0.01
+  startConTime: 0
+  progressConTime: 2
+  isRunning: 0
+  smokeCount: 20
