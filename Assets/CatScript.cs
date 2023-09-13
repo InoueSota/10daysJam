@@ -96,6 +96,8 @@ public class CatScript : MonoBehaviour
             if (target != null)
             {
                 distance = Vector2.Distance(transform.position, target.transform.position);
+                direction_ = target.transform.position - transform.position;
+                direction_.Normalize();
 
             }
 
@@ -137,7 +139,7 @@ public class CatScript : MonoBehaviour
                         {
                             if (!onDanbol)
                             {
-                                transform.position += new Vector3(direction_.x * 4.0f, 0, 0) * Time.deltaTime;
+                                transform.position += new Vector3(direction_.x * 6.0f, 0, 0) * Time.deltaTime;
                             }
                             if (distance <= 7.0f)
                             {
@@ -195,6 +197,11 @@ public class CatScript : MonoBehaviour
                             else
                             {
                                 GameObject.FindGameObjectWithTag("ChildManager").GetComponent<AllChildScript>().TakeOffDiffUpdate();
+                            }
+                            if (distance >= 7.0f)
+                            {
+                                mode = Mode.Scan;
+                                kuwaeru = false;
                             }
                         }
                         BakuBakuTime -= Time.deltaTime;
