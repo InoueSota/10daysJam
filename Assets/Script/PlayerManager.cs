@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using static ChildManager;
 
@@ -97,6 +98,12 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private GameObject orderTextObj;
     [SerializeField] private TextMeshProUGUI orderText;
 
+    // カメラオブジェクト
+    [SerializeField] private GameObject cameraObj;
+    private ScrollManager scrollManager;
+    private float halfWidth;
+    private float halfHeight;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -112,6 +119,10 @@ public class PlayerManager : MonoBehaviour
         gameFlowManager = gameFlowManagerObj.GetComponent<GameFlowManager>();
         tutorialManager = tutorialObj.GetComponent<TutorialManager>();
         playSound = this.GetComponent<PlaySound>();
+
+        scrollManager = cameraObj.GetComponent<ScrollManager>();
+        halfWidth = Camera.main.ScreenToWorldPoint(new(Screen.width, 0f, 0f)).x;
+        halfHeight = Camera.main.ScreenToWorldPoint(new(0f, Screen.height, 0f)).y;
     }
 
     void Update()
@@ -130,6 +141,8 @@ public class PlayerManager : MonoBehaviour
         }
         Gravity();
         Animation();
+
+        ClampInCamera();
     }
     private void FixedUpdate()
     {
@@ -625,6 +638,34 @@ public class PlayerManager : MonoBehaviour
             {
                 isEnterObstacle = false;
             }
+        }
+    }
+
+    // カメラの範囲内に収める
+    private void ClampInCamera()
+    {
+        // 左端
+        float thisLeft = transform.position.x - transform.localScale.x * 0.5f;
+        float cameraLeft = scrollManager.GetScrollValue() - halfWidth;
+        if (thisLeft < cameraLeft)
+        {
+            transform.position = new(cameraLeft + transform.localScale.x * 0.5f, transform.position.y, transform.position.z);
+        }
+
+        // 右端
+        float thisRight = transform.position.x + transform.localScale.x * 0.5f;
+        float cameraRight = scrollManager.GetScrollValue() + halfWidth;
+        if (thisRight > cameraRight)
+        {
+            transform.position = new(cameraRight - transform.localScale.x * 0.5f, transform.position.y, transform.position.z);
+        }
+
+        // 上端
+        float thisTop = transform.position.y + transform.localScale.y * 0.5f;
+        float cameraTop = cameraObj.transform.position.y + halfHeight;
+        if (thisTop > cameraTop)
+        {
+            transform.position = new(transform.position.x, cameraTop - transform.localScale.y * 0.5f, transform.position.z);
         }
     }
 

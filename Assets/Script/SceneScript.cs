@@ -19,11 +19,11 @@ public class SceneScript : MonoBehaviour
                 Screen.fullScreen = true;
             }
         }
-        //// シーンをリセットする
-        //if (Input.GetKeyDown(KeyCode.R))
-        //{
-        //    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        //}
+        // シーンをリセットする
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
         // ウィンドウを閉じる
         if (Input.GetKeyDown(KeyCode.Escape))
         {
